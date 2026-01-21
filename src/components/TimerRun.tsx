@@ -6,6 +6,7 @@ import DailySummary from './DailySummary';
 interface Props {
     initialMinutes: number;
     onReset: () => void;
+    lang: 'es' | 'en';
 }
 
 interface Session {
@@ -16,7 +17,7 @@ interface Session {
 
 const ALARM_SOUND = "https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=tibetan-bowl-singing-72688.mp3";
 
-export default function TimerRun({ initialMinutes, onReset }: Props) {
+export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
   
   const { addSession, history, hours, minutes, sessionCount } = usePomodoroStats();
 
@@ -273,6 +274,7 @@ export default function TimerRun({ initialMinutes, onReset }: Props) {
 
         {/* 3. 🔥 STATS / TRACKER (COMPONENTIZADO) */}
         <DailySummary 
+            lang={lang}
             history={history} 
             hours={hours} 
             minutes={minutes} 
