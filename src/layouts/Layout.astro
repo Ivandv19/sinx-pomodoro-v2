@@ -9,18 +9,24 @@ interface Props {
 	title: string;
 	description?: string; // El ? significa que es opcional
 	image?: string;
+    lang?: string;
 }
 
 // 2. Extraemos los valores o ponemos unos por defecto
 const { 
 	title, 
 	description = "Maximiza tu productividad y concentración. La herramienta ideal para estudiantes, profesionales y creativos que buscan enfoque total.", 
-	image = new URL("/og-image.png", Astro.site || "https://sinx-pomodoro.pages.dev").toString()
+	image = new URL("/og-image.png", Astro.site || "https://sinx-pomodoro.pages.dev").toString(),
+    lang = "es"
 } = Astro.props;
+
+const jsonLdDescription = lang === 'en' 
+    ? "A minimalist Pomodoro timer designed to improve productivity and focus." 
+    : "Un temporizador Pomodoro minimalista diseñado para mejorar la productividad y el enfoque.";
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -54,6 +60,22 @@ const {
             document.documentElement.setAttribute('data-theme', theme);
         </script>
 		<meta name="description" content={description} />
+
+		<script type="application/ld+json" set:html={JSON.stringify({
+			  "@context": "https://schema.org",
+			  "@type": "SoftwareApplication",
+			  "name": "Sinx Pomodoro",
+			  "operatingSystem": "Any",
+			  "applicationCategory": "ProductivityApplication",
+			  "offers": {
+				"@type": "Offer",
+				"price": "0",
+				"priceCurrency": "USD"
+			  },
+			  "description": jsonLdDescription,
+              "inLanguage": lang
+			})}>
+		</script>
 
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />

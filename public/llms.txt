@@ -1,0 +1,27 @@
+# Sinx Pomodoro
+Una herramienta web minimalista de productividad basada en la técnica Pomodoro.
+
+## Herramientas
+- Pomodoro Timer: Temporizador de 25 minutos para enfoque profundo.
+- Short Break: Descanso corto de 5 minutos.
+- Long Break: Descanso largo de 15 minutos.
+
+## Características
+- Interfaz limpia y sin distracciones.
+- No requiere registro.
+- Optimizado para navegadores modernos.
+
+---
+
+# Sinx Pomodoro (English)
+A minimalist web productivity tool based on the Pomodoro technique.
+
+## Tools
+- Pomodoro Timer: 25-minute timer for deep focus.
+- Short Break: 5-minute short break.
+- Long Break: 15-minute long break.
+
+## Features
+- Clean and distraction-free interface.
+- No registration required.
+- Optimized for modern browsers.
