@@ -16,25 +16,29 @@ export default function PomodoroManager({ lang = 'es' }: Props) {
     if (typeof window === 'undefined') return;
     
     try {
-      // 1. Check for running timer state first
+      // Only check for ACTIVE running timer state
       const timerState = localStorage.getItem('pomodoro_timer_state');
       if (timerState) {
           const state = JSON.parse(timerState);
-          if (state.initialMinutes && !state.isSessionFinished) {
+          // Only restore if there's actual progress (timeLeft is less than total duration)
+          // This prevents auto-restoring when user just selected time but didn't start
+          const hasProgress = state.currentSessionIndex > 0 || 
+                             (state.timeLeft && state.timeLeft < (state.initialMinutes * 60));
+          
+          if (state.initialMinutes && !state.isSessionFinished && hasProgress) {
               setSelectedMinutes(state.initialMinutes);
               return;
           }
       }
 
-      // 2. Fallback to just "active session" setup preference
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const state = JSON.parse(saved);
-        // Auto-restore the session
-        setSelectedMinutes(state.initialMinutes);
-      }
+      // If we reach here, there's no active timer, so clean up any old state
+      localStorage.removeItem('pomodoro_timer_state');
+      localStorage.removeItem(STORAGE_KEY);
     } catch (e) {
       console.error('Error loading saved session:', e);
+      // Clean up on error
+      localStorage.removeItem('pomodoro_timer_state');
+      localStorage.removeItem(STORAGE_KEY);
     }
   }, []);
 

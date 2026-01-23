@@ -24,7 +24,7 @@ export default function DailySummary({ lang, history, hours, minutes, count }: P
             
             {/* Tarjeta Izquierda: Totales */}
             <div className="bg-base-200/50 p-6 rounded-2xl border border-base-200 flex flex-col justify-center items-center text-center">
-                <span className="text-xs font-bold uppercase opacity-40 mb-2 tracking-widest first-letter:uppercase">
+                <span className="text-xs font-bold uppercase opacity-60 mb-2 tracking-widest first-letter:uppercase">
                     {todayDateLabel}
                 </span>
                 <span className="text-xs font-bold uppercase opacity-50 mb-1">
@@ -68,7 +68,7 @@ export default function DailySummary({ lang, history, hours, minutes, count }: P
                                             {entry.minutes} min
                                         </span>
                                     </div>
-                                    <div className="text-xs opacity-40 font-mono mt-1">
+                                    <div className="text-xs opacity-60 font-mono mt-1">
                                         {formatHour(entry.startTime)} - {formatHour(entry.endTime)}
                                     </div>
                                 </div>

@@ -133,6 +133,16 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
           return;
       }
 
+      // Only save if timer has actually been started (not just on initial mount)
+      // Check if timeLeft is different from initial duration (meaning timer has run)
+      const initialDuration = schedule[0]?.duration || 0;
+      const hasStarted = timeLeft < initialDuration || currentSessionIndex > 0;
+      
+      if (!hasStarted) {
+          // Don't save state if user hasn't started the timer yet
+          return;
+      }
+
       const stateToSave = {
           initialMinutes,
           currentSessionIndex,
@@ -144,7 +154,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
       };
       
       localStorage.setItem(TIMER_STATE_KEY, JSON.stringify(stateToSave));
-  }, [currentSessionIndex, isActive, timeLeft, blockStartTime, planStartTime, isSessionFinished, initialMinutes]);
+  }, [currentSessionIndex, isActive, timeLeft, blockStartTime, planStartTime, isSessionFinished, initialMinutes, schedule]);
 
   // Main Timer Logic
   useEffect(() => {
@@ -341,7 +351,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
                         {t('timer.run.new')}
                     </button>
                 )}
-                <button type="button" onClick={() => { localStorage.removeItem('pomodoro_timer_state'); onReset(); }} className="btn btn-circle btn-ghost opacity-40 hover:opacity-100 tooltip" data-tip={t('timer.run.cancel')}>
+                <button type="button" onClick={() => { localStorage.removeItem('pomodoro_timer_state'); onReset(); }} className="btn btn-circle btn-ghost opacity-60 hover:opacity-100 tooltip" data-tip={t('timer.run.cancel')} aria-label={t('timer.run.cancel')}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
@@ -352,7 +362,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
             <div className="mb-6 pb-4 border-b border-base-200 flex justify-between items-center">
                 <div className="flex flex-col">
                     <h3 className="text-lg font-bold opacity-70">{t('timer.run.agenda')}</h3>
-                    <span className="text-xs font-mono opacity-40">{t('timer.run.start')} {formatHour(planStartTime)}</span>
+                    <span className="text-xs font-mono opacity-60">{t('timer.run.start')} {formatHour(planStartTime)}</span>
                 </div>
                 <div className="flex flex-col items-end">
                     <div className="flex items-center gap-2">
