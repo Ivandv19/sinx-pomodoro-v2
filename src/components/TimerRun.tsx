@@ -2,6 +2,7 @@
 import { useState, useEffect, useMemo, useRef } from 'preact/hooks';
 import { usePomodoroStats, type SessionType } from '../hooks/usePomodoroStats';
 import DailySummary from './DailySummary';
+import { useTranslations } from '../i18n/utils';
 
 interface Props {
     initialMinutes: number;
@@ -20,6 +21,7 @@ const ALARM_SOUND = "https://cdn.pixabay.com/download/audio/2021/08/04/audio_062
 export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
   
   const { addSession, history, hours, minutes, sessionCount } = usePomodoroStats();
+  const t = useTranslations(lang);
 
   const schedule = useMemo(() => {
     const queue: Session[] = [];
@@ -27,7 +29,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
     let cycleCount = 1;
 
     while (remainingMins >= 25) {
-        queue.push({ type: 'focus', duration: 25 * 60, label: 'Modo Enfoque' });
+        queue.push({ type: 'focus', duration: 25 * 60, label: t('timer.focus') });
         remainingMins -= 25;
 
         if (remainingMins >= 5) {
@@ -37,7 +39,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
                 queue.push({ 
                     type: isLongBreak ? 'long' : 'short', 
                     duration: breakDuration * 60, 
-                    label: isLongBreak ? 'Descanso Largo' : 'Relax Breve' 
+                    label: isLongBreak ? t('timer.long') : t('timer.short') 
                 });
                 remainingMins -= breakDuration;
             }
@@ -45,7 +47,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
         cycleCount++;
     }
     return queue;
-  }, [initialMinutes]);
+  }, [initialMinutes, lang, t]);
 
   // Clave para localStorage
   const TIMER_STATE_KEY = 'pomodoro_timer_state';
@@ -152,7 +154,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
     if (isActive && timeLeft > 0 && currentSession) {
         document.title = `(${formatTime(timeLeft)}) ${currentSession.label}`;
     } else if (!isActive && !isSessionFinished) {
-        document.title = "⏸ Pausa";
+        document.title = `⏸ ${t('timer.run.pause').replace('⏸ ', '')}`;
     }
 
     if (isActive && timeLeft > 0) {
@@ -184,8 +186,8 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
       audio.play().catch(e => console.error(e));
 
       if (Notification.permission === "granted") {
-         new Notification(`¡${currentSession.label} terminado!`, {
-            body: "Registrado en tu historial.",
+         new Notification(`¡${currentSession.label} ${t('timer.run.finished')}!`, {
+            body: lang === 'en' ? "Logged in your history." : "Registrado en tu historial.",
             icon: "/favicon.svg"
          });
       }
@@ -203,7 +205,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
       } else {
           setIsActive(false);
           setIsSessionFinished(true);
-          document.title = "✅ ¡Listo!";
+          document.title = lang === 'en' ? "✅ Done!" : "✅ ¡Listo!";
       }
     }
 
@@ -244,8 +246,8 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
   if (!currentSession) {
     return (
         <div className="flex flex-col items-center justify-center p-10 space-y-4">
-            <h2 className="text-2xl font-bold">Error en la sesión</h2>
-            <p>No se pudo recuperar la sesión actual.</p>
+            <h2 className="text-2xl font-bold">{lang === 'en' ? 'Session Error' : 'Error en la sesión'}</h2>
+            <p>{lang === 'en' ? 'Could not recover current session.' : 'No se pudo recuperar la sesión actual.'}</p>
             <button 
                 className="btn btn-primary"
                 onClick={() => {
@@ -254,7 +256,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
                     onReset();
                 }}
             >
-                Reiniciar Plan
+                {lang === 'en' ? 'Restart Plan' : 'Reiniciar Plan'}
             </button>
         </div>
     );
@@ -286,7 +288,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
         <div className="flex flex-col items-center justify-center space-y-8">
              <div className="text-center">
                 <span className="text-sm font-bold opacity-50 tracking-widest uppercase">
-                    Bloque Actual
+                    {t('timer.run.current')}
                 </span>
                 <h2 className={`text-4xl font-black mt-2 ${theme.color} drop-shadow-sm`}>
                     {currentSession.label}
@@ -313,7 +315,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
                     </span>
                     {isSessionFinished && (
                         <span className="text-sm mt-2 uppercase font-bold animate-pulse text-base-content">
-                            Terminado
+                            {t('timer.run.finished')}
                         </span>
                     )}
                 </div>
@@ -329,17 +331,17 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
                         onClick={() => setIsActive(!isActive)}
                     >
                         {isActive ? (
-                            <span className="text-lg font-bold flex items-center gap-2">⏸ Pausar</span>
+                            <span className="text-lg font-bold flex items-center gap-2">{t('timer.run.pause')}</span>
                         ) : (
-                            <span className="text-lg font-bold flex items-center gap-2">▶ Continuar</span>
+                            <span className="text-lg font-bold flex items-center gap-2">{t('timer.run.resume')}</span>
                         )}
                     </button>
                 ) : (
                     <button type="button" className={`btn btn-lg h-16 px-10 rounded-full border-none shadow-xl animate-bounce text-white ${theme.bgButton}`} onClick={() => { localStorage.removeItem('pomodoro_timer_state'); onReset(); }}>
-                        Nuevo Plan ↺
+                        {t('timer.run.new')}
                     </button>
                 )}
-                <button type="button" onClick={() => { localStorage.removeItem('pomodoro_timer_state'); onReset(); }} className="btn btn-circle btn-ghost opacity-40 hover:opacity-100 tooltip" data-tip="Cancelar Plan">
+                <button type="button" onClick={() => { localStorage.removeItem('pomodoro_timer_state'); onReset(); }} className="btn btn-circle btn-ghost opacity-40 hover:opacity-100 tooltip" data-tip={t('timer.run.cancel')}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
@@ -349,12 +351,12 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
         <div className="w-full bg-base-100/50 backdrop-blur-sm rounded-2xl p-6 border border-base-200 shadow-sm">
             <div className="mb-6 pb-4 border-b border-base-200 flex justify-between items-center">
                 <div className="flex flex-col">
-                    <h3 className="text-lg font-bold opacity-70">Agenda de Hoy</h3>
-                    <span className="text-xs font-mono opacity-40">Inicio: {formatHour(planStartTime)}</span>
+                    <h3 className="text-lg font-bold opacity-70">{t('timer.run.agenda')}</h3>
+                    <span className="text-xs font-mono opacity-40">{t('timer.run.start')} {formatHour(planStartTime)}</span>
                 </div>
                 <div className="flex flex-col items-end">
                     <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold uppercase opacity-50">Fin Aprox:</span>
+                        <span className="text-xs font-bold uppercase opacity-50">{t('timer.run.end')}</span>
                         <span className="text-2xl font-black">{estimatedFinishTime}</span>
                     </div>
                 </div>

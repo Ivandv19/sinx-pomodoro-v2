@@ -2,6 +2,7 @@
 import { useState } from 'preact/hooks';
 import { usePomodoroStats } from '../hooks/usePomodoroStats';
 import DailySummary from './DailySummary';
+import { useTranslations } from '../i18n/utils';
 
 const PRESETS = [
   { label: "30m", minutes: 30 },
@@ -19,6 +20,7 @@ interface Props {
 
 export default function TimerSetup({ onStart, lang }: Props) {
   const { history, hours, minutes, sessionCount } = usePomodoroStats();
+  const t = useTranslations(lang);
   
   const [selected, setSelected] = useState<number | null>(null);
 
@@ -48,7 +50,7 @@ export default function TimerSetup({ onStart, lang }: Props) {
       {/* SECCIÓN 1: ELEGIR TIEMPO */}
       <div>
         <h2 className="text-2xl font-bold text-center mb-6">
-            ¿Cuánto tiempo tienes hoy?
+            {t('timer.setup.subtitle')}
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
@@ -65,7 +67,7 @@ export default function TimerSetup({ onStart, lang }: Props) {
             >
                 <span>{preset.label}</span>
                 <span className="text-xs font-normal opacity-70">
-                {Math.floor(preset.minutes / 30)} ciclos
+                {Math.floor(preset.minutes / 30)} {t('timer.setup.cycles')}
                 </span>
             </button>
             ))}
@@ -75,19 +77,19 @@ export default function TimerSetup({ onStart, lang }: Props) {
         {stats && (
             <div className="card bg-base-200 shadow-xl border border-base-300 animate-fade-in-up">
             <div className="card-body">
-                <h3 className="card-title text-primary">Resumen del Plan</h3>
+                <h3 className="card-title text-primary">{t('timer.setup.summary')}</h3>
                 <div className="grid grid-cols-3 gap-4 text-center my-4">
                 <div className="flex flex-col">
                     <span className="text-3xl font-bold">{stats.focusTime}m</span>
-                    <span className="text-xs opacity-70">Focus</span>
+                    <span className="text-xs opacity-70">{t('stats.focus')}</span>
                 </div>
                 <div className="flex flex-col">
                     <span className="text-3xl font-bold">{stats.breakTime}m</span>
-                    <span className="text-xs opacity-70">Break</span>
+                    <span className="text-xs opacity-70">{t('timer.setup.break')}</span>
                 </div>
                 <div className="flex flex-col text-accent">
                     <span className="text-3xl font-bold">{stats.finishLabel}</span>
-                    <span className="text-xs opacity-70">Fin</span>
+                    <span className="text-xs opacity-70">{t('timer.setup.finish')}</span>
                 </div>
                 </div>
 
@@ -101,7 +103,7 @@ export default function TimerSetup({ onStart, lang }: Props) {
                     }
                     }}
                 >
-                    Iniciar Sesión
+                    {t('timer.setup.btn.start')}
                 </button>
                 </div>
             </div>
@@ -113,7 +115,7 @@ export default function TimerSetup({ onStart, lang }: Props) {
       {history.length > 0 && (
           <div className="animate-fade-in">
               <div className="divider opacity-50 mb-8 text-xs font-bold uppercase tracking-widest">
-                  Tu Progreso de Hoy
+                  {t('stats.progress.title')}
               </div>
               
               {/* Aquí usamos el componente reutilizable */}
