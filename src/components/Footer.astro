@@ -24,9 +24,15 @@ const year = new Date().getFullYear();
 
     <p class="text-xs mt-4">
         {t('footer.developed')} <span class="font-bold">Sinx</span>
-        <span class="badge badge-outline badge-xs ml-1">Astro</span>
-        <span class="badge badge-outline badge-xs ml-1">Bun</span>
     </p>
+
+    <div class="flex flex-wrap justify-center gap-2 mt-1 mb-2">
+        <span class="badge badge-outline badge-xs">Astro</span>
+        <span class="badge badge-outline badge-xs">Preact</span>
+        <span class="badge badge-outline badge-xs">Tailwind</span>
+        <span class="badge badge-outline badge-xs">Bun</span>
+        <span class="badge badge-outline badge-xs">Cloudflare</span>
+    </div>
     
     <p class="text-xs opacity-75">Copyright © {year} - {t('footer.rights')}</p>
   </aside>
