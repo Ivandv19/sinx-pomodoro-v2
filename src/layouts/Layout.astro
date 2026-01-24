@@ -14,7 +14,7 @@ interface Props {
 
 // 2. Extraemos los valores o ponemos unos por defecto
 const { 
-	title, 
+	title = "Sinx Pomodoro",
 	description = "Maximiza tu productividad y concentración. La herramienta ideal para estudiantes, profesionales y creativos que buscan enfoque total.", 
 	image = new URL("/og-image.png", Astro.site || "https://sinx-pomodoro.pages.dev").toString(),
     lang = "es"
@@ -33,7 +33,7 @@ const jsonLdDescription = lang === 'en'
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="generator" content={Astro.generator} />
 		
-		<title>{title} | Sinx Pomodoro</title>
+		<title>{title}</title>
 		<ClientRouter />
 		<!-- Google Analytics (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-L4W9E2FP48"></script>
