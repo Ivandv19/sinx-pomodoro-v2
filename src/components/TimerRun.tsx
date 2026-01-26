@@ -116,6 +116,9 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
   // useRef para persistir el tiempo objetivo
   const endTimeRef = useRef<number>(0);
 
+  // Guard to prevent duplicate processing of the same session
+  const lastProcessedSessionRef = useRef<number>(-1);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -185,21 +188,27 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
       }, 200);
     } 
     else if (timeLeft === 0 && !isSessionFinished && currentSession) {
-      addSession(
-          currentSession.type, 
-          Math.floor(currentSession.duration / 60), 
-          blockStartTime
-      );
+      // 🔥 GUARD: Prevent duplicate execution
+      if (lastProcessedSessionRef.current !== currentSessionIndex) {
+        addSession(
+            currentSession.type, 
+            Math.floor(currentSession.duration / 60), 
+            blockStartTime
+        );
+        
+        // Mark as processed immediately
+        lastProcessedSessionRef.current = currentSessionIndex;
 
-      const audio = new Audio(ALARM_SOUND);
-      audio.volume = 0.7;
-      audio.play().catch(e => console.error(e));
+        const audio = new Audio(ALARM_SOUND);
+        audio.volume = 0.7;
+        audio.play().catch(e => console.error(e));
 
-      if (Notification.permission === "granted") {
-         new Notification(`¡${currentSession.label} ${t('timer.run.finished')}!`, {
-            body: lang === 'en' ? "Logged in your history." : "Registrado en tu historial.",
-            icon: "/favicon.png"
-         });
+        if (Notification.permission === "granted") {
+           new Notification(`¡${currentSession.label} ${t('timer.run.finished')}!`, {
+              body: lang === 'en' ? "Logged in your history." : "Registrado en tu historial.",
+              icon: "/favicon.png"
+           });
+        }
       }
 
       if (currentSessionIndex < schedule.length - 1) {
