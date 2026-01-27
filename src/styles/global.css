@@ -19,17 +19,12 @@
 
 /* Base Styles */
 body {
-  /* We stop overriding bg-canvas and text-primary to use DaisyUI defaults */
+  /* Use DaisyUI standard variables */
+  background-color: var(--fallback-b1, oklch(var(--b1)/1));
+  color: var(--fallback-bc, oklch(var(--bc)/1));
   font-family: var(--font-outfit);
-  transition: background-color 0.4s ease, color 0.4s ease;
-}
 
-/* Base Styles */
-body {
-  background-color: var(--bg-canvas);
-  color: var(--text-primary);
-  font-family: var(--font-outfit);
-  /* Smooth transition for all semantic properties */
+  /* Smooth transition */
   transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
@@ -85,4 +80,41 @@ h6 {
     transform: none;
     animation: none;
   }
+}
+
+/* Utility to hide scrollbar */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari and Opera */
+}
+
+/* Styled Scrollbar for Agenda */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--fallback-bc, oklch(var(--bc)/0.2)) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  height: 6px;
+  /* Horizontal scrollbar height */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--fallback-bc, oklch(var(--bc)/0.2));
+  border-radius: 20px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: var(--fallback-bc, oklch(var(--bc)/0.4));
 }

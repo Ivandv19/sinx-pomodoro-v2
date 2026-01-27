@@ -24,7 +24,7 @@ export default function HeroSection({ lang, mode }: Props) {
 
   return (
     <div class="text-center space-y-4 mb-10 animate-fade-in-up">
-      <h1 class="text-5xl font-extrabold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+      <h1 class="text-5xl font-extrabold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent pb-2">
         {t('hero.title')}
       </h1>
       

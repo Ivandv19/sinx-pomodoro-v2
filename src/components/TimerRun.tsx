@@ -380,7 +380,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
                     </div>
                 </div>
             </div>
-            <div className="relative flex items-center overflow-x-auto pb-4 hide-scrollbar scroll-smooth snap-x">
+            <div className="relative flex items-center overflow-x-auto pb-8 pt-4 custom-scrollbar scroll-smooth snap-x">
                 <div className="absolute left-0 right-0 top-[1.2rem] h-0.5 bg-base-300 z-0"></div>
                 {schedule.map((session, index) => {
                     const isPast = index < currentSessionIndex;
