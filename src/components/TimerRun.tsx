@@ -367,7 +367,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
         </div>
 
         {/* 2. AGENDA HORIZONTAL (Visual igual) */}
-        <div className="w-full bg-base-100/50 backdrop-blur-sm rounded-2xl p-6 border border-base-200 shadow-sm transition-colors duration-400">
+        <div className="w-full bg-base-100/50 backdrop-blur-sm rounded-2xl p-6 border border-base-200 shadow-xl transition-colors duration-400">
             <div className="mb-6 pb-4 border-b border-base-200 flex justify-between items-center">
                 <div className="flex flex-col">
                     <h3 className="text-lg font-bold opacity-70">{t('timer.run.agenda')}</h3>
@@ -387,7 +387,7 @@ export default function TimerRun({ initialMinutes, onReset, lang }: Props) {
                     const isCurrent = index === currentSessionIndex;
                     const sTheme = getTheme(session.type);
                     return (
-                        <div key={index} className={`relative flex-shrink-0 flex flex-col items-center px-6 snap-center transition-all ${isCurrent ? 'opacity-100 scale-105' : 'opacity-50'}`}>
+                        <div key={index} className={`relative shrink-0 flex flex-col items-center px-6 snap-center transition-all ${isCurrent ? 'opacity-100 scale-105' : 'opacity-50'}`}>
                             <div className={`w-4 h-4 rounded-full border-2 transition-colors z-10 mb-4 ${
                                 isPast ? 'bg-success border-success' : 
                                 isCurrent ? `${sTheme.bgButton} border-white shadow-lg` : 

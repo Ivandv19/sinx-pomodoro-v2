@@ -59,10 +59,10 @@ export default function TimerSetup({ onStart, lang }: Props) {
                 type="button"
                 key={preset.label}
                 onClick={() => setSelected(preset.minutes)}
-                className={`btn btn-lg h-24 text-xl flex flex-col gap-1 transition-all ${
+                className={`btn btn-lg h-24 text-xl flex flex-col gap-1 transition-all shadow-sm ${
                 selected === preset.minutes
                     ? "btn-primary shadow-lg scale-105 border-2 border-primary"
-                    : "btn-outline border-base-300 hover:border-primary"
+                    : "btn-outline border-base-300 hover:border-primary hover:shadow-md"
                 }`}
             >
                 <span>{preset.label}</span>

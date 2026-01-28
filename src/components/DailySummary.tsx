@@ -23,7 +23,7 @@ export default function DailySummary({ lang, history, hours, minutes, count }: P
         <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-up">
             
             {/* Tarjeta Izquierda: Totales */}
-            <div className="bg-base-200/50 p-6 rounded-2xl border border-base-200 flex flex-col justify-center items-center text-center transition-colors duration-400">
+            <div className="bg-base-200/50 p-6 rounded-2xl border border-base-200 shadow-md flex flex-col justify-center items-center text-center transition-all duration-400 hover:shadow-lg">
                 <span className="text-xs font-bold uppercase opacity-60 mb-2 tracking-widest first-letter:uppercase">
                     {todayDateLabel}
                 </span>
@@ -39,7 +39,7 @@ export default function DailySummary({ lang, history, hours, minutes, count }: P
             </div>
 
             {/* Tarjeta Derecha: Timeline Vertical */}
-            <div className="bg-base-200/50 p-6 rounded-2xl border border-base-200 max-h-60 overflow-y-auto relative transition-colors duration-400">
+            <div className="bg-base-200/50 p-6 rounded-2xl border border-base-200 shadow-md max-h-60 overflow-y-auto relative transition-all duration-400 hover:shadow-lg">
                 <h4 className="text-xs font-bold uppercase opacity-50 mb-6 sticky top-0 bg-base-200/95 backdrop-blur-md pb-2 z-20">
                     {t['stats.log.title']}
                 </h4>
