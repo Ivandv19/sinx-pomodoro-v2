@@ -12,7 +12,7 @@ export default defineConfig({
       enabled: true,
     },
   }),
-  site: 'https://sinx-pomodoro.pages.dev',
+  site: 'https://sinx-pomodoro.mgdc.site',
   prefetch: true,
   integrations: [preact(), sitemap()], 
   
