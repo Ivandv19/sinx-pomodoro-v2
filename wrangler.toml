@@ -12,5 +12,5 @@ database_id = "896db0a5-ecfc-4f4d-92d2-302a54266f3d"
 
 # 📦 KV Namespace Binding (Cache de Sesiones)
 [[kv_namespaces]]
-binding = "SESSION"
+binding = "LUCIA_KV"
 id = "2f41dca3b1444beebacd5a4d94284baa"

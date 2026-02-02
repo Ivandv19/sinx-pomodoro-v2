@@ -25,7 +25,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
     // ⚡ OPTIMIZACIÓN KV: Intentar leer del caché primero
     // check if runtime and env are available
-    const kv = context.locals.runtime.env.SESSION;
+    const kv = context.locals.runtime.env.LUCIA_KV;
     let user = null;
     let session = null;
 
