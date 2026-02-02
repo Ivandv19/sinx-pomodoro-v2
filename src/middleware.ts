@@ -30,13 +30,18 @@ export const onRequest = defineMiddleware(async (context, next) => {
     let session = null;
 
     if (kv) {
-        const cachedUser = await kv.get(sessionId);
-        if (cachedUser) {
-             // ¡HIT! Encontramos al usuario en caché. Nos ahorramos llamar a D1.
-             // El caché guarda el objeto { user, session } serializado
-             const result = JSON.parse(cachedUser);
-             user = result.user;
-             session = result.session;
+        try {
+            const cachedUser = await kv.get(sessionId);
+            if (cachedUser) {
+                 // ¡HIT! Encontramos al usuario en caché. Nos ahorramos llamar a D1.
+                 // El caché guarda el objeto { user, session } serializado
+                 const result = JSON.parse(cachedUser);
+                 user = result.user;
+                 session = result.session;
+            }
+        } catch (e) {
+            console.error("Error reading/parsing session from KV", e);
+            // If cache is corrupted, proceed as if it's a miss
         }
     }
 
