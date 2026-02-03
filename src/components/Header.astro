@@ -44,7 +44,7 @@ const translatePath = (lang: string) => getRelativeLocaleUrl(lang, currentPath);
 
     <div class="navbar-end gap-2">
       <AuthButton 
-        client:load 
+        client:only="react" 
         loginText={currentLang === 'es' ? 'Entrar' : 'Login'}
         logoutText={currentLang === 'es' ? 'Salir' : 'Logout'}
         loginUrl={getRelativeLocaleUrl(currentLang, 'login')}

@@ -8,5 +8,5 @@ const { lang } = Astro.props;
 
 
 <div class="mt-8">
-    <PomodoroManager client:load lang={lang} />
+    <PomodoroManager client:only="react" lang={lang} />
 </div>
