@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 import react from "@astrojs/react";
 
 export default defineConfig({
-  output: 'server',
+  output: 'static',
   adapter: cloudflare({
     mode: 'directory',
     platformProxy: {
