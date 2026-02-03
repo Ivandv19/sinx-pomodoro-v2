@@ -12,7 +12,7 @@ export default defineConfig({
       enabled: true,
     },
     runtime: {
-      mode: 'off',
+      mode: 'on',
     },
   }),
   site: 'https://sinx-pomodoro.mgdc.site',

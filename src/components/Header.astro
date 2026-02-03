@@ -17,12 +17,7 @@ const t = useTranslations(currentLang as 'es' | 'en');
 const currentPath = Astro.url.pathname.replace(/^\/(en|es)\//, '/').replace(/^\//, ''); 
 const translatePath = (lang: string) => getRelativeLocaleUrl(lang, currentPath);
 
-const db = Astro.locals.runtime.env.DB;
-const kv = Astro.locals.runtime.env.LUCIA_KV;
-const session = await auth(db, kv).api.getSession({
-    headers: Astro.request.headers
-});
-const user = session?.user;
+const user = Astro.locals.user;
 ---
 
 <header class="sticky top-0 z-50 w-full transition-colors duration-400">
