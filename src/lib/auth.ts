@@ -1,5 +1,6 @@
 import type { KVNamespace, D1Database } from "@cloudflare/workers-types";
 import { betterAuth } from "better-auth";
+import bcrypt from "bcryptjs";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "../db/schema";
@@ -41,15 +42,10 @@ export const auth = (db: D1Database, kv: KVNamespace | null, env?: { BETTER_AUTH
             enabled: true,
             password: {
                 hash: async (password) => {
-                   const { scrypt } = await import("@better-auth/utils");
-                   // Using lower Scrypt parameters to fit Cloudflare's 50ms CPU limit
-                   // Better Auth default: N=16384, r=8, p=1
-                   // Cloudflare optimized: N=1024, r=8, p=1
-                   return await scrypt.hash(password, { 
-                       N: 1024,
-                       r: 8,
-                       p: 1
-                   });
+                    return await bcrypt.hash(password, 4);
+                },
+                verify: async ({ hash, password }) => {
+                    return await bcrypt.compare(password, hash);
                 }
             }
         },
