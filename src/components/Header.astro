@@ -3,9 +3,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations } from '../i18n/utils';
 import LanguagePicker from './LanguagePicker.astro';
-
-import { auth } from '../lib/auth';
-import LogoutButton from './LogoutButton';
+import AuthButton from './AuthButton';
 
 // 1. Detectar idioma actual
 const currentLang = Astro.currentLocale || 'es';
@@ -16,8 +14,6 @@ const t = useTranslations(currentLang as 'es' | 'en');
 // 3. Generar rutas dinámicas
 const currentPath = Astro.url.pathname.replace(/^\/(en|es)\//, '/').replace(/^\//, ''); 
 const translatePath = (lang: string) => getRelativeLocaleUrl(lang, currentPath);
-
-const user = Astro.locals.runtime?.data?.user || (Astro.locals as any).user;
 ---
 
 <header class="sticky top-0 z-50 w-full transition-colors duration-400">
