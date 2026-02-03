@@ -25,3 +25,12 @@ TODO.md
 
 # jetbrains setting folder
 .idea/
+
+# Cloudflare local state
+.wrangler/
+
+# Local Databases
+*.sqlite
+*.db
+*.sqlite3
+.d1/
