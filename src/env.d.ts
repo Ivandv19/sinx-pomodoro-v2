@@ -4,6 +4,8 @@ type D1Database = import("@cloudflare/workers-types").D1Database;
 type ENV = {
 	DB: D1Database;
 	LUCIA_KV: KVNamespace;
+	BETTER_AUTH_SECRET: string;
+	BETTER_AUTH_URL: string;
 };
 
 type Runtime = import("@astrojs/cloudflare").Runtime<ENV>;
