@@ -2,16 +2,28 @@ import { defineMiddleware } from "astro:middleware";
 import { auth } from "./lib/auth";
 
 export const onRequest = defineMiddleware(async (context, next) => {
-    const db = context.locals.runtime.env.DB;
-    const kv = context.locals.runtime.env.LUCIA_KV;
-    const session = await auth(db, kv).api.getSession({
-        headers: context.request.headers,
-    });
+    try {
+        const env = context.locals.runtime?.env;
+        if (!env || !env.DB) {
+            console.error("Missing environment or DB binding in middleware");
+            context.locals.user = null;
+            context.locals.session = null;
+            return next();
+        }
 
-    if (session) {
-        context.locals.user = session.user;
-        context.locals.session = session.session;
-    } else {
+        const session = await auth(env.DB, env.LUCIA_KV, env).api.getSession({
+            headers: context.request.headers,
+        });
+
+        if (session) {
+            context.locals.user = session.user;
+            context.locals.session = session.session;
+        } else {
+            context.locals.user = null;
+            context.locals.session = null;
+        }
+    } catch (e) {
+        console.error("Auth middleware error:", e);
         context.locals.user = null;
         context.locals.session = null;
     }

@@ -4,7 +4,10 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "../db/schema";
 
-export const auth = (db: D1Database, kv: KVNamespace | null) => {
+export const auth = (db: D1Database, kv: KVNamespace | null, env?: { BETTER_AUTH_SECRET?: string, BETTER_AUTH_URL?: string }) => {
+    if (!db) {
+        throw new Error("Database (D1) is required for auth");
+    }
     const d1 = drizzle(db, { schema });
     return betterAuth({
         database: drizzleAdapter(d1, {
@@ -16,6 +19,8 @@ export const auth = (db: D1Database, kv: KVNamespace | null) => {
                 verification: schema.verification,
             }
         }),
+        secret: env?.BETTER_AUTH_SECRET,
+        baseURL: env?.BETTER_AUTH_URL,
         secondaryStorage: kv ? {
             get: async (key: string) => {
                 const value = await kv.get(key);
