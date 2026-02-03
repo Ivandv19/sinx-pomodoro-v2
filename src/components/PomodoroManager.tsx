@@ -3,16 +3,19 @@ import React, { useState, useEffect } from "react";
 import TimerSetup from "./TimerSetup";
 import TimerRun from "./TimerRun"; 
 import HeroSection from "./HeroSection"; 
+import { authClient } from "../lib/auth-client";
 
 interface Props {
   lang?: 'es' | 'en';
-  isLoggedIn?: boolean;
+  isLoggedIn?: boolean; // Keep for compatibility but prioritize session
 }
 
 const STORAGE_KEY = 'pomodoro_active_session';
 
-export default function PomodoroManager({ lang = 'es', isLoggedIn = false }: Props) {
+export default function PomodoroManager({ lang = 'es', isLoggedIn: initialIsLoggedIn = false }: Props) {
   const [selectedMinutes, setSelectedMinutes] = useState<number | null>(null);
+  const { data: session, isPending } = authClient.useSession();
+  const isLoggedIn = !!session;
 
   // 🔥 Check for saved session on mount
   useEffect(() => {

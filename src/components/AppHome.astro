@@ -1,10 +1,8 @@
 ---
 // src/components/pages/AppHome.astro
 import PomodoroManager from './PomodoroManager';
-import { auth } from '../lib/auth';
 
 const { lang } = Astro.props;
-const user = Astro.locals.runtime?.data?.user || (Astro.locals as any).user;
 ---
 
 

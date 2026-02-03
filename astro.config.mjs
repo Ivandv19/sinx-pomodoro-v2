@@ -1,21 +1,10 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
-import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
-
 import react from "@astrojs/react";
 
 export default defineConfig({
   output: 'static',
-  adapter: cloudflare({
-    mode: 'directory',
-    platformProxy: {
-      enabled: true,
-    },
-    runtime: {
-      mode: 'on',
-    },
-  }),
   site: 'https://sinx-pomodoro.mgdc.site',
   prefetch: true,
   integrations: [react(), sitemap()], 
