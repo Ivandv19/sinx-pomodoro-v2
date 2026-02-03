@@ -1,6 +1,7 @@
 /** @jsxImportSource react */
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { signIn, signUp } from '../../lib/auth-client';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 interface Props {
   translations: {
@@ -26,15 +27,26 @@ export default function AuthForm({ translations, redirectPath }: Props) {
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<any>(null);
 
   const toggleMode = () => {
     setIsLogin(!isLogin);
     setError(null);
+    setTurnstileToken(null);
+    turnstileRef.current?.reset();
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
+
+    // Validate Turnstile
+    if (!turnstileToken) {
+      setError('Please complete the security verification');
+      return;
+    }
+
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -61,6 +73,9 @@ export default function AuthForm({ translations, redirectPath }: Props) {
     } catch (err: any) {
       setError(err.message);
       setLoading(false);
+      // Reset Turnstile on error
+      setTurnstileToken(null);
+      turnstileRef.current?.reset();
     }
   };
 
@@ -135,6 +150,26 @@ export default function AuthForm({ translations, redirectPath }: Props) {
             {error}
           </div>
         )}
+
+        {/* Turnstile Widget */}
+        <div className="w-full">
+          <Turnstile
+            ref={turnstileRef}
+            siteKey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}
+            options={{
+              size: 'flexible',
+            }}
+            onSuccess={(token) => setTurnstileToken(token)}
+            onError={() => {
+              setTurnstileToken(null);
+              setError('Security verification failed. Please try again.');
+            }}
+            onExpire={() => {
+              setTurnstileToken(null);
+              setError('Security verification expired. Please try again.');
+            }}
+          />
+        </div>
 
         <div>
           <button
