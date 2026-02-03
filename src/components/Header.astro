@@ -17,7 +17,7 @@ const t = useTranslations(currentLang as 'es' | 'en');
 const currentPath = Astro.url.pathname.replace(/^\/(en|es)\//, '/').replace(/^\//, ''); 
 const translatePath = (lang: string) => getRelativeLocaleUrl(lang, currentPath);
 
-const user = Astro.locals.user;
+const user = Astro.locals.runtime?.data?.user || (Astro.locals as any).user;
 ---
 
 <header class="sticky top-0 z-50 w-full transition-colors duration-400">

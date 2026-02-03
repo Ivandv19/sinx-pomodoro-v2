@@ -1,23 +1,23 @@
 import type { KVNamespace, D1Database } from "@cloudflare/workers-types";
 import { Hono } from 'hono';
-import { auth } from '../../lib/auth';
-import type { APIContext } from 'astro';
+import { handle } from 'hono/cloudflare-pages';
+import { auth } from '../../src/lib/auth';
 
-const app = new Hono<{
-  Bindings: {
-    DB: D1Database;
-    LUCIA_KV: KVNamespace;
-    BETTER_AUTH_SECRET: string;
-    BETTER_AUTH_URL: string;
-  };
-}>().basePath('/api');
+type Bindings = {
+  DB: D1Database;
+  LUCIA_KV: KVNamespace;
+  BETTER_AUTH_SECRET: string;
+  BETTER_AUTH_URL: string;
+};
+
+const app = new Hono<{ Bindings: Bindings }>();
 
 // Better Auth integration
 app.on(['POST', 'GET'], '/auth/**', async (c) => {
   return auth(c.env.DB, c.env.LUCIA_KV, c.env).handler(c.req.raw);
 });
 
-// Middleware for Auth
+// Helper for session
 const getSession = async (c: any) => {
     return await auth(c.env.DB, c.env.LUCIA_KV, c.env).api.getSession({
         headers: c.req.raw.headers
@@ -54,11 +54,4 @@ app.get('/pomodoros', async (c) => {
     })));
 });
 
-// Export the Astro API handler
-export const ALL = async (context: APIContext) => {
-  const env = context.locals.runtime?.env;
-  if (!env) {
-    return new Response("Environment not available", { status: 500 });
-  }
-  return app.fetch(context.request, env);
-};
+export const onRequest = handle(app);

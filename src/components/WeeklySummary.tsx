@@ -44,7 +44,7 @@ export default function WeeklySummary({ lang, weeklyStats }: Props) {
                 <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
                     {[...Array(3)].map((_, i) => ( // 3 líneas: Top, Middle, Bottom
                         <div key={i} className="w-full border-b border-dashed border-base-content/5 h-full last:border-0 relative">
-                            <span className="absolute -top-2 -left-0 text-[9px] font-mono opacity-20">
+                            <span className="absolute -top-2 left-0 text-[9px] font-mono opacity-20">
                                 {i === 0 ? `${maxHours}h` : i === 1 ? `${maxHours / 2}h` : ''}
                             </span>
                         </div>
