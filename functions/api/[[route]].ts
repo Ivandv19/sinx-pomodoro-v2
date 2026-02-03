@@ -10,7 +10,7 @@ type Bindings = {
   BETTER_AUTH_URL: string;
 };
 
-const app = new Hono<{ Bindings: Bindings }>();
+const app = new Hono<{ Bindings: Bindings }>().basePath('/api');
 
 // Better Auth integration
 app.on(['POST', 'GET'], '/auth/**', async (c) => {
