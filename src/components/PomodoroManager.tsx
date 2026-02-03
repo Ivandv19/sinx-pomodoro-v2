@@ -52,6 +52,7 @@ export default function PomodoroManager({ lang = 'es', isLoggedIn = false }: Pro
       {selectedMinutes === null ? (
         <TimerSetup 
             lang={lang}
+            isLoggedIn={isLoggedIn}
             onStart={(minutes) => {
               localStorage.setItem(STORAGE_KEY, JSON.stringify({ initialMinutes: minutes }));
               setSelectedMinutes(minutes);

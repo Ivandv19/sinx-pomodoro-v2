@@ -1,4 +1,3 @@
-// src/hooks/usePomodoroStats.ts
 import { useState, useEffect } from "react";
 
 export type SessionType = "focus" | "short" | "long";
@@ -11,7 +10,7 @@ export interface LogEntry {
   endTime: string;
 }
 
-export function usePomodoroStats() {
+export function usePomodoroStats(isLoggedIn: boolean = false) {
   // 🔥 CAMBIO: Inicialización "Lazy"
   // En lugar de arrancar vacío, leemos localStorage DIRECTAMENTE en el estado inicial.
   // Así no hay "parpadeo" de datos vacíos.
@@ -41,21 +40,22 @@ export function usePomodoroStats() {
 
   // Cargar desde la Nube
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || !isLoggedIn) return;
 
     fetch('/api/pomodoros')
       .then(res => {
           if (res.ok) return res.json();
-          throw new Error('Not logged in or error');
+          return []; // Fallback a vacio si hay error o no autorizado
       })
       .then((cloudHistory: LogEntry[]) => {
-          // Guardamos TODO lo que viene de la nube (que ya viene limitado a 50 o por fecha)
-          setFullHistory(cloudHistory);
+          if (cloudHistory && Array.isArray(cloudHistory)) {
+             setFullHistory(cloudHistory);
+          }
       })
       .catch(() => {
           console.log("Modo Offline o Invitado: Usando historial local.");
       });
-  }, []);
+  }, [isLoggedIn]);
 
   const addSession = (type: SessionType, minutes: number, startTime: Date) => {
     const now = new Date();
@@ -81,15 +81,17 @@ export function usePomodoroStats() {
       console.error("No se pudo guardar en localStorage", e);
     }
 
-    fetch('/api/pomodoros', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            type,
-            minutes,
-            createdAt: now.getTime() // ✅ Usa endTime (cuando terminó), igual que localStorage
-        })
-    }).catch(err => console.log("No se pudo sincronizar con la nube:", err));
+    if (isLoggedIn) {
+        fetch('/api/pomodoros', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type,
+                minutes,
+                createdAt: now.getTime() // ✅ Usa endTime (cuando terminó), igual que localStorage
+            })
+        }).catch(err => console.log("No se pudo sincronizar con la nube:", err));
+    }
   };
 
   // 1. Datos de HOY (Para compatibilidad con lo existente)

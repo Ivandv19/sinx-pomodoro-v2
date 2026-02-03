@@ -23,7 +23,7 @@ const ALARM_SOUND = "https://pomodoro-assets.mgdc.site/alarm.mp3";
 
 export default function TimerRun({ initialMinutes, onReset, lang, isLoggedIn = false }: Props) {
   
-  const { addSession, history, hours, minutes, sessionCount, weeklyStats } = usePomodoroStats();
+  const { addSession, history, hours, minutes, sessionCount, weeklyStats } = usePomodoroStats(isLoggedIn);
   const t = useTranslations(lang);
 
   const schedule = useMemo(() => {

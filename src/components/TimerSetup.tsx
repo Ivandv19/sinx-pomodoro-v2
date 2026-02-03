@@ -17,10 +17,11 @@ const PRESETS = [
 interface Props {
   onStart: (minutes: number) => void;
   lang: 'es' | 'en';
+  isLoggedIn?: boolean;
 }
 
-export default function TimerSetup({ onStart, lang }: Props) {
-  const { history, hours, minutes, sessionCount } = usePomodoroStats();
+export default function TimerSetup({ onStart, lang, isLoggedIn = false }: Props) {
+  const { history, hours, minutes, sessionCount } = usePomodoroStats(isLoggedIn);
   const t = useTranslations(lang);
   
   const [selected, setSelected] = useState<number | null>(null);
