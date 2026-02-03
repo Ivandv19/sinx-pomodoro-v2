@@ -47,15 +47,12 @@ const user = Astro.locals.runtime?.data?.user || (Astro.locals as any).user;
     </div>
 
     <div class="navbar-end gap-2">
-      {
-        user ? (
-          <LogoutButton client:load label={currentLang === 'es' ? 'Salir' : 'Logout'} />
-        ) : (
-            <a href={getRelativeLocaleUrl(currentLang, 'login')} class="btn btn-ghost btn-sm">
-                {currentLang === 'es' ? 'Entrar' : 'Login'}
-            </a>
-        )
-      }
+      <AuthButton 
+        client:load 
+        loginText={currentLang === 'es' ? 'Entrar' : 'Login'}
+        logoutText={currentLang === 'es' ? 'Salir' : 'Logout'}
+        loginUrl={getRelativeLocaleUrl(currentLang, 'login')}
+      />
       <LanguagePicker />
 
       <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">

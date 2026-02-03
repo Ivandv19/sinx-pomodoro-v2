@@ -5,18 +5,18 @@ CREATE TABLE IF NOT EXISTS user (
     id TEXT PRIMARY KEY,
     name TEXT,
     email TEXT NOT NULL UNIQUE,
-    emailVerified BOOLEAN NOT NULL,
+    emailVerified INTEGER NOT NULL,
     image TEXT,
-    createdAt DATETIME NOT NULL,
-    updatedAt DATETIME NOT NULL
+    createdAt INTEGER NOT NULL,
+    updatedAt INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS session (
     id TEXT PRIMARY KEY,
-    expiresAt DATETIME NOT NULL,
+    expiresAt INTEGER NOT NULL,
     token TEXT NOT NULL UNIQUE,
-    createdAt DATETIME NOT NULL,
-    updatedAt DATETIME NOT NULL,
+    createdAt INTEGER NOT NULL,
+    updatedAt INTEGER NOT NULL,
     ipAddress TEXT,
     userAgent TEXT,
     userId TEXT NOT NULL REFERENCES user(id)
@@ -30,21 +30,21 @@ CREATE TABLE IF NOT EXISTS account (
     accessToken TEXT,
     refreshToken TEXT,
     idToken TEXT,
-    accessTokenExpiresAt DATETIME,
-    refreshTokenExpiresAt DATETIME,
+    accessTokenExpiresAt INTEGER,
+    refreshTokenExpiresAt INTEGER,
     scope TEXT,
     password TEXT,
-    createdAt DATETIME NOT NULL,
-    updatedAt DATETIME NOT NULL
+    createdAt INTEGER NOT NULL,
+    updatedAt INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS verification (
     id TEXT PRIMARY KEY,
     identifier TEXT NOT NULL,
     value TEXT NOT NULL,
-    expiresAt DATETIME NOT NULL,
-    createdAt DATETIME,
-    updatedAt DATETIME
+    expiresAt INTEGER NOT NULL,
+    createdAt INTEGER,
+    updatedAt INTEGER
 );
 
 -- App Tables
@@ -53,5 +53,5 @@ CREATE TABLE IF NOT EXISTS pomodoro_log (
     user_id TEXT NOT NULL REFERENCES user(id),
     type TEXT NOT NULL,
     minutes INTEGER NOT NULL,
-    created_at DATETIME NOT NULL
+    created_at INTEGER NOT NULL
 );
