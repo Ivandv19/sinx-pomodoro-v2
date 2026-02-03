@@ -1,4 +1,5 @@
-// src/components/DailySummary.tsx
+/** @jsxImportSource react */
+import React from 'react';
 import type { LogEntry } from '../hooks/usePomodoroStats';
 import { ui } from '../i18n/ui';
 

@@ -1,5 +1,5 @@
 // src/hooks/useTimerPersistence.ts
-import { useEffect } from 'preact/hooks';
+import { useEffect } from 'react';
 import type { SessionType } from './usePomodoroStats';
 
 interface Session {

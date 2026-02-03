@@ -4,6 +4,9 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import { useTranslations } from '../i18n/utils';
 import LanguagePicker from './LanguagePicker.astro';
 
+import { auth } from '../lib/auth';
+import LogoutButton from './LogoutButton';
+
 // 1. Detectar idioma actual
 const currentLang = Astro.currentLocale || 'es';
 
@@ -14,7 +17,12 @@ const t = useTranslations(currentLang as 'es' | 'en');
 const currentPath = Astro.url.pathname.replace(/^\/(en|es)\//, '/').replace(/^\//, ''); 
 const translatePath = (lang: string) => getRelativeLocaleUrl(lang, currentPath);
 
-const { user } = Astro.locals;
+const db = Astro.locals.runtime.env.DB;
+const kv = Astro.locals.runtime.env.LUCIA_KV;
+const session = await auth(db, kv).api.getSession({
+    headers: Astro.request.headers
+});
+const user = session?.user;
 ---
 
 <header class="sticky top-0 z-50 w-full transition-colors duration-400">
@@ -46,11 +54,7 @@ const { user } = Astro.locals;
     <div class="navbar-end gap-2">
       {
         user ? (
-            <form method="POST" action="/api/logout">
-                <button type="submit" class="btn btn-ghost btn-sm text-primary hover:text-primary-focus">
-                    {currentLang === 'es' ? 'Salir' : 'Logout'}
-                </button>
-            </form>
+          <LogoutButton client:load label={currentLang === 'es' ? 'Salir' : 'Logout'} />
         ) : (
             <a href={getRelativeLocaleUrl(currentLang, 'login')} class="btn btn-ghost btn-sm">
                 {currentLang === 'es' ? 'Entrar' : 'Login'}

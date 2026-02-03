@@ -1,5 +1,6 @@
 // src/components/TimerRun.tsx
-import { useState, useEffect, useMemo, useRef } from 'preact/hooks';
+/** @jsxImportSource react */
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { usePomodoroStats, type SessionType } from '../hooks/usePomodoroStats';
 import DailySummary from './DailySummary';
 import WeeklySummary from './WeeklySummary';
@@ -319,8 +320,8 @@ export default function TimerRun({ initialMinutes, onReset, lang, isLoggedIn = f
             <div className="relative w-80 h-80 flex items-center justify-center">
                 <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 280 280" role="img" aria-label="Temporizador Pomodoro">
                     <title>Temporizador Pomodoro</title>
-                    <circle cx="140" cy="140" r={radius} stroke="currentColor" stroke-width="12" fill="none" className="text-base-300 dark:text-base-content/10" />
-                    <circle cx="140" cy="140" r={radius} stroke="currentColor" stroke-width="12" fill="none" stroke-linecap="round"
+                    <circle cx="140" cy="140" r={radius} stroke="currentColor" strokeWidth="12" fill="none" className="text-base-300 dark:text-base-content/10" />
+                    <circle cx="140" cy="140" r={radius} stroke="currentColor" strokeWidth="12" fill="none" strokeLinecap="round"
                         className={`transition-all duration-1000 ease-linear ${theme.stroke}`}
                         style={{ strokeDasharray: circumference, strokeDashoffset: dashOffset }}
                     />
@@ -363,7 +364,7 @@ export default function TimerRun({ initialMinutes, onReset, lang, isLoggedIn = f
                     </button>
                 )}
                 <button type="button" onClick={() => { localStorage.removeItem('pomodoro_timer_state'); onReset(); }} className="btn btn-circle btn-ghost opacity-60 hover:opacity-100 tooltip" data-tip={t('timer.run.cancel')} aria-label={t('timer.run.cancel')}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
         </div>
@@ -395,7 +396,7 @@ export default function TimerRun({ initialMinutes, onReset, lang, isLoggedIn = f
                                 isCurrent ? `${sTheme.bgButton} border-white shadow-lg` : 
                                 'bg-base-100 border-base-300'
                             }`}>
-                                {isPast && <svg className="w-2.5 h-2.5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                                {isPast && <svg className="w-2.5 h-2.5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
                             </div>
                             <div className={`p-3 rounded-lg border-b-4 w-40 text-center ${isCurrent ? 'bg-base-200 shadow-md ' + sTheme.border : 'border-transparent'}`}>
                                 <div className="flex flex-col items-center">

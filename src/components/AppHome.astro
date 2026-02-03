@@ -1,7 +1,15 @@
 ---
 // src/components/pages/AppHome.astro
 import PomodoroManager from './PomodoroManager';
-const { lang, user } = Astro.props;
+import { auth } from '../lib/auth';
+
+const { lang } = Astro.props;
+const db = Astro.locals.runtime.env.DB;
+const kv = Astro.locals.runtime.env.LUCIA_KV;
+const session = await auth(db, kv).api.getSession({
+	headers: Astro.request.headers,
+});
+const user = session?.user;
 ---
 
 

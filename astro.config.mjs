@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
 
-import preact from "@astrojs/preact";
+import react from "@astrojs/react";
 
 export default defineConfig({
   output: 'server',
@@ -11,15 +11,18 @@ export default defineConfig({
     platformProxy: {
       enabled: true,
     },
+    runtime: {
+      mode: 'off',
+    },
   }),
   site: 'https://sinx-pomodoro.mgdc.site',
   prefetch: true,
-  integrations: [preact(), sitemap()], 
+  integrations: [react(), sitemap()], 
   
   vite: {
     plugins: [tailwindcss()],
     ssr: {
-      external: ['@node-rs/argon2', '@node-rs/bcrypt']
+      external: []
     },
     server: {
       watch: {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'preact/hooks';
+import { useState, useEffect, useMemo } from 'react';
 import type { SessionType } from './usePomodoroStats';
 
 const ALARM_SOUND = "https://pomodoro-assets.mgdc.site/alarm.mp3";

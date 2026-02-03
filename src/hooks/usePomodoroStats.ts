@@ -1,5 +1,5 @@
 // src/hooks/usePomodoroStats.ts
-import { useState, useEffect } from "preact/hooks";
+import { useState, useEffect } from "react";
 
 export type SessionType = "focus" | "short" | "long";
 

@@ -1,5 +1,5 @@
 // src/hooks/useTimerState.ts
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect } from 'react';
 import type { SavedTimerState } from './useTimerPersistence';
 
 interface Session {

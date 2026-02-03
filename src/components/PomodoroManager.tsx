@@ -1,4 +1,5 @@
-import { useState, useEffect } from "preact/hooks";
+/** @jsxImportSource react */
+import React, { useState, useEffect } from "react";
 import TimerSetup from "./TimerSetup";
 import TimerRun from "./TimerRun"; 
 import HeroSection from "./HeroSection"; 
