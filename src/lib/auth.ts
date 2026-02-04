@@ -1,11 +1,16 @@
 import type { KVNamespace, D1Database } from "@cloudflare/workers-types";
 import { betterAuth } from "better-auth";
-import bcrypt from "bcryptjs";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "../db/schema";
 
-export const auth = (db: D1Database, kv: KVNamespace | null, env?: { BETTER_AUTH_SECRET?: string, BETTER_AUTH_URL?: string, TURNSTILE_SECRET_KEY?: string }) => {
+export const auth = (db: D1Database, kv: KVNamespace | null, env?: { 
+    BETTER_AUTH_SECRET?: string, 
+    BETTER_AUTH_URL?: string, 
+    TURNSTILE_SECRET_KEY?: string,
+    HASH_SERVICE_URL?: string,
+    HASH_SERVICE_API_KEY?: string
+}) => {
     if (!db) {
         throw new Error("Database (D1) is required for auth");
     }
@@ -42,10 +47,28 @@ export const auth = (db: D1Database, kv: KVNamespace | null, env?: { BETTER_AUTH
             enabled: true,
             password: {
                 hash: async (password) => {
-                    return await bcrypt.hash(password, 4);
+                    const response = await fetch(`${env?.HASH_SERVICE_URL}/hash`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-api-key": env?.HASH_SERVICE_API_KEY || "",
+                        },
+                        body: JSON.stringify({ password }),
+                    });
+                    const data = await response.json() as { hash: string };
+                    return data.hash;
                 },
                 verify: async ({ hash, password }) => {
-                    return await bcrypt.compare(password, hash);
+                    const response = await fetch(`${env?.HASH_SERVICE_URL}/verify`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-api-key": env?.HASH_SERVICE_API_KEY || "",
+                        },
+                        body: JSON.stringify({ password, hash }),
+                    });
+                    const data = await response.json() as { match: boolean };
+                    return data.match;
                 }
             }
         },

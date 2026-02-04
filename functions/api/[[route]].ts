@@ -9,6 +9,8 @@ type Bindings = {
   BETTER_AUTH_SECRET: string;
   BETTER_AUTH_URL: string;
   TURNSTILE_SECRET_KEY: string;
+  HASH_SERVICE_URL: string;
+  HASH_SERVICE_API_KEY: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>().basePath('/api');
