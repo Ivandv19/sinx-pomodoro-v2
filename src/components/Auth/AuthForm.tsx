@@ -55,17 +55,29 @@ export default function AuthForm({ translations, redirectPath }: Props) {
 
     try {
       if (isLogin) {
-        const { error } = await signIn.email({
+        const { error } = (await signIn.email({
           email,
           password,
-        });
+        }, {
+          fetchOptions: {
+            headers: {
+              "x-turnstile-token": turnstileToken || "",
+            }
+          }
+        } as any)) as any;
         if (error) throw new Error(error.message || translations.genericError);
       } else {
-        const { error } = await signUp.email({
+        const { error } = (await signUp.email({
           email,
           password,
           name: email.split('@')[0], // Default name
-        });
+        }, {
+          fetchOptions: {
+            headers: {
+              "x-turnstile-token": turnstileToken || "",
+            }
+          }
+        } as any)) as any;
         if (error) throw new Error(error.message || translations.genericError);
       }
 

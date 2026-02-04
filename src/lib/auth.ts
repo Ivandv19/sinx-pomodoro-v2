@@ -5,7 +5,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "../db/schema";
 
-export const auth = (db: D1Database, kv: KVNamespace | null, env?: { BETTER_AUTH_SECRET?: string, BETTER_AUTH_URL?: string }) => {
+export const auth = (db: D1Database, kv: KVNamespace | null, env?: { BETTER_AUTH_SECRET?: string, BETTER_AUTH_URL?: string, TURNSTILE_SECRET_KEY?: string }) => {
     if (!db) {
         throw new Error("Database (D1) is required for auth");
     }
@@ -52,6 +52,42 @@ export const auth = (db: D1Database, kv: KVNamespace | null, env?: { BETTER_AUTH
         trustedOrigins: [
             "http://localhost:4321",
             "https://sinx-pomodoro.mgdc.site"
-        ]
+        ],
+        hooks: {
+            before: async (context) => {
+                if (!context.request) return;
+                
+                const url = new URL(context.request.url);
+                const path = url.pathname;
+                
+                // Verificar Turnstile solo en registro y login por email
+                if (path.endsWith("/sign-up/email") || path.endsWith("/sign-in/email")) {
+                    const token = context.request.headers.get("x-turnstile-token");
+                    const secret = env?.TURNSTILE_SECRET_KEY;
+
+                    if (!secret) {
+                        console.error("TURNSTILE_SECRET_KEY missing in environment");
+                        return;
+                    }
+
+                    if (!token) {
+                        throw new Error("Security verification is required");
+                    }
+
+                    const result = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        },
+                        body: `secret=${secret}&response=${token}`,
+                    });
+
+                    const outcome: any = await result.json();
+                    if (!outcome.success) {
+                        throw new Error("Security verification failed. Please try again.");
+                    }
+                }
+            }
+        }
     });
 };
