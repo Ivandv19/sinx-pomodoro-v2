@@ -14,6 +14,7 @@ Una aplicación web moderna para gestionar tu tiempo de estudio o trabajo usando
 - **Tema Oscuro/Claro**: Adaptable a tus preferencias
 - **Responsive**: Funciona en desktop y móvil
 
+
 ## 🚀 Inicio Rápido
 
 ### Prerrequisitos
@@ -85,19 +86,6 @@ La app implementa la técnica Pomodoro estándar:
 - **Descanso largo**: 15 minutos después de 4 ciclos
 - **Ciclos**: Se repiten hasta completar el tiempo planificado
 
-## 🤝 Contribuciones
-
-¡Las contribuciones son bienvenidas! Por favor:
-
-1. Haz fork del proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -am 'Agrega nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
 ## 🙏 Agradecimientos
 
