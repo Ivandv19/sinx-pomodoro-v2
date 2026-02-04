@@ -1,6 +1,6 @@
 /** @jsxImportSource react */
 import React, { useState, useRef } from 'react';
-import { signIn, signUp } from '../../lib/auth-client';
+import { signIn, signUp, turnstileToken as globalTurnstileToken } from '../../lib/auth-client';
 import { Turnstile } from '@marsidev/react-turnstile';
 
 interface Props {
@@ -34,6 +34,7 @@ export default function AuthForm({ translations, redirectPath }: Props) {
     setIsLogin(!isLogin);
     setError(null);
     setTurnstileToken(null);
+    globalTurnstileToken.current = null;
     turnstileRef.current?.reset();
   };
 
@@ -47,6 +48,9 @@ export default function AuthForm({ translations, redirectPath }: Props) {
       return;
     }
 
+    // Asegurar que el token global está actualizado
+    globalTurnstileToken.current = turnstileToken;
+
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -55,29 +59,17 @@ export default function AuthForm({ translations, redirectPath }: Props) {
 
     try {
       if (isLogin) {
-        const { error } = (await signIn.email({
+        const { error } = await signIn.email({
           email,
           password,
-        }, {
-          fetchOptions: {
-            headers: {
-              "x-turnstile-token": turnstileToken || "",
-            }
-          }
-        } as any)) as any;
+        });
         if (error) throw new Error(error.message || translations.genericError);
       } else {
-        const { error } = (await signUp.email({
+        const { error } = await signUp.email({
           email,
           password,
           name: email.split('@')[0], // Default name
-        }, {
-          fetchOptions: {
-            headers: {
-              "x-turnstile-token": turnstileToken || "",
-            }
-          }
-        } as any)) as any;
+        });
         if (error) throw new Error(error.message || translations.genericError);
       }
 
@@ -87,6 +79,7 @@ export default function AuthForm({ translations, redirectPath }: Props) {
       setLoading(false);
       // Reset Turnstile on error
       setTurnstileToken(null);
+      globalTurnstileToken.current = null;
       turnstileRef.current?.reset();
     }
   };
