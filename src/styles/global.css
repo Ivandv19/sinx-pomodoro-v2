@@ -1,72 +1,50 @@
 @import "tailwindcss";
-@plugin "daisyui";
 
-/*
-  Centralized Style System
-  Inspired by Flux (Blog) architecture.
+/* DaisyUI con temas claro (nord) y oscuro (business) */
+@plugin "daisyui" {
+  themes: nord, business;
+}
+
+/* 
+  Sistema de estilos centralizado
+  Inspirado en arquitectura Flux
 */
 
 @theme {
-  /* Brand Colors (Originals) */
-  --color-primary: #ea580c;
-  /* Orange-600 */
-  --color-primary-content: #ffffff;
-  --color-secondary: #4b5563;
-
-  /* Global Fonts */
+  /* Fuente personalizada */
   --font-outfit: 'Outfit', sans-serif;
 
-  /* Detailed Palette (Extracted from Components) */
+  /* Colores naranjas para Pomodoro (custom variables) */
   --color-primary-500: #f97316;
-  /* Orange-500 */
   --color-primary-600: #ea580c;
-  /* Orange-600 - Matches base primary */
   --color-primary-700: #c2410c;
-  /* Orange-700 */
 
+  /* Colores para sesiones cortas (verdes) */
   --color-short-400: #34d399;
-  /* Emerald-400 */
   --color-short-500: #10b981;
-  /* Emerald-500 */
   --color-short-600: #059669;
-  /* Emerald-600 */
 
+  /* Colores para sesiones largas (índigos) */
   --color-long-400: #818cf8;
-  /* Indigo-400 */
   --color-long-500: #6366f1;
-  /* Indigo-500 */
   --color-long-600: #4f46e5;
-  /* Indigo-600 */
 
-  /* UI Tokens - Auth */
+  /* Tokens para efecto glassmorphism (auth) */
   --color-card-glass-bg: #ffffff1a;
-  /* white/10 */
   --color-card-glass-border: #ffffff33;
-  /* white/20 */
-
   --color-input-bg: #ffffff80;
-  /* white/50 */
   --color-input-bg-dark: #ffffff0d;
-  /* white/5 - Subtle glass fill */
-
   --color-input-border: #cbd5e1;
-  /* slate-300 */
   --color-input-border-dark: #ffffff33;
-  /* white/20 - Match card border */
 }
 
-/* Base Styles */
+/* Estilos base */
 body {
-  /* Use DaisyUI standard variables */
-  background-color: var(--fallback-b1, oklch(var(--b1)/1));
-  color: var(--fallback-bc, oklch(var(--bc)/1));
   font-family: var(--font-outfit);
-
-  /* Smooth transition */
   transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
 }
 
-/* Headings use System Font (User preference) */
+/* Títulos usan fuente del sistema */
 h1,
 h2,
 h3,
@@ -76,7 +54,7 @@ h6 {
   font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-/* ANIMATIONS */
+/* Animación de entrada */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -91,11 +69,10 @@ h6 {
 
 .animate-fade-in-up {
   opacity: 0;
-  /* Initial state */
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* Stagger delays for premium feel */
+/* Delays */
 .animate-delay-100 {
   animation-delay: 100ms;
 }
@@ -120,28 +97,23 @@ h6 {
   }
 }
 
-/* Utility to hide scrollbar */
+/* Scrollbars */
 .hide-scrollbar {
   -ms-overflow-style: none;
-  /* IE and Edge */
   scrollbar-width: none;
-  /* Firefox */
 }
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
-  /* Chrome, Safari and Opera */
 }
 
-/* Styled Scrollbar for Agenda */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: var(--fallback-bc, oklch(var(--bc)/0.2)) transparent;
+  scrollbar-color: oklch(0.5 0.03 250 / 0.2) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
   height: 6px;
-  /* Horizontal scrollbar height */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
@@ -149,10 +121,10 @@ h6 {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: var(--fallback-bc, oklch(var(--bc)/0.2));
+  background-color: oklch(0.5 0.03 250 / 0.2);
   border-radius: 20px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: var(--fallback-bc, oklch(var(--bc)/0.4));
+  background-color: oklch(0.5 0.03 250 / 0.4);
 }
