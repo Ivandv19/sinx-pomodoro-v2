@@ -87,6 +87,12 @@ export const ui = {
     'blog.comingSoon': 'Próximamente más contenido',
     'blog.body': 'Estamos preparando artículos increíbles sobre productividad, la técnica Pomodoro y cómo sacar el máximo provecho a tu tiempo de enfoque.',
     'blog.back': 'Volver al Inicio',
+
+    // 404
+    '404.title': '404 - No encontrado',
+    '404.heading': '¡Te has distraído!',
+    '404.description': 'Esta página no existe o se ha perdido en el tiempo. Regresa para mantener tu racha de concentración.',
+    '404.back': 'Volver al Foco',
   },
   en: {
     'nav.home': 'Home',
@@ -166,5 +172,11 @@ export const ui = {
     'blog.comingSoon': 'More content coming soon',
     'blog.body': 'We are preparing amazing articles about productivity, the Pomodoro technique, and how to get the most out of your focus time.',
     'blog.back': 'Back to Home',
+
+    // 404
+    '404.title': '404 - Not Found',
+    '404.heading': 'You got distracted!',
+    '404.description': "This page doesn't exist or has been lost in time. Go back to keep your focus streak.",
+    '404.back': 'Back to Focus',
   },
 } as const;
