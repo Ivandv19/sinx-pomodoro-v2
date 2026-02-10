@@ -1,14 +1,18 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from "../../layouts/Layout.astro";
 ---
 
-<Layout title="About" description="Discover the Pomodoro technique and how our app helps you maximize productivity with deep focus sessions.">
+<Layout
+  title="About"
+  description="Discover the Pomodoro technique and how our app helps you maximize productivity with deep focus sessions."
+>
   <div class="max-w-4xl mx-auto space-y-16">
-    
     <!-- Hero Section -->
     <section class="text-center space-y-6 py-8">
       <div class="text-6xl mb-4">🍅</div>
-      <h1 class="text-5xl font-extrabold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+      <h1
+        class="text-5xl font-extrabold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent"
+      >
         The Pomodoro Technique
       </h1>
       <p class="text-xl text-base-content/80 max-w-2xl mx-auto">
@@ -18,16 +22,22 @@ import Layout from '../../layouts/Layout.astro';
 
     <!-- What is Pomodoro -->
     <section class="space-y-6">
-      <h2 class="text-3xl font-bold text-center">What is the Pomodoro Technique?</h2>
+      <h2 class="text-3xl font-bold text-center">
+        What is the Pomodoro Technique?
+      </h2>
       <div class="card bg-base-200 shadow-xl">
         <div class="card-body">
           <p class="text-lg leading-relaxed">
-            The Pomodoro Technique was created by <span class="font-bold text-primary">Francesco Cirillo</span> in the late 1980s. 
-            The name comes from the tomato-shaped kitchen timer (pomodoro in Italian) he used during university.
+            The Pomodoro Technique was created by <span
+              class="font-bold text-primary">Francesco Cirillo</span
+            > in the late 1980s. The name comes from the tomato-shaped kitchen timer
+            (pomodoro in Italian) he used during university.
           </p>
           <p class="text-lg leading-relaxed">
-            This technique breaks work into <span class="badge badge-primary">25-minute</span> intervals called "pomodoros", 
-            separated by short breaks. It's perfect for fighting procrastination and maintaining focus.
+            This technique breaks work into <span class="badge badge-primary"
+              >25-minute</span
+            > intervals called "pomodoros", separated by short breaks. It's perfect
+            for fighting procrastination and maintaining focus.
           </p>
         </div>
       </div>
@@ -37,47 +47,65 @@ import Layout from '../../layouts/Layout.astro';
     <section class="space-y-6">
       <h2 class="text-3xl font-bold text-center">How Does it Work?</h2>
       <div class="grid gap-6 md:grid-cols-2">
-        
-        <div class="card bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20">
+        <div
+          class="card bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20"
+        >
           <div class="card-body">
             <div class="flex items-center gap-3 mb-3">
               <div class="badge badge-primary badge-lg">1</div>
               <h3 class="card-title text-xl">Choose a task</h3>
             </div>
-            <p>Select the task you want to work on. It can be anything: studying, coding, writing, designing...</p>
+            <p>
+              Select the task you want to work on. It can be anything: studying,
+              coding, writing, designing...
+            </p>
           </div>
         </div>
 
-        <div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20">
+        <div
+          class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20"
+        >
           <div class="card-body">
             <div class="flex items-center gap-3 mb-3">
               <div class="badge badge-secondary badge-lg">2</div>
               <h3 class="card-title text-xl">Work for 25 minutes</h3>
             </div>
-            <p>Focus completely on your task for 25 minutes. No distractions, no social media, no multitasking.</p>
+            <p>
+              Focus completely on your task for 25 minutes. No distractions, no
+              social media, no multitasking.
+            </p>
           </div>
         </div>
 
-        <div class="card bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20">
+        <div
+          class="card bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20"
+        >
           <div class="card-body">
             <div class="flex items-center gap-3 mb-3">
               <div class="badge badge-accent badge-lg">3</div>
               <h3 class="card-title text-xl">Take a 5-minute break</h3>
             </div>
-            <p>Take a short break. Stand up, stretch, drink water. Let your mind relax.</p>
+            <p>
+              Take a short break. Stand up, stretch, drink water. Let your mind
+              relax.
+            </p>
           </div>
         </div>
 
-        <div class="card bg-gradient-to-br from-info/10 to-info/5 border border-info/20">
+        <div
+          class="card bg-gradient-to-br from-info/10 to-info/5 border border-info/20"
+        >
           <div class="card-body">
             <div class="flex items-center gap-3 mb-3">
               <div class="badge badge-info badge-lg">4</div>
               <h3 class="card-title text-xl">Repeat and long break</h3>
             </div>
-            <p>After 4 pomodoros, take a longer break of 15-30 minutes. You've earned it!</p>
+            <p>
+              After 4 pomodoros, take a longer break of 15-30 minutes. You've
+              earned it!
+            </p>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -85,55 +113,154 @@ import Layout from '../../layouts/Layout.astro';
     <section class="space-y-6">
       <h2 class="text-3xl font-bold text-center">App Features</h2>
       <div class="grid gap-6 md:grid-cols-3">
-        
         <div class="card bg-base-200 hover:shadow-xl transition-shadow">
-          <div class="card-body items-center text-center">
-            <div class="text-4xl mb-3">⏱️</div>
-            <h3 class="card-title">Smart Timer</h3>
-            <p>Automatically alternates between work and rest. Set your available time and start.</p>
+          <div class="card-body items-center text-center text-primary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mb-3"
+              ><circle cx="12" cy="12" r="10"></circle><polyline
+                points="12 6 12 12 16 14"></polyline></svg
+            >
+            <h3 class="card-title text-base-content">Smart Timer</h3>
+            <p class="text-base-content/80 text-sm">
+              Automatically alternates between work and rest. Set your available
+              time and start.
+            </p>
           </div>
         </div>
 
         <div class="card bg-base-200 hover:shadow-xl transition-shadow">
-          <div class="card-body items-center text-center">
-            <div class="text-4xl mb-3">🔔</div>
-            <h3 class="card-title">Notifications</h3>
-            <p>Get sound alerts when each session ends. Never lose your rhythm.</p>
+          <div class="card-body items-center text-center text-secondary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mb-3"
+              ><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path
+                d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg
+            >
+            <h3 class="card-title text-base-content">Notifications</h3>
+            <p class="text-base-content/80 text-sm">
+              Get sound alerts when each session ends. Never lose your rhythm.
+            </p>
           </div>
         </div>
 
         <div class="card bg-base-200 hover:shadow-xl transition-shadow">
-          <div class="card-body items-center text-center">
-            <div class="text-4xl mb-3">🎨</div>
-            <h3 class="card-title">Customizable Themes</h3>
-            <p>Light or dark mode. Choose the one that best suits your work environment.</p>
+          <div class="card-body items-center text-center text-accent">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mb-3"
+              ><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"
+              ></path></svg
+            >
+            <h3 class="card-title text-base-content">Detailed Stats</h3>
+            <p class="text-base-content/80 text-sm">
+              Visualize your weekly and daily performance. See how much real
+              time you spend on each task.
+            </p>
           </div>
         </div>
 
         <div class="card bg-base-200 hover:shadow-xl transition-shadow">
-          <div class="card-body items-center text-center">
-            <div class="text-4xl mb-3">🌐</div>
-            <h3 class="card-title">Multilingual</h3>
-            <p>Available in Spanish and English. Switch languages anytime.</p>
+          <div class="card-body items-center text-center text-info">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mb-3"
+              ><circle cx="12" cy="12" r="10"></circle><line
+                x1="2"
+                y1="12"
+                x2="22"
+                y2="12"></line><path
+                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+              ></path></svg
+            >
+            <h3 class="card-title text-base-content">Multilingual</h3>
+            <p class="text-base-content/80 text-sm">
+              Available in Spanish and English. Switch languages anytime.
+            </p>
           </div>
         </div>
 
         <div class="card bg-base-200 hover:shadow-xl transition-shadow">
-          <div class="card-body items-center text-center">
-            <div class="text-4xl mb-3">📱</div>
-            <h3 class="card-title">Responsive</h3>
-            <p>Works perfectly on mobile, tablet, and desktop. Take your productivity everywhere.</p>
+          <div class="card-body items-center text-center text-warning">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mb-3"
+              ><rect x="5" y="2" width="14" height="20" rx="2" ry="2"
+              ></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg
+            >
+            <h3 class="card-title text-base-content">Responsive</h3>
+            <p class="text-base-content/80 text-sm">
+              Works perfectly on mobile, tablet, and desktop. Take your
+              productivity everywhere.
+            </p>
           </div>
         </div>
 
         <div class="card bg-base-200 hover:shadow-xl transition-shadow">
-          <div class="card-body items-center text-center">
-            <div class="text-4xl mb-3">⚡</div>
-            <h3 class="card-title">Fast & Lightweight</h3>
-            <p>No installation, no registration. Open and start working immediately.</p>
+          <div class="card-body items-center text-center text-primary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="mb-3"
+              ><path
+                d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"
+              ></path><polyline points="17 21 17 13 7 13 7 21"
+              ></polyline><polyline points="7 3 7 8 15 8"></polyline></svg
+            >
+            <h3 class="card-title text-base-content">History & Sync</h3>
+            <p class="text-base-content/80 text-sm">
+              Save your progress automatically. Analyze your sessions and keep
+              track over time.
+            </p>
           </div>
         </div>
-
       </div>
     </section>
 
@@ -141,59 +268,139 @@ import Layout from '../../layouts/Layout.astro';
     <section class="space-y-6">
       <h2 class="text-3xl font-bold text-center">Benefits of Using Pomodoro</h2>
       <div class="grid gap-4 md:grid-cols-2">
-        
-        <div class="flex gap-4 items-start p-4 bg-base-200 rounded-lg">
-          <div class="text-2xl">✅</div>
+        <div class="flex gap-4 items-center p-4 bg-base-200 rounded-lg">
+          <div class="text-primary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><circle cx="12" cy="12" r="10"></circle><circle
+                cx="12"
+                cy="12"
+                r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg
+            >
+          </div>
           <div>
             <h3 class="font-bold text-lg mb-1">Improves concentration</h3>
-            <p class="text-base-content/80">Short intervals help you maintain focus without mental exhaustion.</p>
+            <p class="text-base-content/80">
+              Short intervals help you maintain focus without mental exhaustion.
+            </p>
           </div>
         </div>
 
-        <div class="flex gap-4 items-start p-4 bg-base-200 rounded-lg">
-          <div class="text-2xl">✅</div>
+        <div class="flex gap-4 items-center p-4 bg-base-200 rounded-lg">
+          <div class="text-secondary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path d="m12 14 4-4"></path><path
+                d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg
+            >
+          </div>
           <div>
             <h3 class="font-bold text-lg mb-1">Reduces procrastination</h3>
-            <p class="text-base-content/80">25 minutes is a manageable commitment. It's easier to start when you know it's temporary.</p>
+            <p class="text-base-content/80">
+              25 minutes is a manageable commitment. It's easier to start when
+              you know it's temporary.
+            </p>
           </div>
         </div>
 
-        <div class="flex gap-4 items-start p-4 bg-base-200 rounded-lg">
-          <div class="text-2xl">✅</div>
+        <div class="flex gap-4 items-center p-4 bg-base-200 rounded-lg">
+          <div class="text-accent">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path
+                d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3-4-4-6.5c-1 2.5-2 4.9-4 6.5s-3 3.5-3 5.5a7 7 0 0 0 7 7Z"
+              ></path></svg
+            >
+          </div>
           <div>
             <h3 class="font-bold text-lg mb-1">Prevents burnout</h3>
-            <p class="text-base-content/80">Regular breaks prevent exhaustion and keep your energy high.</p>
+            <p class="text-base-content/80">
+              Regular breaks prevent exhaustion and keep your energy high.
+            </p>
           </div>
         </div>
 
-        <div class="flex gap-4 items-start p-4 bg-base-200 rounded-lg">
-          <div class="text-2xl">✅</div>
+        <div class="flex gap-4 items-center p-4 bg-base-200 rounded-lg">
+          <div class="text-info">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              ><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"></path></svg
+            >
+          </div>
           <div>
             <h3 class="font-bold text-lg mb-1">Increases productivity</h3>
-            <p class="text-base-content/80">Working in short sprints makes you more efficient and time-aware.</p>
+            <p class="text-base-content/80">
+              Working in short sprints makes you more efficient and time-aware.
+            </p>
           </div>
         </div>
-
       </div>
     </section>
 
     <!-- CTA -->
     <section class="text-center space-y-6 py-8">
-      <div class="card bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 border border-primary/30">
+      <div
+        class="card bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 border border-primary/30"
+      >
         <div class="card-body">
-          <h2 class="card-title text-3xl justify-center mb-4">Ready to be more productive?</h2>
-          <p class="text-lg mb-6">Start your first Pomodoro now and experience the difference</p>
+          <h2 class="card-title text-3xl justify-center mb-4">
+            Ready to be more productive?
+          </h2>
+          <p class="text-lg mb-6">
+            Start your first Pomodoro now and experience the difference
+          </p>
           <div class="card-actions justify-center">
             <a href="/en" class="btn btn-primary btn-lg">
               Start Now
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
               </svg>
             </a>
           </div>
         </div>
       </div>
     </section>
-
   </div>
 </Layout>

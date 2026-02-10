@@ -13,7 +13,7 @@ export const ui = {
     'nav.home': 'Inicio',
     'nav.about': 'Acerca de',
     'nav.blog': 'Blog',
-    
+
     // Hero
     'hero.title': 'Domina tu tiempo',
     'hero.subtitle': 'Ya sea que estés, estudiando o creando, el método Pomodoro es tu mejor aliado.',
@@ -40,7 +40,7 @@ export const ui = {
     'timer.run.start': 'Inicio:',
     'timer.run.end': 'Fin Aprox:',
     'timer.run.finished': 'Terminado',
-    
+
     // Timer Setup (Specific)
     'timer.setup.cycles': 'ciclos',
     'timer.setup.summary': 'Resumen del Plan',
@@ -80,12 +80,19 @@ export const ui = {
     'auth.password.placeholder': '••••••••',
     'auth.error.generic': 'Ocurrió un error. Inténtalo de nuevo.',
     'auth.loading': 'Cargando...',
+
+    // Blog
+    'blog.title': 'Sinx Blog',
+    'blog.description': 'Estamos preparando el blog de Sinx Pomodoro. Muy pronto compartiremos consejos sobre productividad y enfoque.',
+    'blog.comingSoon': 'Próximamente más contenido',
+    'blog.body': 'Estamos preparando artículos increíbles sobre productividad, la técnica Pomodoro y cómo sacar el máximo provecho a tu tiempo de enfoque.',
+    'blog.back': 'Volver al Inicio',
   },
   en: {
     'nav.home': 'Home',
     'nav.about': 'About',
     'nav.blog': 'Blog',
-    
+
     // Hero
     'hero.title': 'Master your time',
     'hero.subtitle': 'Whether you are, studying or creating, the Pomodoro method is your best ally.',
@@ -112,7 +119,7 @@ export const ui = {
     'timer.run.start': 'Start:',
     'timer.run.end': 'End approx:',
     'timer.run.finished': 'Finished',
-    
+
     // Timer Setup (Specific)
     'timer.setup.cycles': 'cycles',
     'timer.setup.summary': 'Plan Summary',
@@ -152,5 +159,12 @@ export const ui = {
     'auth.password.placeholder': '••••••••',
     'auth.error.generic': 'An error occurred. Please try again.',
     'auth.loading': 'Loading...',
+
+    // Blog
+    'blog.title': 'Sinx Blog',
+    'blog.description': 'We are preparing the Sinx Pomodoro blog. Very soon we will share tips on productivity and focus.',
+    'blog.comingSoon': 'More content coming soon',
+    'blog.body': 'We are preparing amazing articles about productivity, the Pomodoro technique, and how to get the most out of your focus time.',
+    'blog.back': 'Back to Home',
   },
 } as const;
