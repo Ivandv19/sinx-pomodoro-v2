@@ -63,6 +63,11 @@ const jsonLdDescription = lang === 'en'
 
 			const applyTheme = (theme) => {
 				document.documentElement.setAttribute('data-theme', theme);
+				if (theme === 'business') {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
 				localStorage.setItem('theme', theme);
 				
 				// Sync checkbox state if it exists
@@ -78,22 +83,22 @@ const jsonLdDescription = lang === 'en'
 			document.documentElement.setAttribute('data-theme-initialized', 'true');
 
 			// 3. Event Listeners for Persistence (Runs on every navigation)
-			document.addEventListener('astro:page-load', () => {
+			const onPageLoad = () => {
 				const theme = getTheme();
+				applyTheme(theme);
+
 				const controller = document.querySelector('.theme-controller');
-				
 				if (controller) {
-					// Sync state
 					controller.checked = theme === 'business';
-					
-					// Add listener to save changes to localStorage
-					// note: DaisyUI handles the visual toggle via CSS, we just need to save state
 					controller.addEventListener('change', (e) => {
 						const newTheme = e.target.checked ? 'business' : 'nord';
 						applyTheme(newTheme);
 					});
 				}
-			});
+			};
+
+			document.addEventListener('astro:page-load', onPageLoad);
+			document.addEventListener('astro:after-swap', () => applyTheme(getTheme()));
 		</script>
 		
 		<meta name="description" content={description} />

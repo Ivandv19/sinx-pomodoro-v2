@@ -25,19 +25,19 @@ export default function HeroSection({ lang, mode }: Props) {
 
   return (
     <div className="text-center space-y-4 mb-10 animate-fade-in-up">
-      <h1 className="text-5xl font-extrabold bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent pb-2">
+      <h1 className="text-5xl md:text-6xl font-black bg-linear-to-r from-(--hero-title-from) to-(--hero-title-to) bg-clip-text text-transparent pb-3 tracking-tighter">
         {t('hero.title')}
       </h1>
 
-      <div className="text-xl text-base-content/80 max-w-2xl mx-auto flex flex-col gap-2">
+      <div className="text-xl text-base-content/70 max-w-2xl mx-auto font-medium leading-relaxed">
         <p>
           {t('hero.subtitle').split(',')[0]}{' '}
-          <span className="text-primary font-bold">{t('hero.span.coding')}</span>,{' '}
-          <span className="text-secondary font-bold">{t('hero.span.studying')}</span>{' '}
+          <span className="text-(--hero-coding) font-extrabold">{t('hero.span.coding')}</span>,{' '}
+          <span className="text-(--hero-studying) font-extrabold">{t('hero.span.studying')}</span>{' '}
           {lang === 'es' ? 'o' : 'or'}{' '}
-          <span className="text-accent font-bold">{t('hero.span.creating')}</span>
+          <span className="text-(--hero-creating) font-extrabold">{t('hero.span.creating')}</span>
         </p>
-        <p>
+        <p className="opacity-80">
           {lang === 'es' ? 'el método Pomodoro es tu mejor aliado.' : 'the Pomodoro method is your best ally.'}
         </p>
       </div>

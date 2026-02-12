@@ -1,20 +1,15 @@
 @import "tailwindcss";
 
-/* DaisyUI con temas claro (nord) y oscuro (business) */
 @plugin "daisyui" {
   themes: nord, business;
 }
 
-/* 
-  Sistema de estilos centralizado
-  Inspirado en arquitectura Flux
-*/
-
+/* ✅ 1. @theme PRIMERO */
 @theme {
   /* Fuente personalizada */
   --font-outfit: 'Outfit', sans-serif;
 
-  /* Colores naranjas para Pomodoro (custom variables) */
+  /* Colores naranjas para Pomodoro */
   --color-primary-500: #f97316;
   --color-primary-600: #ea580c;
   --color-primary-700: #c2410c;
@@ -28,20 +23,71 @@
   --color-long-400: #818cf8;
   --color-long-500: #6366f1;
   --color-long-600: #4f46e5;
-
-  /* Tokens para efecto glassmorphism (auth) */
-  --color-card-glass-bg: #ffffff1a;
-  --color-card-glass-border: #ffffff33;
-  --color-input-bg: #ffffff80;
-  --color-input-bg-dark: #ffffff0d;
-  --color-input-border: #cbd5e1;
-  --color-input-border-dark: #ffffff33;
 }
 
-/* Estilos base */
+/* ✅ 2. Tus variables custom DESPUÉS */
+[data-theme="nord"] {
+  --auth-bg-card: rgba(255, 255, 255, 0.85);
+  --auth-text: #0f172a;
+  --auth-text-secondary: #475569;
+  --auth-label: #64748b;
+  --auth-placeholder: #94a3b8;
+  --auth-border: rgba(226, 232, 240, 0.8);
+  --auth-input-bg: rgba(241, 245, 249, 0.5);
+  --auth-accent: #64748b;
+  --auth-accent-hover: #1e293b;
+  --auth-title-from: #2563eb;
+  --auth-title-to: #7c3aed;
+  --auth-btn-text: #ffffff;
+
+  /* Hero Vibrancy Tokens (Nord/Light) */
+  --hero-title-from: #3b82f6;
+  --hero-title-to: #ec4899;
+  --hero-coding: #2563eb;
+  --hero-studying: #db2777;
+  --hero-creating: #0d9488;
+
+  /* UI Cards (Nord) */
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="business"] {
+  --bg-page: #1d232a;
+  --auth-bg-card: rgba(30, 41, 59, 0.4);
+  --auth-text: #f1f5f9;
+  --auth-text-secondary: #94a3b8;
+  --auth-label: #94a3b8;
+  --auth-placeholder: #4b5563;
+  --auth-border: rgba(255, 255, 255, 0.1);
+  --auth-input-bg: rgba(255, 255, 255, 0.05);
+  --auth-accent: rgba(255, 255, 255, 0.7);
+  --auth-accent-hover: #ffffff;
+  --auth-title-from: #2563eb;
+  --auth-title-to: #7c3aed;
+  --auth-btn-text: #ffffff;
+
+  /* Hero Vibrancy Tokens (Business/Dark) */
+  --hero-title-from: #60a5fa;
+  --hero-title-to: #d946ef;
+  --hero-coding: #60a5fa;
+  --hero-studying: #f472b6;
+  --hero-creating: #2dd4bf;
+
+  /* UI Cards (Business) */
+  --card-bg: rgba(30, 41, 59, 0.4);
+  --card-border: rgba(255, 255, 255, 0.08);
+}
+
+/* ✅ 3. Transición ÚNICA */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
 body {
   font-family: var(--font-outfit);
-  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+  background-color: var(--bg-page);
+  color: var(--auth-text);
 }
 
 /* Títulos usan fuente del sistema */
