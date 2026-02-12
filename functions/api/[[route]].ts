@@ -4,20 +4,80 @@ import { handle } from 'hono/cloudflare-pages';
 import { auth } from '../../src/lib/auth';
 
 type Bindings = {
-  DB: D1Database;
-  LUCIA_KV: KVNamespace;
-  BETTER_AUTH_SECRET: string;
-  BETTER_AUTH_URL: string;
-  TURNSTILE_SECRET_KEY: string;
-  HASH_SERVICE_URL: string;
-  HASH_SERVICE_API_KEY: string;
+    DB: D1Database;
+    LUCIA_KV: KVNamespace;
+    BETTER_AUTH_SECRET: string;
+    BETTER_AUTH_URL: string;
+    TURNSTILE_SECRET_KEY: string;
+    HASH_SERVICE_URL: string;
+    HASH_SERVICE_API_KEY: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>().basePath('/api');
 
-// Better Auth integration
-app.on(['POST', 'GET'], '/auth/**', async (c) => {
-  return auth(c.env.DB, c.env.LUCIA_KV, c.env).handler(c.req.raw);
+// Helper para rate limiting usando KV
+// Límite predeterminado: 5 intentos por 15 minutos
+const checkRateLimit = async (kv: KVNamespace, ip: string, maxAttempts = 5, windowMinutes = 15) => {
+    const key = `rate-limit:login:${ip}`;
+    const now = Date.now();
+
+    // Obtener estado actual
+    const data = await kv.get<{ attempts: number, resetAt: number }>(key, 'json');
+
+    // Si no existe o expiró, resetear
+    if (!data || now > data.resetAt) {
+        await kv.put(key, JSON.stringify({
+            attempts: 1,
+            resetAt: now + (windowMinutes * 60 * 1000)
+        }), { expirationTtl: windowMinutes * 60 });
+        return true; // Permitido
+    }
+
+    // Si excedió intentos
+    if (data.attempts >= maxAttempts) {
+        return false; // Bloqueado
+    }
+
+    // Incrementar intentos
+    await kv.put(key, JSON.stringify({
+        attempts: data.attempts + 1,
+        resetAt: data.resetAt
+    }), { expirationTtl: Math.ceil((data.resetAt - now) / 1000) });
+
+    return true; // Permitido
+};
+
+app.all("*", async (c) => {
+    // Manejar rate limiting para endpoints de autenticación sensibles
+    if (c.req.path.includes("/sign-in/email") || c.req.path.includes("/sign-up/email")) {
+        const kv = c.env.LUCIA_KV;
+        if (kv) {
+            const ip = c.req.header('cf-connecting-ip') || 'unknown';
+            const allowed = await checkRateLimit(kv, ip);
+
+            if (!allowed) {
+                return c.json({
+                    error: "Demasiados intentos. Por favor intente de nuevo en 15 minutos."
+                }, 429);
+            }
+        }
+    }
+
+    // Extraer token de Turnstile de los headers si existe
+    const turnstileToken = c.req.header('x-turnstile-token');
+
+    // Pasar token y contexto a auth
+    const authInstance = auth(c.env.DB, c.env.LUCIA_KV, c.env);
+
+    // Si hay token, agregarlo al request para que los hooks lo vean
+    let requestHandler = c.req.raw;
+    if (turnstileToken) {
+        requestHandler = new Request(c.req.raw, {
+            headers: c.req.raw.headers
+        });
+    }
+
+    return auth(c.env.DB, c.env.LUCIA_KV, c.env).handler(c.req.raw);
 });
 
 // Helper for session
@@ -34,7 +94,7 @@ app.post('/pomodoros', async (c) => {
 
     const body = await c.req.json();
     const { type, minutes, createdAt } = body;
-    
+
     await c.env.DB.prepare(
         "INSERT INTO pomodoro_log (user_id, type, minutes, created_at) VALUES (?, ?, ?, ?)"
     ).bind(session.user.id, type, minutes, createdAt).run();

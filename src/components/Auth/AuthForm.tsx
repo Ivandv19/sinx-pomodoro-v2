@@ -1,8 +1,11 @@
 /** @jsxImportSource react */
 import React, { useState, useRef } from 'react';
-import { signIn, signUp, turnstileToken as globalTurnstileToken } from '../../lib/auth-client';
-import { Turnstile } from '@marsidev/react-turnstile';
+import { signIn, signUp } from '../../lib/auth-client';
+import { Turnstile, type TurnstileInstance } from '@marsidev/react-turnstile';
 
+/**
+ * Interfaz para las traducciones pasadas desde Astro
+ */
 interface Props {
   translations: {
     loginTitle: string;
@@ -23,56 +26,88 @@ interface Props {
   redirectPath: string;
 }
 
+/**
+ * Componente AuthForm: Maneja tanto el inicio de sesión como el registro.
+ * Utiliza Better Auth para la lógica y Turnstile para la verificación de seguridad.
+ */
 export default function AuthForm({ translations, redirectPath }: Props) {
-  const [isLogin, setIsLogin] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const turnstileRef = useRef<any>(null);
+  // --- Estados del Componente ---
+  const [isLogin, setIsLogin] = useState(true); // Controla si estamos en modo Login o Signup
+  const [loading, setLoading] = useState(false); // Estado de carga durante las peticiones
+  const [error, setError] = useState<string | null>(null); // Mensajes de error para el usuario
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null); // Token de verificación de Cloudflare
+  const [showPassword, setShowPassword] = useState(false); // Controla la visibilidad de la contraseña
+  const turnstileRef = useRef<TurnstileInstance>(null); // Referencia para controlar el widget de Turnstile
 
+  /**
+   * Cambia entre el modo de inicio de sesión y el de registro.
+   * Resetea errores y tokens para evitar estados inconsistentes.
+   */
   const toggleMode = () => {
     setIsLogin(!isLogin);
     setError(null);
     setTurnstileToken(null);
-    globalTurnstileToken.current = null;
     turnstileRef.current?.reset();
   };
 
+  /**
+   * Maneja el envío del formulario.
+   * Realiza validaciones básicas y llama a las funciones de Better Auth.
+   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
 
+    // Verificación obligatoria de Turnstile en el cliente
     if (!turnstileToken) {
-      setError('Please complete the security verification');
+      setError('Por favor completa la verificación de seguridad');
       return;
     }
 
-    globalTurnstileToken.current = turnstileToken;
     setLoading(true);
 
+    // Obtención de datos del formulario de forma nativa
     const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
 
     try {
       if (isLogin) {
-        const { error } = await signIn.email({ email, password });
+        // --- Proceso de Inicio de Sesión ---
+        const { error } = await signIn.email({
+          email,
+          password,
+          fetchOptions: {
+            headers: {
+              // El token se pasa en el header para ser procesado por el hook en el servidor
+              'x-turnstile-token': turnstileToken
+            }
+          }
+        });
         if (error) throw new Error(error.message || translations.genericError);
       } else {
+        // --- Proceso de Registro ---
         const { error } = await signUp.email({
           email,
           password,
-          name: email.split('@')[0] || 'User',
+          name: email.split('@')[0] || 'User', // Nombre por defecto basado en el email
+          fetchOptions: {
+            headers: {
+              'x-turnstile-token': turnstileToken
+            }
+          }
         });
         if (error) throw new Error(error.message || translations.genericError);
       }
+
+      // Si todo sale bien, redirigir a la ruta especificada
       window.location.href = redirectPath;
+
     } catch (err: any) {
+      // Manejo de errores: Mostramos el mensaje y reseteamos el CAPTCHA por seguridad
       setError(err.message);
       setLoading(false);
       setTurnstileToken(null);
-      globalTurnstileToken.current = null;
       turnstileRef.current?.reset();
     }
   };
@@ -80,6 +115,7 @@ export default function AuthForm({ translations, redirectPath }: Props) {
   return (
     <div className="max-w-md w-full space-y-8 bg-base-100/50 backdrop-blur-sm border border-base-200 p-10 rounded-3xl shadow-2xl animate-fade-in transition-all duration-300">
 
+      {/* Cabecera del Formulario */}
       <div className="text-center space-y-2">
         <h2 className="text-4xl font-black bg-linear-to-r from-(--auth-title-from) to-(--auth-title-to) bg-clip-text text-transparent font-[Outfit] tracking-tight py-1">
           {isLogin ? translations.loginTitle : translations.signupTitle}
@@ -98,6 +134,7 @@ export default function AuthForm({ translations, redirectPath }: Props) {
 
       <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
         <div className="space-y-4">
+          {/* Campo de Correo Electrónico */}
           <div className="group">
             <label htmlFor="email-address" className="block text-xs font-bold text-(--auth-label) uppercase tracking-widest mb-1.5 ml-1">
               {translations.emailLabel}
@@ -118,6 +155,7 @@ export default function AuthForm({ translations, redirectPath }: Props) {
             </div>
           </div>
 
+          {/* Campo de Contraseña con opción de visualización */}
           <div className="group">
             <label htmlFor="password" ext-id="password-label" className="block text-xs font-bold text-(--auth-label) uppercase tracking-widest mb-1.5 ml-1">
               {translations.passwordLabel}
@@ -139,7 +177,7 @@ export default function AuthForm({ translations, redirectPath }: Props) {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-0 inset-y-0 flex items-center pr-4 text-(--auth-placeholder) hover:text-(--auth-accent) transition-colors cursor-pointer z-20"
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
               >
                 {showPassword ? (
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
@@ -151,12 +189,14 @@ export default function AuthForm({ translations, redirectPath }: Props) {
           </div>
         </div>
 
+        {/* Sección de Mensajes de Error */}
         {error && (
           <div className="text-red-600 dark:text-red-400 shadow-md text-xs font-bold text-center animate-bounce bg-red-100 dark:bg-red-400/10 py-2.5 px-4 rounded-xl border border-red-300 dark:border-red-400/20">
             {error}
           </div>
         )}
 
+        {/* Widget de Verificación Turnstile */}
         <div className="w-full flex justify-center py-2">
           <Turnstile
             ref={turnstileRef}
@@ -168,15 +208,16 @@ export default function AuthForm({ translations, redirectPath }: Props) {
             onSuccess={(token) => setTurnstileToken(token)}
             onError={() => {
               setTurnstileToken(null);
-              setError('Security verification failed. Please try again.');
+              setError('La verificación de seguridad falló. Por favor intenta de nuevo.');
             }}
             onExpire={() => {
               setTurnstileToken(null);
-              setError('Security verification expired. Please try again.');
+              setError('La verificación de seguridad expiró. Por favor intenta de nuevo.');
             }}
           />
         </div>
 
+        {/* Botón de Envío */}
         <div>
           <button
             type="submit"
