@@ -15,6 +15,25 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>().basePath('/api');
 
+// Manejador global de errores para capturar detalles en producción
+app.onError((err, c) => {
+    console.error(`❌ Error en API [${c.req.method}] ${c.req.path}:`, err);
+    return c.json({
+        error: "Error interno del servidor",
+        message: err.message,
+        stack: c.env.BETTER_AUTH_URL?.includes('localhost') ? err.stack : undefined // Solo mostrar stack en dev o si es local
+    }, 500);
+});
+
+// Middleware de depuración para ver qué bindings llegan
+app.use('*', async (c, next) => {
+    console.log(`[${new Date().toISOString()}] Request: ${c.req.method} ${c.req.path}`);
+    if (!c.env.DB) console.error("⚠️ DB binding no detectado");
+    if (!c.env.LUCIA_KV) console.error("⚠️ KV binding no detectado");
+    if (!c.env.BETTER_AUTH_SECRET) console.error("⚠️ BETTER_AUTH_SECRET no detectado");
+    await next();
+});
+
 // Helper para rate limiting usando KV
 // Límite predeterminado: 5 intentos por 15 minutos
 const checkRateLimit = async (kv: KVNamespace, ip: string, maxAttempts = 5, windowMinutes = 15) => {
@@ -65,6 +84,11 @@ app.all("*", async (c) => {
 
     // Extraer token de Turnstile de los headers si existe
     const turnstileToken = c.req.header('x-turnstile-token');
+    if (turnstileToken) {
+        console.log(`[API] Token Turnstile detectado (${turnstileToken.substring(0, 10)}...)`);
+    } else {
+        console.log(`[API] No se detectó token Turnstile en los headers`);
+    }
 
     // Pasar token y contexto a auth
     const authInstance = auth(c.env.DB, c.env.LUCIA_KV, c.env);
@@ -72,12 +96,16 @@ app.all("*", async (c) => {
     // Si hay token, agregarlo al request para que los hooks lo vean
     let requestHandler = c.req.raw;
     if (turnstileToken) {
-        requestHandler = new Request(c.req.raw, {
-            headers: c.req.raw.headers
-        });
+        // Clonamos el request e inyectamos el header si no está (doble seguridad)
+        const headers = new Headers(c.req.raw.headers);
+        if (!headers.has('x-turnstile-token')) {
+            headers.set('x-turnstile-token', turnstileToken);
+        }
+        requestHandler = new Request(c.req.raw, { headers });
+        console.log(`[API] RequestHandler clonado con token Turnstile`);
     }
 
-    return auth(c.env.DB, c.env.LUCIA_KV, c.env).handler(c.req.raw);
+    return authInstance.handler(requestHandler);
 });
 
 // Helper for session

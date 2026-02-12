@@ -38,8 +38,11 @@ export const auth = (db: D1Database, kv: KVNamespace | null, env?: {
 
     // Intentar recuperar de la cache para mejorar el tiempo de respuesta (Warm Start)
     if (authInstances.has(cacheKey)) {
+        console.log(`[Auth] Reusando instancia para cacheKey: ${cacheKey.replace(/-[^-]+$/, '-*****')}`);
         return authInstances.get(cacheKey)!;
     }
+
+    console.log(`[Auth] Creando nueva instancia. URL: ${env?.BETTER_AUTH_URL || 'n/a'}`);
 
     /**
      * Gestión de Memoria (Evicción LRU Simple)
