@@ -70,58 +70,16 @@ const checkRateLimit = async (kv: KVNamespace, ip: string, maxAttempts = 5, wind
     return true; // Permitido
 };
 
-app.all("*", async (c) => {
-    // Manejar rate limiting para endpoints de autenticación sensibles
-    if (c.req.path.includes("/sign-in/email") || c.req.path.includes("/sign-up/email")) {
-        const kv = c.env.LUCIA_KV;
-        if (kv) {
-            const ip = c.req.header('cf-connecting-ip') || 'unknown';
-            const allowed = await checkRateLimit(kv, ip);
-
-            if (!allowed) {
-                return c.json({
-                    error: "Demasiados intentos. Por favor intente de nuevo en 15 minutos."
-                }, 429);
-            }
-        }
-    }
-
-    // Extraer token de Turnstile de los headers si existe
-    const turnstileToken = c.req.header('x-turnstile-token');
-    /*
-    if (turnstileToken) {
-        console.log(`[API] Token Turnstile detectado (${turnstileToken.substring(0, 10)}...)`);
-    } else {
-        console.log(`[API] No se detectó token Turnstile en los headers`);
-    }
-    */
-
-    // Pasar token y contexto a auth
-    const authInstance = auth(c.env.DB, c.env.LUCIA_KV, c.env);
-
-    // Si hay token, agregarlo al request para que los hooks lo vean
-    let requestHandler = c.req.raw;
-    if (turnstileToken) {
-        // Clonamos el request e inyectamos el header si no está (doble seguridad)
-        const headers = new Headers(c.req.raw.headers);
-        if (!headers.has('x-turnstile-token')) {
-            headers.set('x-turnstile-token', turnstileToken);
-        }
-        requestHandler = new Request(c.req.raw, { headers });
-        // console.log(`[API] RequestHandler clonado con token Turnstile`);
-    }
-
-    return authInstance.handler(requestHandler);
-});
-
-// Helper for session
+// Helper para obtener la sesión actual
 const getSession = async (c: any) => {
     return await auth(c.env.DB, c.env.LUCIA_KV, c.env).api.getSession({
         headers: c.req.raw.headers
     });
 };
 
-// Pomodoro Endpoints
+// --- ENDPOINTS ESPECÍFICOS DE POMODORO ---
+// Deben ir ANTES del catch-all (*) para no ser interceptados por Better Auth
+
 app.post('/pomodoros', async (c) => {
     const session = await getSession(c);
     if (!session) return c.json({ error: 'Unauthorized' }, 401);
@@ -149,6 +107,45 @@ app.get('/pomodoros', async (c) => {
         startTime: new Date(row.createdAt - (row.minutes * 60000)).toISOString(),
         endTime: new Date(row.createdAt).toISOString()
     })));
+});
+
+// --- MANEJADOR DE AUTENTICACIÓN (Better Auth) ---
+// Actúa como un catch-all para todas las rutas de /api/auth/*
+
+app.all("*", async (c) => {
+    // Manejar rate limiting para endpoints de autenticación sensibles
+    if (c.req.path.includes("/sign-in/email") || c.req.path.includes("/sign-up/email")) {
+        const kv = c.env.LUCIA_KV;
+        if (kv) {
+            const ip = c.req.header('cf-connecting-ip') || 'unknown';
+            const allowed = await checkRateLimit(kv, ip);
+
+            if (!allowed) {
+                return c.json({
+                    error: "Demasiados intentos. Por favor intente de nuevo en 15 minutos."
+                }, 429);
+            }
+        }
+    }
+
+    // Extraer token de Turnstile de los headers si existe
+    const turnstileToken = c.req.header('x-turnstile-token');
+
+    // Pasar token y contexto a auth
+    const authInstance = auth(c.env.DB, c.env.LUCIA_KV, c.env);
+
+    // Si hay token, agregarlo al request para que los hooks lo vean
+    let requestHandler = c.req.raw;
+    if (turnstileToken) {
+        // Clonamos el request e inyectamos el header si no está (doble seguridad)
+        const headers = new Headers(c.req.raw.headers);
+        if (!headers.has('x-turnstile-token')) {
+            headers.set('x-turnstile-token', turnstileToken);
+        }
+        requestHandler = new Request(c.req.raw, { headers });
+    }
+
+    return authInstance.handler(requestHandler);
 });
 
 export const onRequest = handle(app);
