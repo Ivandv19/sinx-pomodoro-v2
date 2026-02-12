@@ -4,29 +4,29 @@
   themes: nord, business;
 }
 
-/* ✅ 1. @theme PRIMERO */
+/* ========== VARIABLES GLOBALES ========== */
 @theme {
-  /* Fuente personalizada */
   --font-outfit: 'Outfit', sans-serif;
 
-  /* Colores naranjas para Pomodoro */
+  /* Pomodoro - naranjas */
   --color-primary-500: #f97316;
   --color-primary-600: #ea580c;
   --color-primary-700: #c2410c;
 
-  /* Colores para sesiones cortas (verdes) */
+  /* Sesiones cortas - verdes */
   --color-short-400: #34d399;
   --color-short-500: #10b981;
   --color-short-600: #059669;
 
-  /* Colores para sesiones largas (índigos) */
+  /* Sesiones largas - índigos */
   --color-long-400: #818cf8;
   --color-long-500: #6366f1;
   --color-long-600: #4f46e5;
 }
 
-/* ✅ 2. Tus variables custom DESPUÉS */
+/* ========== TEMA NORD (CLARO) ========== */
 [data-theme="nord"] {
+  /* Registro / Login */
   --auth-bg-card: rgba(255, 255, 255, 0.85);
   --auth-text: #0f172a;
   --auth-text-secondary: #475569;
@@ -40,20 +40,22 @@
   --auth-title-to: #7c3aed;
   --auth-btn-text: #ffffff;
 
-  /* Hero Vibrancy Tokens (Nord/Light) */
+  /* Hero */
   --hero-title-from: #3b82f6;
   --hero-title-to: #ec4899;
   --hero-coding: #2563eb;
   --hero-studying: #db2777;
   --hero-creating: #0d9488;
 
-  /* UI Cards (Nord) */
+  /* Cards */
   --card-bg: rgba(255, 255, 255, 0.7);
   --card-border: rgba(0, 0, 0, 0.05);
 }
 
+/* ========== TEMA BUSINESS (OSCURO) ========== */
 [data-theme="business"] {
   --bg-page: #1d232a;
+  /* Registro / Login */
   --auth-bg-card: rgba(30, 41, 59, 0.4);
   --auth-text: #f1f5f9;
   --auth-text-secondary: #94a3b8;
@@ -67,19 +69,19 @@
   --auth-title-to: #7c3aed;
   --auth-btn-text: #ffffff;
 
-  /* Hero Vibrancy Tokens (Business/Dark) */
+  /* Hero */
   --hero-title-from: #60a5fa;
   --hero-title-to: #d946ef;
   --hero-coding: #60a5fa;
   --hero-studying: #f472b6;
   --hero-creating: #2dd4bf;
 
-  /* UI Cards (Business) */
+  /* Cards */
   --card-bg: rgba(30, 41, 59, 0.4);
   --card-border: rgba(255, 255, 255, 0.08);
 }
 
-/* ✅ 3. Transición ÚNICA */
+/* ========== TRANSICIÓN ÚNICA ========== */
 * {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
@@ -90,17 +92,18 @@ body {
   color: var(--auth-text);
 }
 
-/* Títulos usan fuente del sistema */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Animación de entrada */
+/* ========== ANIMACIONES ========== */
+
+/* Desplazamiento suave hacia arriba al entrar */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -113,12 +116,14 @@ h6 {
   }
 }
 
+/* Clase utilidad para aplicar la animación de entrada */
 .animate-fade-in-up {
   opacity: 0;
   animation: fadeInUp 0.6s ease-out forwards;
 }
 
-/* Delays */
+/* ========== DELAYS (RETRASOS) ========== */
+/* Útiles para escalonar la entrada de elementos en lista */
 .animate-delay-100 {
   animation-delay: 100ms;
 }
@@ -143,7 +148,7 @@ h6 {
   }
 }
 
-/* Scrollbars */
+/* ========== SCROLLBARS ========== */
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
