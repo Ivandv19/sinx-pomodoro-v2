@@ -313,10 +313,7 @@ export default function ResetPasswordForm({
 						className="h-14 w-full text-sm font-black rounded-2xl shadow-lg hover:scale-[1.02] active:scale-95 transition-transform disabled:opacity-50"
 					>
 						{loading ? (
-							<Icon
-								icon="lucide:loader-circle"
-								className="animate-spin"
-							/>
+							<Icon icon="lucide:loader-circle" className="animate-spin" />
 						) : (
 							t("auth.reset.btn")
 						)}

@@ -91,7 +91,9 @@ export default function TimerView(_props: TimerViewProps) {
 	const [showComplete, setShowComplete] = useState(false);
 	const [showInterrupt, setShowInterrupt] = useState(haySesionGuardada);
 	const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-	const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+		undefined,
+	);
 	const startTimeRef = useRef(initialStartTime);
 
 	const tarea =
@@ -269,10 +271,30 @@ export default function TimerView(_props: TimerViewProps) {
 						}}
 					/>
 					{/* Esquinas decorativas */}
-					<circle cx="140" cy="20" r="3.5" className="fill-muted-foreground/20" />
-					<circle cx="260" cy="140" r="3.5" className="fill-muted-foreground/20" />
-					<circle cx="140" cy="260" r="3.5" className="fill-muted-foreground/20" />
-					<circle cx="20" cy="140" r="3.5" className="fill-muted-foreground/20" />
+					<circle
+						cx="140"
+						cy="20"
+						r="3.5"
+						className="fill-muted-foreground/20"
+					/>
+					<circle
+						cx="260"
+						cy="140"
+						r="3.5"
+						className="fill-muted-foreground/20"
+					/>
+					<circle
+						cx="140"
+						cy="260"
+						r="3.5"
+						className="fill-muted-foreground/20"
+					/>
+					<circle
+						cx="20"
+						cy="140"
+						r="3.5"
+						className="fill-muted-foreground/20"
+					/>
 				</svg>
 
 				{/* Tiempo restante */}

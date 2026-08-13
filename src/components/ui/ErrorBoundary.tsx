@@ -49,10 +49,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 							<div className="text-4xl">💥</div>
 							<h2 className="text-xl font-bold">{t("error.title")}</h2>
 							<p className="text-sm opacity-70">{t("error.message")}</p>
-							<Button
-								type="button"
-								onClick={() => window.location.reload()}
-							>
+							<Button type="button" onClick={() => window.location.reload()}>
 								{t("error.reload")}
 							</Button>
 						</div>

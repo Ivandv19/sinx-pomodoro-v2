@@ -61,12 +61,7 @@ export default function CompleteDialog({
 					>
 						{t("task.complete.no")}
 					</Button>
-					<Button
-						type="button"
-						size="sm"
-						className="px-6"
-						onClick={onComplete}
-					>
+					<Button type="button" size="sm" className="px-6" onClick={onComplete}>
 						{t("task.complete.yes")}
 					</Button>
 				</div>

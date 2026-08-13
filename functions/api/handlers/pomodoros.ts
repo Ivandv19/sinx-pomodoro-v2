@@ -105,10 +105,7 @@ export function registerPomodoros(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				.first<StatsResponse>();
 
 			// 5. Responde con las estadísticas
-			return c.json(
-				{ data: stats ?? { total: 0, totalTime: 0 } },
-				200,
-			);
+			return c.json({ data: stats ?? { total: 0, totalTime: 0 } }, 200);
 		} catch (err) {
 			console.error("[Pomodoros] Error al obtener stats:", err);
 			return c.json({ error: "Error al obtener estadísticas" }, 500);

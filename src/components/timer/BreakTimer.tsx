@@ -30,7 +30,9 @@ export default function BreakTimer(_props: BreakTimerProps) {
 	const totalSeconds = (breakActivo?.minutesPlanned ?? 5) * 60;
 	const [timeLeft, setTimeLeft] = useState(totalSeconds);
 	const [isDone, setIsDone] = useState(false);
-	const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
+	const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(
+		undefined,
+	);
 
 	// Effect del temporizador de descanso: descuenta cada segundo
 	useEffect(() => {
@@ -74,7 +76,9 @@ export default function BreakTimer(_props: BreakTimerProps) {
 						✓
 					</div>
 					<h2 className="text-3xl font-black">{t("break.done_title")}</h2>
-					<p className="text-muted-foreground text-sm">{t("break.done_desc")}</p>
+					<p className="text-muted-foreground text-sm">
+						{t("break.done_desc")}
+					</p>
 					<Button
 						type="button"
 						onClick={handleContinue}
@@ -137,10 +141,30 @@ export default function BreakTimer(_props: BreakTimerProps) {
 						}}
 					/>
 					{/* Esquinas decorativas */}
-					<circle cx="140" cy="20" r="3.5" className="fill-muted-foreground/20" />
-					<circle cx="260" cy="140" r="3.5" className="fill-muted-foreground/20" />
-					<circle cx="140" cy="260" r="3.5" className="fill-muted-foreground/20" />
-					<circle cx="20" cy="140" r="3.5" className="fill-muted-foreground/20" />
+					<circle
+						cx="140"
+						cy="20"
+						r="3.5"
+						className="fill-muted-foreground/20"
+					/>
+					<circle
+						cx="260"
+						cy="140"
+						r="3.5"
+						className="fill-muted-foreground/20"
+					/>
+					<circle
+						cx="140"
+						cy="260"
+						r="3.5"
+						className="fill-muted-foreground/20"
+					/>
+					<circle
+						cx="20"
+						cy="140"
+						r="3.5"
+						className="fill-muted-foreground/20"
+					/>
 				</svg>
 
 				{/* Tiempo restante */}

@@ -178,7 +178,10 @@ export default function TaskSelector({
 							{t("task.selector.pending")}
 						</h3>
 						{/* Badge de cantidad */}
-						<Badge variant="default" className="rounded-full px-2.5 py-1 font-bold">
+						<Badge
+							variant="default"
+							className="rounded-full px-2.5 py-1 font-bold"
+						>
 							{pendientes.length}
 						</Badge>
 					</div>
@@ -216,64 +219,72 @@ export default function TaskSelector({
 								<div className="flex items-center gap-2 border-t border-border/50 pt-3 sm:border-0 sm:pt-0 justify-end">
 									{/* Iniciar Pomodoro */}
 									<TooltipProvider>
-							<Tooltip>
-								<TooltipTrigger
-									render={
-										<Button
-											type="button"
-											onClick={() => onSelectTask(tarea.id)}
-											size="icon-sm"
-											className="hover:scale-110 transition-transform"
-											aria-label={t("task.tooltip.start")}
-										>
-											<Icon
-												icon="lucide:play"
-												className="w-4 h-4 fill-current ml-0.5"
+										<Tooltip>
+											<TooltipTrigger
+												render={
+													<Button
+														type="button"
+														onClick={() => onSelectTask(tarea.id)}
+														size="icon-sm"
+														className="hover:scale-110 transition-transform"
+														aria-label={t("task.tooltip.start")}
+													>
+														<Icon
+															icon="lucide:play"
+															className="w-4 h-4 fill-current ml-0.5"
+														/>
+													</Button>
+												}
 											/>
-										</Button>
-									}
-								/>
-								<TooltipContent>{t("task.tooltip.start")}</TooltipContent>
-							</Tooltip>
+											<TooltipContent>{t("task.tooltip.start")}</TooltipContent>
+										</Tooltip>
 
-							<Tooltip>
-								<TooltipTrigger
-									render={
-										<Button
-											type="button"
-											onClick={() =>
-												updateTarea(tarea.id, { estado: "done" }, isLoggedIn)
-											}
-											variant="outline"
-											size="icon-sm"
-											className="text-success hover:scale-110 hover:text-white hover:bg-success transition-transform"
-											aria-label={t("task.tooltip.complete")}
-										>
-											<Icon icon="lucide:check" className="w-4 h-4" />
-										</Button>
-									}
-								/>
-								<TooltipContent>{t("task.tooltip.complete")}</TooltipContent>
-							</Tooltip>
+										<Tooltip>
+											<TooltipTrigger
+												render={
+													<Button
+														type="button"
+														onClick={() =>
+															updateTarea(
+																tarea.id,
+																{ estado: "done" },
+																isLoggedIn,
+															)
+														}
+														variant="outline"
+														size="icon-sm"
+														className="text-success hover:scale-110 hover:text-white hover:bg-success transition-transform"
+														aria-label={t("task.tooltip.complete")}
+													>
+														<Icon icon="lucide:check" className="w-4 h-4" />
+													</Button>
+												}
+											/>
+											<TooltipContent>
+												{t("task.tooltip.complete")}
+											</TooltipContent>
+										</Tooltip>
 
-							<Tooltip>
-								<TooltipTrigger
-									render={
-										<Button
-											type="button"
-											onClick={() => deleteTarea(tarea.id, isLoggedIn)}
-											variant="outline"
-											size="icon-sm"
-											className="text-destructive hover:scale-110 hover:text-white hover:bg-destructive transition-transform"
-											aria-label={t("task.tooltip.delete")}
-										>
-											<Icon icon="lucide:trash-2" className="w-4 h-4" />
-										</Button>
-									}
-								/>
-								<TooltipContent>{t("task.tooltip.delete")}</TooltipContent>
-							</Tooltip>
-						</TooltipProvider>
+										<Tooltip>
+											<TooltipTrigger
+												render={
+													<Button
+														type="button"
+														onClick={() => deleteTarea(tarea.id, isLoggedIn)}
+														variant="outline"
+														size="icon-sm"
+														className="text-destructive hover:scale-110 hover:text-white hover:bg-destructive transition-transform"
+														aria-label={t("task.tooltip.delete")}
+													>
+														<Icon icon="lucide:trash-2" className="w-4 h-4" />
+													</Button>
+												}
+											/>
+											<TooltipContent>
+												{t("task.tooltip.delete")}
+											</TooltipContent>
+										</Tooltip>
+									</TooltipProvider>
 								</div>
 							</div>
 						))}

@@ -28,7 +28,7 @@ export default function PomodoroManager({ lang = "es" }: PomodoroManagerProps) {
 		selectTarea,
 		pomodoroActivo,
 		breakActivo,
-iniciar,
+		iniciar,
 		initPomodoros,
 		setLang,
 		toasts,

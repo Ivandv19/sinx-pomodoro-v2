@@ -116,10 +116,7 @@ export default function ForgotPasswordForm({
 						className="h-12 w-full rounded-xl font-bold"
 					>
 						{loading ? (
-							<Icon
-								icon="lucide:loader-circle"
-								className="animate-spin"
-							/>
+							<Icon icon="lucide:loader-circle" className="animate-spin" />
 						) : (
 							t("auth.forgot.btn")
 						)}
