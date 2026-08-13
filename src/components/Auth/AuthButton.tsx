@@ -2,6 +2,8 @@
 import { Icon } from "@iconify/react";
 import { authClient } from "../../lib/auth-client";
 import { useStore } from "../../stores/store";
+import { Button, buttonVariants } from "../ui/button";
+import { cn } from "../../lib/utils";
 
 interface Props {
 	loginText: string;
@@ -21,30 +23,38 @@ export default function AuthButton({ loginText, logoutText, loginUrl }: Props) {
 
 	if (sessionLoading) {
 		return (
-			<div className="btn btn-ghost btn-sm">
-				<span className="loading loading-spinner loading-xs"></span>
-			</div>
+			<Button variant="ghost" size="sm" disabled>
+				<Icon icon="lucide:loader-circle" className="animate-spin" />
+			</Button>
 		);
 	}
 
 	if (isLoggedIn && user) {
 		return (
-			<button
+			<Button
 				type="button"
+				variant="ghost"
+				size="sm"
+				className="gap-2 px-3 group"
 				onClick={handleLogout}
-				className="btn btn-ghost btn-sm gap-2 px-3 group"
 			>
 				<Icon
 					icon="lucide:log-out"
 					className="w-4 h-4 group-hover:text-primary transition-colors"
 				/>
 				<span>{logoutText}</span>
-			</button>
+			</Button>
 		);
 	}
 
 	return (
-		<a href={loginUrl} className="btn btn-ghost btn-sm gap-2 px-3 group">
+		<a
+			href={loginUrl}
+			className={cn(
+				buttonVariants({ variant: "ghost", size: "sm" }),
+				"gap-2 px-3 group",
+			)}
+		>
 			<Icon
 				icon="lucide:log-in"
 				className="w-4 h-4 group-hover:text-primary transition-colors"

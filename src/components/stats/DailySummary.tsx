@@ -32,7 +32,7 @@ export default function DailySummary({
 	return (
 		<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-up">
 			{/* Tarjeta Izquierda: Totales */}
-			<div className="bg-base-100/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-base-200/60 shadow-xl flex flex-col justify-center items-center text-center">
+			<div className="bg-card/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-border/60 shadow-xl flex flex-col justify-center items-center text-center">
 				{/* Fecha actual */}
 				<span className="text-xs font-bold uppercase opacity-60 mb-2 tracking-widest first-letter:uppercase">
 					{todayDateLabel}
@@ -54,8 +54,8 @@ export default function DailySummary({
 			</div>
 
 			{/* Tarjeta Derecha: Timeline Vertical */}
-			<div className="bg-base-100/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-base-200/60 shadow-xl max-h-60 overflow-y-auto relative">
-				<h4 className="text-xs font-bold uppercase opacity-50 mb-6 sticky top-0 bg-base-100/60 backdrop-blur-md pb-2 z-20 text-center">
+			<div className="bg-card/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-border/60 shadow-xl max-h-60 overflow-y-auto relative">
+				<h4 className="text-xs font-bold uppercase opacity-50 mb-6 sticky top-0 bg-card/60 backdrop-blur-md pb-2 z-20 text-center">
 					{t("stats.log.title")}
 				</h4>
 
@@ -65,7 +65,7 @@ export default function DailySummary({
 						{t("stats.log.empty")}
 					</div>
 				) : (
-					<div className="ml-2 border-l-2 border-base-content/10 space-y-6">
+					<div className="ml-2 border-l-2 border-foreground/10 space-y-6">
 						{history
 							.slice()
 							.reverse()
@@ -73,9 +73,9 @@ export default function DailySummary({
 								<div key={entry.id} className="relative pl-6">
 									{/* Puntito de color según el tipo */}
 									<div
-										className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 border-base-200 ${
+										className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 border-border ${
 											entry.type === "focus"
-												? "bg-primary-500"
+												? "bg-brand-500"
 												: entry.type === "short"
 													? "bg-short-500"
 													: "bg-long-500"
@@ -92,7 +92,7 @@ export default function DailySummary({
 														? t("timer.short")
 														: t("timer.long")}
 											</span>
-											<span className="text-xs font-mono opacity-50 bg-base-content/5 px-2 py-0.5 rounded">
+											<span className="text-xs font-mono opacity-50 bg-muted px-2 py-0.5 rounded">
 												{entry.minutes} min
 											</span>
 										</div>

@@ -9,7 +9,7 @@ const year = new Date().getFullYear();
 ---
 
 <footer
-    class="bg-base-200 text-base-content rounded-t-2xl mt-auto transition-colors duration-400 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-1px_rgba(0,0,0,0.06)]"
+    class="bg-muted text-foreground rounded-t-2xl mt-auto transition-colors duration-400 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1),0_-2px_4px_-1px_rgba(0,0,0,0.06)]"
 >
     <div
         class="footer p-10 w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4"
@@ -20,7 +20,7 @@ const year = new Date().getFullYear();
         >
             <a
                 href={currentLang === "en" ? "/en/about" : "/about"}
-                class="inline-block px-4 py-2 rounded-lg bg-base-300/50 hover:bg-base-300 transition-colors text-lg font-bold"
+                class="inline-block px-4 py-2 rounded-lg bg-foreground/5 hover:bg-foreground/10 transition-colors text-lg font-bold"
             >
                 {t("footer.whatis")}
                 <span>→</span>
@@ -42,24 +42,24 @@ const year = new Date().getFullYear();
 
             <p class="text-xs mt-4">
                 {t("footer.developed")}
-                <span class="font-bold">Tempo</span>
+                <span class="font-bold">sinx</span>
             </p>
 
             <!-- Tecnologías usadas -->
             <div class="flex flex-wrap justify-center gap-2 mt-1 mb-2">
-                <span class="badge badge-outline badge-xs rounded-full"
+                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
                     >Astro</span
                 >
-                <span class="badge badge-outline badge-xs rounded-full"
+                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
                     >React</span
                 >
-                <span class="badge badge-outline badge-xs rounded-full"
+                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
                     >Tailwind</span
                 >
-                <span class="badge badge-outline badge-xs rounded-full"
+                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
                     >Bun</span
                 >
-                <span class="badge badge-outline badge-xs rounded-full"
+                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
                     >Cloudflare</span
                 >
             </div>

@@ -3,15 +3,16 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
-import icon from "astro-icon";
 
 // Configuración de Astro
 export default defineConfig({
 	// Modo estático (sin servidor)
 	output: "static",
 	site: "https://tempo.mgdc.site",
+	// Preserva el whitespace del output de Astro 6 (default de v7 es 'jsx')
+	compressHTML: true,
 	prefetch: true,
-	integrations: [react(), sitemap(), icon()],
+	integrations: [react(), sitemap()],
 
 	// Vite + Tailwind CSS
 	vite: {

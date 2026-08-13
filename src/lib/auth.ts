@@ -1,16 +1,17 @@
 // Cloudflare
+
+import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import type { D1Database, KVNamespace } from "@cloudflare/workers-types";
 // Autenticación
 import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "@better-auth/drizzle-adapter";
+// Plugins
+import { captcha } from "better-auth/plugins";
 // Base de datos
 import { drizzle } from "drizzle-orm/d1";
 // Email
 import { Resend } from "resend";
 // Schema
 import * as schema from "../db/schema";
-// Plugins
-import { captcha } from "better-auth/plugins";
 
 // Tipos de respuestas del servicio de hash externo
 interface HashResponse {

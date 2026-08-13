@@ -7,10 +7,12 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "../../i18n/utils";
 // Store
 import { useStore } from "../../stores/store";
+// Componentes
+import { Button } from "../ui/button";
 
 // Props del componente (interfaz local)
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type BreakTimerProps = Record<string, never>
+type BreakTimerProps = Record<string, never>;
 
 // Constantes del temporizador
 const ALARM_SOUND = "https://pomodoro-assets.mgdc.site/alarm.mp3";
@@ -28,7 +30,7 @@ export default function BreakTimer(_props: BreakTimerProps) {
 	const totalSeconds = (breakActivo?.minutesPlanned ?? 5) * 60;
 	const [timeLeft, setTimeLeft] = useState(totalSeconds);
 	const [isDone, setIsDone] = useState(false);
-	const intervalRef = useRef<ReturnType<typeof setInterval>>();
+	const intervalRef = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
 
 	// Effect del temporizador de descanso: descuenta cada segundo
 	useEffect(() => {
@@ -72,14 +74,14 @@ export default function BreakTimer(_props: BreakTimerProps) {
 						✓
 					</div>
 					<h2 className="text-3xl font-black">{t("break.done_title")}</h2>
-					<p className="text-base-content/60 text-sm">{t("break.done_desc")}</p>
-					<button
+					<p className="text-muted-foreground text-sm">{t("break.done_desc")}</p>
+					<Button
 						type="button"
 						onClick={handleContinue}
-						className="btn btn-primary btn-lg px-10 rounded-xl font-bold shadow-lg hover:scale-[1.02] transition-transform"
+						className="h-12 rounded-xl px-10 font-bold shadow-lg hover:scale-[1.02] transition-transform"
 					>
 						{t("break.continue")}
-					</button>
+					</Button>
 				</div>
 			</div>
 		);
@@ -95,7 +97,7 @@ export default function BreakTimer(_props: BreakTimerProps) {
 						? t("break.long_label")
 						: t("break.short_label")}
 				</span>
-				<h2 className="text-2xl md:text-3xl font-black text-base-content/90 tracking-tight mt-1">
+				<h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight mt-1">
 					{t("break.title")}
 				</h2>
 			</div>
@@ -117,7 +119,7 @@ export default function BreakTimer(_props: BreakTimerProps) {
 						stroke="currentColor"
 						strokeWidth="14"
 						fill="none"
-						className="text-base-300 dark:text-base-content/10"
+						className="text-muted dark:text-foreground/10"
 					/>
 					{/* Círculo de progreso */}
 					<circle
@@ -135,10 +137,10 @@ export default function BreakTimer(_props: BreakTimerProps) {
 						}}
 					/>
 					{/* Esquinas decorativas */}
-					<circle cx="140" cy="20" r="3.5" className="fill-base-content/20" />
-					<circle cx="260" cy="140" r="3.5" className="fill-base-content/20" />
-					<circle cx="140" cy="260" r="3.5" className="fill-base-content/20" />
-					<circle cx="20" cy="140" r="3.5" className="fill-base-content/20" />
+					<circle cx="140" cy="20" r="3.5" className="fill-muted-foreground/20" />
+					<circle cx="260" cy="140" r="3.5" className="fill-muted-foreground/20" />
+					<circle cx="140" cy="260" r="3.5" className="fill-muted-foreground/20" />
+					<circle cx="20" cy="140" r="3.5" className="fill-muted-foreground/20" />
 				</svg>
 
 				{/* Tiempo restante */}
@@ -154,14 +156,15 @@ export default function BreakTimer(_props: BreakTimerProps) {
 			</div>
 
 			{/* Botón de saltar descanso */}
-			<button
+			<Button
 				type="button"
 				onClick={handleSkip}
-				className="btn btn-outline border-base-300 hover:bg-base-200 h-12 px-8 rounded-xl font-bold flex items-center justify-center gap-2"
+				variant="outline"
+				className="h-12 rounded-xl px-8 font-bold gap-2"
 			>
 				<Icon icon="lucide:skip-forward" className="w-5 h-5" />
 				<span>{t("break.skip")}</span>
-			</button>
+			</Button>
 		</div>
 	);
 }

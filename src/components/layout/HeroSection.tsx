@@ -22,7 +22,7 @@ export default function HeroSection({ mode }: HeroSectionProps) {
 					{t("hero.focus.title")}
 				</h1>
 				{/* Subtítulo del modo focus */}
-				<p className="text-xl text-base-content/80 max-w-2xl mx-auto">
+				<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
 					{t("hero.focus.subtitle")}
 				</p>
 			</div>
@@ -37,21 +37,18 @@ export default function HeroSection({ mode }: HeroSectionProps) {
 				{t("hero.title")}
 			</h1>
 
-			<div className="text-xl text-base-content/70 max-w-2xl mx-auto font-medium leading-relaxed">
+			<div className="text-xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
 				<p>
 					{/* Primera parte del subtítulo */}
-					{t("hero.subtitle").split(",")[0]}{" "}
-					{/* Palabra "coding" coloreada */}
+					{t("hero.subtitle").split(",")[0]} {/* Palabra "coding" coloreada */}
 					<span className="text-(--hero-coding) font-extrabold">
 						{t("hero.span.coding")}
 					</span>
-					,{" "}
-					{/* Palabra "studying" coloreada */}
+					, {/* Palabra "studying" coloreada */}
 					<span className="text-(--hero-studying) font-extrabold">
 						{t("hero.span.studying")}
 					</span>{" "}
-					{t("hero.or")}{" "}
-					{/* Palabra "creating" coloreada */}
+					{t("hero.or")} {/* Palabra "creating" coloreada */}
 					<span className="text-(--hero-creating) font-extrabold">
 						{t("hero.span.creating")}
 					</span>

@@ -2,12 +2,13 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
 // Validaciones
 import type {
+	PomodoroResponse,
 	StatsResponse,
 	TareaResponse,
 } from "../../../src/lib/validations";
+import type { Bindings } from "../_helpers";
 // Helpers
 import { getSession } from "../_helpers";
-import type { Bindings } from "../_helpers";
 // OpenAPI
 import {
 	actualizarTareaRoute,
@@ -47,7 +48,7 @@ export function registerTareas(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				.all<TareaResponse>();
 
 			// 5. Responde con la lista de tareas
-			return c.json({ data: results });
+			return c.json({ data: results }, 200);
 		} catch (err) {
 			console.error("[Tareas] Error al listar:", err);
 			return c.json({ error: "Error al listar tareas" }, 500);
@@ -79,7 +80,7 @@ export function registerTareas(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				"SELECT id, status, minutes_planned as minutesPlanned, minutes_actual as minutesActual, created_at as createdAt FROM pomodoro WHERE tarea_id = ? ORDER BY created_at",
 			)
 				.bind(id)
-				.all();
+				.all<PomodoroResponse>();
 
 			// 6. Consulta las estadísticas de la tarea
 			const stats = await c.env.DB.prepare(
@@ -89,7 +90,16 @@ export function registerTareas(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				.first<StatsResponse>();
 
 			// 7. Responde con el detalle completo de la tarea
-			return c.json({ data: { ...tarea, pomodoros: pomodoros.results, stats } });
+			return c.json(
+				{
+					data: {
+						...tarea,
+						pomodoros: pomodoros.results,
+						stats: stats ?? { total: 0, totalTime: 0 },
+					},
+				},
+				200,
+			);
 		} catch (err) {
 			console.error("[Tareas] Error al obtener detalle:", err);
 			return c.json({ error: "Error al obtener detalle de la tarea" }, 500);
@@ -179,7 +189,7 @@ export function registerTareas(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				.run();
 
 			// 6. Responde con éxito
-			return c.json({ success: true });
+			return c.json({ success: true }, 200);
 		} catch (err) {
 			console.error("[Tareas] Error al actualizar:", err);
 			return c.json({ error: "Error al actualizar la tarea" }, 500);
@@ -206,7 +216,7 @@ export function registerTareas(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				.run();
 
 			// 5. Responde con éxito
-			return c.json({ success: true });
+			return c.json({ success: true }, 200);
 		} catch (err) {
 			console.error("[Tareas] Error al eliminar:", err);
 			return c.json({ error: "Error al eliminar la tarea" }, 500);

@@ -1,4 +1,11 @@
 /** @jsxImportSource react */
+import { Button } from "../ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogTitle,
+} from "../ui/dialog";
 // i18n
 import { useTranslations } from "../../i18n/utils";
 // Store
@@ -11,41 +18,58 @@ interface CancelConfirmDialogProps {
 }
 
 // Diálogo de confirmación para cancelar la tarea
-export default function CancelConfirmDialog({ onCancel, onBack }: CancelConfirmDialogProps) {
+export default function CancelConfirmDialog({
+	onCancel,
+	onBack,
+}: CancelConfirmDialogProps) {
 	const t = useTranslations(useStore((s) => s.lang));
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-sm">
-			<div className="bg-base-100 border border-base-300 rounded-2xl w-full max-w-sm mx-4 p-8 text-center space-y-4 animate-fade-in-up">
+		<Dialog
+			open
+			onOpenChange={(open) => {
+				if (!open) onBack();
+			}}
+		>
+			<DialogContent
+				showCloseButton={false}
+				className="max-w-sm p-8 text-center gap-6"
+			>
 				{/* Ícono de advertencia */}
 				<div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto bg-warning/15 text-warning">
 					⚠
 				</div>
-				{/* Título y cuerpo */}
-				<h3 className="text-xl font-black">
-					{t("timer.cancel.confirm.title")}
-				</h3>
-				<p className="text-sm leading-relaxed text-base-content/70">
-					{t("timer.cancel.confirm.body")}
-				</p>
+				<div className="space-y-2">
+					{/* Título y cuerpo */}
+					<DialogTitle className="text-xl font-black">
+						{t("timer.cancel.confirm.title")}
+					</DialogTitle>
+					<DialogDescription className="text-sm leading-relaxed text-muted-foreground">
+						{t("timer.cancel.confirm.body")}
+					</DialogDescription>
+				</div>
 				{/* Botones de acción */}
-				<div className="flex gap-4 justify-center pt-2">
-					<button
+				<div className="flex gap-4 justify-center">
+					<Button
 						type="button"
+						variant="outline"
+						size="sm"
+						className="px-6"
 						onClick={onBack}
-						className="btn btn-outline btn-sm px-6"
 					>
 						{t("timer.cancel.confirm.no")}
-					</button>
-					<button
+					</Button>
+					<Button
 						type="button"
+						variant="destructive"
+						size="sm"
+						className="px-6"
 						onClick={onCancel}
-						className="btn btn-error btn-sm px-6"
 					>
 						{t("timer.cancel.confirm.yes")}
-					</button>
+					</Button>
 				</div>
-			</div>
-		</div>
+			</DialogContent>
+		</Dialog>
 	);
 }

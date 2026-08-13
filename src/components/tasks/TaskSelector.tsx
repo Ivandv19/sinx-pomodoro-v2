@@ -5,14 +5,23 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 // Store
 import { useShallow } from "zustand/react/shallow";
+// i18n
+import { useTranslations } from "../../i18n/utils";
 // Utilidades
 import { getTodaysStats, getWeeklyStats } from "../../lib/stats";
 import { useStore } from "../../stores/store";
-// i18n
-import { useTranslations } from "../../i18n/utils";
 // Componentes
 import DailySummary from "../stats/DailySummary";
 import WeeklySummary from "../stats/WeeklySummary";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "../ui/tooltip";
 
 // Props del componente (interfaz local)
 interface TaskSelectorProps {
@@ -90,12 +99,12 @@ export default function TaskSelector({
 	return (
 		<div className="w-full max-w-2xl mx-auto p-4 flex flex-col gap-10 py-6">
 			{/* Tarjeta de Creación de Tareas */}
-			<div className="bg-base-100/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-base-200/60 shadow-xl space-y-6 transition-all duration-300">
+			<div className="bg-card/40 backdrop-blur-md p-6 md:p-8 rounded-3xl border border-border/60 shadow-xl space-y-6 transition-all duration-300">
 				<div className="space-y-1">
-					<h2 className="text-2xl font-bold tracking-tight text-base-content/90">
+					<h2 className="text-2xl font-bold tracking-tight text-foreground">
 						{t("task.selector.title")}
 					</h2>
-					<p className="text-xs text-base-content/60">
+					<p className="text-xs text-muted-foreground">
 						{t("task.selector.subtitle")}
 					</p>
 				</div>
@@ -103,29 +112,29 @@ export default function TaskSelector({
 				{/* Input y botón de crear */}
 				<div className="flex flex-col sm:flex-row gap-3">
 					<div className="relative flex-1">
-						<span className="absolute inset-y-0 left-0 flex items-center pl-4 text-base-content/40">
+						<span className="absolute inset-y-0 left-0 flex items-center pl-4 text-muted-foreground">
 							<Icon icon="lucide:clipboard-list" className="w-5 h-5" />
 						</span>
-						<input
+						<Input
 							type="text"
 							value={nombre}
 							onChange={(e) => setNombre(e.target.value)}
 							placeholder={t("task.selector.placeholder")}
-							className="input input-bordered w-full pl-12 pr-4 h-12 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-base bg-base-100/65"
+							className="h-12 rounded-xl pl-12 pr-4 text-base"
 							onKeyDown={(e) => {
 								if (e.key === "Enter") handleCreate();
 							}}
 						/>
 					</div>
-					<button
+					<Button
 						type="button"
 						onClick={handleCreate}
 						disabled={!nombre.trim()}
-						className="btn btn-primary h-12 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-transform duration-300 hover:scale-[1.02] shadow-md hover:shadow-lg disabled:opacity-50"
+						className="h-12 rounded-xl px-6 font-bold gap-2 transition-transform duration-300 hover:scale-[1.02] shadow-md hover:shadow-lg disabled:opacity-50"
 					>
 						<Icon icon="lucide:plus" className="w-5 h-5" />
 						<span>{t("task.selector.create")}</span>
-					</button>
+					</Button>
 				</div>
 
 				{/* Selector de categorías */}
@@ -139,23 +148,20 @@ export default function TaskSelector({
 							{categorias.map((cat) => {
 								const isSelected = categoriaId === cat.id;
 								return (
-									<button
+									<Button
 										type="button"
 										key={cat.id}
 										onClick={() =>
 											setCategoriaId(isSelected ? undefined : cat.id)
 										}
-										className={`btn btn-sm rounded-full transition-colors duration-200 px-4 py-1.5 h-auto min-h-0 font-medium ${
-											isSelected
-												? "btn-primary shadow-sm scale-105"
-												: "btn-outline border-base-300 hover:bg-base-200/50"
-										}`}
+										variant={isSelected ? "default" : "outline"}
+										className="h-auto rounded-full px-4 py-1.5 font-medium transition-colors duration-200"
 									>
 										{isSelected && (
 											<Icon icon="lucide:check" className="w-3 h-3 mr-1" />
 										)}
 										{cat.nombre}
-									</button>
+									</Button>
 								);
 							})}
 						</div>
@@ -167,24 +173,24 @@ export default function TaskSelector({
 			{pendientes.length > 0 && (
 				<div className="space-y-4">
 					<div className="flex items-center justify-between px-1">
-						<h3 className="text-lg font-bold flex items-center gap-2 text-base-content/80">
+						<h3 className="text-lg font-bold flex items-center gap-2 text-foreground/80">
 							<Icon icon="lucide:list-todo" className="w-5 h-5 text-primary" />
 							{t("task.selector.pending")}
 						</h3>
-							{/* Badge de cantidad */}
-							<span className="badge badge-primary badge-sm font-bold rounded-full px-2.5 py-1">
-								{pendientes.length}
-							</span>
+						{/* Badge de cantidad */}
+						<Badge variant="default" className="rounded-full px-2.5 py-1 font-bold">
+							{pendientes.length}
+						</Badge>
 					</div>
 
 					<div className="space-y-3">
 						{pendientes.map((tarea) => (
 							<div
 								key={tarea.id}
-								className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-base-100/50 backdrop-blur-xs border border-base-200 shadow-sm transition-colors duration-200 hover:bg-base-100/80 gap-4"
+								className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl bg-card/50 backdrop-blur-xs border border-border shadow-sm transition-colors duration-200 hover:bg-card/80 gap-4"
 							>
 								<div className="flex-1 min-w-0">
-									<h4 className="font-semibold text-base-content/90 truncate transition-colors group-hover:text-primary">
+									<h4 className="font-semibold text-foreground/90 truncate transition-colors group-hover:text-primary">
 										{tarea.nombre}
 									</h4>
 									{tarea.categoriaId && (
@@ -207,44 +213,67 @@ export default function TaskSelector({
 								</div>
 
 								{/* Botones de acción rápida */}
-								<div className="flex items-center gap-2 border-t border-base-200/50 pt-3 sm:border-0 sm:pt-0 justify-end">
+								<div className="flex items-center gap-2 border-t border-border/50 pt-3 sm:border-0 sm:pt-0 justify-end">
 									{/* Iniciar Pomodoro */}
-									<button
-										type="button"
-										onClick={() => onSelectTask(tarea.id)}
-										className="btn btn-circle btn-primary btn-sm hover:scale-110 transition-transform tooltip"
-										data-tip={t("task.tooltip.start")}
-										aria-label={t("task.tooltip.start")}
-									>
-										<Icon
-											icon="lucide:play"
-											className="w-4 h-4 fill-current ml-0.5"
-										/>
-									</button>
+									<TooltipProvider>
+							<Tooltip>
+								<TooltipTrigger
+									render={
+										<Button
+											type="button"
+											onClick={() => onSelectTask(tarea.id)}
+											size="icon-sm"
+											className="hover:scale-110 transition-transform"
+											aria-label={t("task.tooltip.start")}
+										>
+											<Icon
+												icon="lucide:play"
+												className="w-4 h-4 fill-current ml-0.5"
+											/>
+										</Button>
+									}
+								/>
+								<TooltipContent>{t("task.tooltip.start")}</TooltipContent>
+							</Tooltip>
 
-									{/* Completar rápida */}
-									<button
-										type="button"
-										onClick={() =>
-											updateTarea(tarea.id, { estado: "done" }, isLoggedIn)
-										}
-										className="btn btn-circle btn-success btn-sm btn-outline hover:text-white hover:scale-110 transition-transform tooltip"
-										data-tip={t("task.tooltip.complete")}
-										aria-label={t("task.tooltip.complete")}
-									>
-										<Icon icon="lucide:check" className="w-4 h-4" />
-									</button>
+							<Tooltip>
+								<TooltipTrigger
+									render={
+										<Button
+											type="button"
+											onClick={() =>
+												updateTarea(tarea.id, { estado: "done" }, isLoggedIn)
+											}
+											variant="outline"
+											size="icon-sm"
+											className="text-success hover:scale-110 hover:text-white hover:bg-success transition-transform"
+											aria-label={t("task.tooltip.complete")}
+										>
+											<Icon icon="lucide:check" className="w-4 h-4" />
+										</Button>
+									}
+								/>
+								<TooltipContent>{t("task.tooltip.complete")}</TooltipContent>
+							</Tooltip>
 
-									{/* Eliminar tarea */}
-									<button
-										type="button"
-										onClick={() => deleteTarea(tarea.id, isLoggedIn)}
-										className="btn btn-circle btn-error btn-sm btn-outline hover:text-white hover:scale-110 transition-transform tooltip"
-										data-tip={t("task.tooltip.delete")}
-										aria-label={t("task.tooltip.delete")}
-									>
-										<Icon icon="lucide:trash-2" className="w-4 h-4" />
-									</button>
+							<Tooltip>
+								<TooltipTrigger
+									render={
+										<Button
+											type="button"
+											onClick={() => deleteTarea(tarea.id, isLoggedIn)}
+											variant="outline"
+											size="icon-sm"
+											className="text-destructive hover:scale-110 hover:text-white hover:bg-destructive transition-transform"
+											aria-label={t("task.tooltip.delete")}
+										>
+											<Icon icon="lucide:trash-2" className="w-4 h-4" />
+										</Button>
+									}
+								/>
+								<TooltipContent>{t("task.tooltip.delete")}</TooltipContent>
+							</Tooltip>
+						</TooltipProvider>
 								</div>
 							</div>
 						))}
@@ -256,8 +285,10 @@ export default function TaskSelector({
 			{todaysStats.history.length > 0 && (
 				<div className="space-y-6 pt-4">
 					{/* Separador */}
-					<div className="divider opacity-30 text-xs font-bold uppercase tracking-widest">
+					<div className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest opacity-30">
+						<span className="h-px flex-1 bg-foreground/20"></span>
 						{t("stats.progress.title")}
+						<span className="h-px flex-1 bg-foreground/20"></span>
 					</div>
 
 					<DailySummary

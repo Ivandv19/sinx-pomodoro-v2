@@ -39,6 +39,10 @@ export const crearBreakRoute = createRoute({
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
 		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
+		},
 	},
 });
 
@@ -47,17 +51,13 @@ export const listarBreaksRoute = createRoute({
 	method: "get",
 	path: "/breaks",
 	tags: ["Descansos"],
-	description:
-		"Listar descansos del día (opcionalmente filtrar por fecha)",
+	description: "Listar descansos del día (opcionalmente filtrar por fecha)",
 	request: { query: listarPomodorosQuery },
 	responses: {
 		200: {
 			content: {
 				"application/json": {
-					schema: dataResponse(
-						z.array(breakResponseSchema),
-						"BreaksResponse",
-					),
+					schema: dataResponse(z.array(breakResponseSchema), "BreaksResponse"),
 				},
 			},
 			description: "Breaks del día",
@@ -65,6 +65,10 @@ export const listarBreaksRoute = createRoute({
 		401: {
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
+		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
 		},
 	},
 });

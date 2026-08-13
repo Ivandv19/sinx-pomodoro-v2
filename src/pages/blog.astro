@@ -15,14 +15,14 @@ const t = useTranslations(lang);
         >
             {t("blog.title")}
         </h1>
-        <p class="text-2xl text-base-content/80">{t("blog.comingSoon")}</p>
-        <div class="card bg-base-200 shadow-xl max-w-lg mx-auto">
-            <div class="card-body">
+        <p class="text-2xl text-muted-foreground">{t("blog.comingSoon")}</p>
+        <div class="rounded-2xl bg-card shadow-xl ring-1 ring-border max-w-lg mx-auto">
+            <div class="p-8 flex flex-col gap-4">
                 <p class="text-lg">
                     {t("blog.body")}
                 </p>
                 <div class="mt-4">
-                    <a href="/" class="btn btn-primary">{t("blog.back")}</a>
+                    <a href="/" class="inline-flex h-8 items-center justify-center rounded-lg bg-primary px-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/80 transition-all">{t("blog.back")}</a>
                 </div>
             </div>
         </div>

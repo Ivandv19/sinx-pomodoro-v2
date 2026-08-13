@@ -2,9 +2,9 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
 // Validaciones
 import type { BreakResponse } from "../../../src/lib/validations";
+import type { Bindings } from "../_helpers";
 // Helpers
 import { getSession } from "../_helpers";
-import type { Bindings } from "../_helpers";
 // OpenAPI
 import { crearBreakRoute, listarBreaksRoute } from "../openapi/breaks";
 
@@ -79,7 +79,7 @@ export function registerBreaks(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				.all<BreakResponse>();
 
 			// 5. Responde con la lista de descansos
-			return c.json({ data: results });
+			return c.json({ data: results }, 200);
 		} catch (err) {
 			console.error("[Breaks] Error al listar:", err);
 			return c.json({ error: "Error al listar descansos" }, 500);

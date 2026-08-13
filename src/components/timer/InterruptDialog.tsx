@@ -1,4 +1,11 @@
 /** @jsxImportSource react */
+import { Button } from "../ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogTitle,
+} from "../ui/dialog";
 // i18n
 import { useTranslations } from "../../i18n/utils";
 // Store
@@ -18,31 +25,50 @@ export default function InterruptDialog({
 	const t = useTranslations(useStore((s) => s.lang));
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-sm">
-			<div className="bg-base-100 border border-base-300 rounded-2xl w-full max-w-sm mx-4 p-8 text-center space-y-4 animate-fade-in-up">
+		<Dialog
+			open
+			onOpenChange={(open) => {
+				if (!open) onContinue();
+			}}
+		>
+			<DialogContent
+				showCloseButton={false}
+				className="max-w-sm p-8 text-center gap-6"
+			>
 				{/* Ícono de pausa */}
 				<div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl mx-auto bg-info/15 text-info">
 					⏸
 				</div>
-				<h3 className="text-xl font-black">{t("task.interrupt.title")}</h3>
+				<div className="space-y-2">
+					<DialogTitle className="text-xl font-black">
+						{t("task.interrupt.title")}
+					</DialogTitle>
+					<DialogDescription className="sr-only">
+						{t("task.interrupt.title")}
+					</DialogDescription>
+				</div>
 				{/* Botones de acción */}
-				<div className="flex gap-4 justify-center pt-2">
-					<button
+				<div className="flex gap-4 justify-center">
+					<Button
 						type="button"
+						variant="outline"
+						size="sm"
+						className="px-6"
 						onClick={onAbandon}
-						className="btn btn-outline btn-sm px-6"
 					>
 						{t("task.interrupt.abandon")}
-					</button>
-					<button
+					</Button>
+					<Button
 						type="button"
+						size="sm"
+						className="px-6"
 						onClick={onContinue}
-						className="btn btn-primary btn-sm px-6"
+						autoFocus
 					>
 						{t("task.interrupt.continue")}
-					</button>
+					</Button>
 				</div>
-			</div>
-		</div>
+			</DialogContent>
+		</Dialog>
 	);
 }

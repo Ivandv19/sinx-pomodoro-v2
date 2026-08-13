@@ -15,10 +15,10 @@ const t = useTranslations(lang);
 			<h1 class="text-3xl font-black">
 				{t("auth.verified.title")}
 			</h1>
-			<p class="text-base-content/70 text-lg">
+			<p class="text-muted-foreground text-lg">
 				{t("auth.verified.message")}
 			</p>
-			<a href={lang === 'en' ? '/en/login' : '/login'} data-astro-reload class="btn btn-primary btn-lg mt-4">
+			<a href={lang === 'en' ? '/en/login' : '/login'} data-astro-reload class="inline-flex h-9 items-center justify-center rounded-lg bg-primary px-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/80 transition-all mt-4">
 				{t("auth.verified.cta")}
 			</a>
 		</div>

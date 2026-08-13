@@ -5,7 +5,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { useTranslations } from "../../i18n/utils";
 import { languages } from "../../i18n/ui";
 // Componentes
-import ThemeToggle from "../ui/ThemeToggle.astro";
+import ThemeToggle from "../ui/ThemeToggle";
 import AuthButton from "../Auth/AuthButton";
 
 // 1. Obtiene el idioma desde las props del componente padre (interfaz local)
@@ -29,7 +29,7 @@ const isActive = (path: string) => {
 <!-- Botón de menú hamburguesa -->
 <button
   id="hamburger-btn"
-  class="btn btn-ghost btn-sm lg:hidden"
+  class="inline-flex h-7 items-center justify-center rounded-lg px-2 text-sm font-medium hover:bg-muted transition-colors lg:hidden"
   aria-label="Toggle menu"
   aria-expanded="false"
 >
@@ -44,12 +44,12 @@ const isActive = (path: string) => {
 <div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-40 invisible opacity-0"></div>
 
 <!-- Panel deslizante -->
-<div id="mobile-panel" class="fixed top-0 right-0 h-full w-72 bg-base-100 z-50 shadow-2xl translate-x-full flex flex-col">
+<div id="mobile-panel" class="fixed top-0 right-0 h-full w-72 bg-background z-50 shadow-2xl translate-x-full flex flex-col">
 
   <!-- Encabezado del panel -->
-  <div class="flex items-center justify-between p-4 border-b border-base-200">
+  <div class="flex items-center justify-between p-4 border-b border-border">
     <span class="font-bold text-lg">Tempo</span>
-    <button id="mobile-close" class="btn btn-ghost btn-sm btn-circle" aria-label="Close menu">
+    <button id="mobile-close" class="inline-flex size-7 items-center justify-center rounded-lg text-sm font-medium hover:bg-muted transition-colors" aria-label="Close menu">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"/>
         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -65,7 +65,7 @@ const isActive = (path: string) => {
         block px-4 py-3 rounded-lg font-medium transition-all duration-200
         ${isActive('about')
           ? 'bg-primary/10 text-primary border-l-2 border-primary'
-          : 'text-base-content/70 hover:bg-base-200 hover:text-base-content border-l-2 border-transparent'}
+          : 'text-muted-foreground hover:bg-muted hover:text-foreground border-l-2 border-transparent'}
       `}
     >
       {t('nav.about')}
@@ -76,7 +76,7 @@ const isActive = (path: string) => {
         block px-4 py-3 rounded-lg font-medium transition-all duration-200
         ${isActive('blog')
           ? 'bg-primary/10 text-primary border-l-2 border-primary'
-          : 'text-base-content/70 hover:bg-base-200 hover:text-base-content border-l-2 border-transparent'}
+          : 'text-muted-foreground hover:bg-muted hover:text-foreground border-l-2 border-transparent'}
       `}
     >
       {t('nav.blog')}
@@ -84,7 +84,7 @@ const isActive = (path: string) => {
   </div>
 
   <!-- Acciones inferiores -->
-  <div class="p-4 border-t border-base-200 space-y-4">
+  <div class="p-4 border-t border-border space-y-4">
     <!-- Idioma -->
     <div class="flex items-center justify-between">
       <span class="text-sm opacity-60">{t("nav.language")}</span>
@@ -96,7 +96,7 @@ const isActive = (path: string) => {
               px-3 py-1.5 rounded-lg text-sm font-medium transition-all
               ${lang === labelLang
                 ? 'bg-primary/10 text-primary'
-                : 'text-base-content/50 hover:text-base-content hover:bg-base-200'}
+                : 'text-muted-foreground hover:text-foreground hover:bg-muted'}
             `}
           >
             {label}
@@ -108,13 +108,15 @@ const isActive = (path: string) => {
     <!-- Tema -->
     <div class="flex items-center justify-between">
       <span class="text-sm opacity-60">{t("nav.theme")}</span>
-      <ThemeToggle />
+      <ThemeToggle client:load />
     </div>
 
     <!-- Autenticación -->
     <AuthButton
       client:only="react"
       loginUrl={getRelativeLocaleUrl(lang, "login")}
+      loginText={t("nav.login")}
+      logoutText={t("nav.logout")}
     />
   </div>
 </div>

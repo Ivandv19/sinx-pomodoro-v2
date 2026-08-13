@@ -5,9 +5,9 @@ import type {
 	PomodoroResponse,
 	StatsResponse,
 } from "../../../src/lib/validations";
+import type { Bindings } from "../_helpers";
 // Helpers
 import { getSession } from "../_helpers";
-import type { Bindings } from "../_helpers";
 // OpenAPI
 import {
 	crearPomodoroRoute,
@@ -16,9 +16,7 @@ import {
 } from "../openapi/pomodoros";
 
 // Registra las rutas de pomodoros en la aplicación
-export function registerPomodoros(
-	app: OpenAPIHono<{ Bindings: Bindings }>,
-) {
+export function registerPomodoros(app: OpenAPIHono<{ Bindings: Bindings }>) {
 	// POST /api/pomodoros - Registra un pomodoro completado o interrumpido
 	app.openapi(crearPomodoroRoute, async (c) => {
 		try {
@@ -78,7 +76,7 @@ export function registerPomodoros(
 				.all<PomodoroResponse>();
 
 			// 5. Responde con la lista de pomodoros
-			return c.json({ data: results });
+			return c.json({ data: results }, 200);
 		} catch (err) {
 			console.error("[Pomodoros] Error al listar:", err);
 			return c.json({ error: "Error al listar pomodoros" }, 500);
@@ -107,7 +105,10 @@ export function registerPomodoros(
 				.first<StatsResponse>();
 
 			// 5. Responde con las estadísticas
-			return c.json({ data: stats });
+			return c.json(
+				{ data: stats ?? { total: 0, totalTime: 0 } },
+				200,
+			);
 		} catch (err) {
 			console.error("[Pomodoros] Error al obtener stats:", err);
 			return c.json({ error: "Error al obtener estadísticas" }, 500);

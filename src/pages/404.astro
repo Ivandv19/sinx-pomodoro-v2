@@ -13,17 +13,17 @@ const t = useTranslations(lang);
     class="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6 animate-fade-in"
   >
     <div
-      class="text-9xl font-black bg-gradient-to-b from-base-content/20 to-transparent bg-clip-text text-transparent select-none"
+      class="text-9xl font-black bg-gradient-to-b from-foreground/20 to-transparent bg-clip-text text-transparent select-none"
     >
       404
     </div>
     <h1 class="text-3xl font-bold">{t("404.heading")}</h1>
-    <p class="text-xl text-base-content/60 max-w-md">
+    <p class="text-xl text-muted-foreground max-w-md">
       {t("404.description")}
     </p>
     <a
       href="/"
-      class="btn btn-primary btn-lg rounded-full px-8 shadow-lg hover:scale-105 transition-transform text-white"
+      class="inline-flex h-9 items-center justify-center rounded-full bg-primary px-8 text-sm font-medium text-primary-foreground shadow-lg hover:scale-105 hover:bg-primary/80 transition-all"
     >
       {t("404.back")}
     </a>

@@ -17,11 +17,11 @@ export type Bindings = {
 
 // Schema base para respuestas de error (string o detalle)
 export const errorSchema = z.object({
-	error: z.union([z.string(), z.record(z.any())]),
+	error: z.union([z.string(), z.record(z.string(), z.any())]),
 });
 
 // Schema base para respuestas exitosas simples
-export const successSchema = z.object({ success: z.literal(true) });
+export const successSchema = z.object({ success: z.boolean() });
 
 // Envuelve un schema de datos en { data: schema } para respuestas REST
 export function dataResponse<T extends z.ZodType>(schema: T, name: string) {

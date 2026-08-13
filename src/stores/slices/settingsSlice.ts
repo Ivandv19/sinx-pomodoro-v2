@@ -32,6 +32,7 @@ export const crearSliceSettings = (
 		try {
 			localStorage.setItem("theme", theme);
 			document.documentElement.setAttribute("data-theme", theme);
+			document.documentElement.classList.toggle("dark", theme === "business");
 		} catch {}
 		set({ theme });
 	},

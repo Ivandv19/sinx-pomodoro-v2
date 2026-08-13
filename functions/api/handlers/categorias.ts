@@ -2,11 +2,14 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
 // Validaciones
 import type { CategoriaResponse } from "../../../src/lib/validations";
+import type { Bindings } from "../_helpers";
 // Helpers
 import { getSession } from "../_helpers";
-import type { Bindings } from "../_helpers";
 // OpenAPI
-import { listarCategoriasRoute, seedCategoriasRoute } from "../openapi/categorias";
+import {
+	listarCategoriasRoute,
+	seedCategoriasRoute,
+} from "../openapi/categorias";
 
 // Registra las rutas de categorías en la aplicación
 export function registerCategorias(app: OpenAPIHono<{ Bindings: Bindings }>) {
@@ -25,7 +28,7 @@ export function registerCategorias(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				.all<CategoriaResponse>();
 
 			// 3. Responde con la lista de categorías
-			return c.json({ data: results });
+			return c.json({ data: results }, 200);
 		} catch (err) {
 			console.error("[Categorías] Error al listar:", err);
 			return c.json({ error: "Error al listar categorías" }, 500);
@@ -65,10 +68,10 @@ export function registerCategorias(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				"SELECT id, nombre, user_id FROM categoria WHERE user_id = ? ORDER BY id DESC LIMIT 3",
 			)
 				.bind(session.user.id)
-				.all();
+				.all<CategoriaResponse>();
 
 			// 5. Responde con las categorías creadas
-			return c.json({ data: results });
+			return c.json({ data: results }, 200);
 		} catch (err) {
 			console.error("[Categorías] Error al crear seed:", err);
 			return c.json({ error: "Error al crear categorías por defecto" }, 500);

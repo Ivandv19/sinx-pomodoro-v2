@@ -25,10 +25,7 @@ export const listarTareasRoute = createRoute({
 		200: {
 			content: {
 				"application/json": {
-					schema: dataResponse(
-						z.array(tareaResponseSchema),
-						"TareasResponse",
-					),
+					schema: dataResponse(z.array(tareaResponseSchema), "TareasResponse"),
 				},
 			},
 			description: "Lista de tareas del usuario",
@@ -36,6 +33,10 @@ export const listarTareasRoute = createRoute({
 		401: {
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
+		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
 		},
 	},
 });
@@ -45,8 +46,7 @@ export const obtenerTareaRoute = createRoute({
 	method: "get",
 	path: "/tareas/{id}",
 	tags: ["Tareas"],
-	description:
-		"Obtener detalle de una tarea con sus pomodoros y estadísticas",
+	description: "Obtener detalle de una tarea con sus pomodoros y estadísticas",
 	request: { params: z.object({ id: idParamSchema }) },
 	responses: {
 		200: {
@@ -67,6 +67,10 @@ export const obtenerTareaRoute = createRoute({
 		404: {
 			content: { "application/json": { schema: errorSchema } },
 			description: "Tarea no encontrada",
+		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
 		},
 	},
 });
@@ -97,6 +101,10 @@ export const crearTareaRoute = createRoute({
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
 		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
+		},
 	},
 });
 
@@ -105,8 +113,7 @@ export const actualizarTareaRoute = createRoute({
 	method: "patch",
 	path: "/tareas/{id}",
 	tags: ["Tareas"],
-	description:
-		"Actualizar parcialmente una tarea (nombre, categoría o estado)",
+	description: "Actualizar parcialmente una tarea (nombre, categoría o estado)",
 	request: {
 		params: z.object({ id: idParamSchema }),
 		body: {
@@ -126,6 +133,10 @@ export const actualizarTareaRoute = createRoute({
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
 		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
+		},
 	},
 });
 
@@ -144,6 +155,10 @@ export const eliminarTareaRoute = createRoute({
 		401: {
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
+		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
 		},
 	},
 });

@@ -1,12 +1,18 @@
 /** @jsxImportSource react */
 // React
 import { useState } from "react";
-// Autenticación
-import { authClient } from "../../lib/auth-client";
 // i18n
 import { useTranslations } from "../../i18n/utils";
+// Autenticación
+import { authClient } from "../../lib/auth-client";
 // Store
 import { useStore } from "../../stores/store";
+// Componentes
+import { Button, buttonVariants } from "../ui/button";
+import { Input } from "../ui/input";
+import { cn } from "../../lib/utils";
+// Iconos
+import { Icon } from "@iconify/react";
 
 // Props del componente (interfaz local)
 interface ForgotPasswordFormProps {
@@ -55,7 +61,10 @@ export default function ForgotPasswordForm({
 				<h2 className="text-2xl font-bold">{t("auth.forgot.title")}</h2>
 				<p className="text-sm opacity-70">{t("auth.forgot.sent")}</p>
 				{/* Volver al inicio */}
-				<a href={redirectPath} className="btn btn-primary">
+				<a
+					href={redirectPath}
+					className={cn(buttonVariants({ variant: "default" }))}
+				>
 					{t("auth.backHome")}
 				</a>
 			</div>
@@ -64,7 +73,7 @@ export default function ForgotPasswordForm({
 
 	return (
 		<div className="max-w-md w-full mx-4">
-			<div className="bg-base-100/50 backdrop-blur-sm border border-base-200 p-10 rounded-3xl shadow-2xl animate-fade-in-up">
+			<div className="bg-card/50 backdrop-blur-sm border border-border p-10 rounded-3xl shadow-2xl animate-fade-in-up">
 				{/* Encabezado */}
 				<div className="text-center space-y-2 mb-8">
 					<div className="text-4xl">🔑</div>
@@ -82,14 +91,14 @@ export default function ForgotPasswordForm({
 						>
 							{t("auth.email.label")}
 						</label>
-						<input
+						<Input
 							id="email"
 							type="email"
 							required
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							placeholder={t("auth.email.placeholder")}
-							className="input input-bordered w-full h-12 rounded-xl"
+							className="h-12 rounded-xl"
 						/>
 					</div>
 
@@ -101,17 +110,20 @@ export default function ForgotPasswordForm({
 					)}
 
 					{/* Botón de enviar */}
-					<button
+					<Button
 						type="submit"
 						disabled={loading || !email}
-						className="btn btn-primary w-full h-12 rounded-xl font-bold"
+						className="h-12 w-full rounded-xl font-bold"
 					>
 						{loading ? (
-							<span className="loading loading-spinner loading-sm" />
+							<Icon
+								icon="lucide:loader-circle"
+								className="animate-spin"
+							/>
 						) : (
 							t("auth.forgot.btn")
 						)}
-					</button>
+					</Button>
 				</form>
 			</div>
 		</div>

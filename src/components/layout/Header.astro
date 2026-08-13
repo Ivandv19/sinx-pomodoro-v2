@@ -4,9 +4,9 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 // i18n
 import { useTranslations } from "../../i18n/utils";
 // Componentes
-import LanguagePicker from "./LanguagePicker.astro";
+import LanguagePicker from "./LanguagePicker";
 import AuthButton from "../Auth/AuthButton";
-import ThemeToggle from "../ui/ThemeToggle.astro";
+import ThemeToggle from "../ui/ThemeToggle";
 import MobileMenu from "./MobileMenu.astro";
 
 // 1. Obtiene el idioma actual de la URL
@@ -19,7 +19,7 @@ const isActive = (path: string) => {
 };
 ---
 
-<header class="w-full border-b border-base-200/50">
+<header class="w-full border-b border-border/50">
   <nav class="max-w-7xl mx-auto px-6 flex items-center justify-between">
     <!-- Logo -->
     <div class="flex items-center gap-2">
@@ -64,11 +64,13 @@ const isActive = (path: string) => {
 
     <!-- Desktop Actions -->
     <div class="hidden lg:flex items-center gap-1">
-      <ThemeToggle />
-      <LanguagePicker />
+      <ThemeToggle client:load />
+      <LanguagePicker lang={currentLang} client:load />
       <AuthButton
         client:only="react"
         loginUrl={getRelativeLocaleUrl(currentLang, "login")}
+        loginText={t("nav.login")}
+        logoutText={t("nav.logout")}
       />
     </div>
 
@@ -77,6 +79,8 @@ const isActive = (path: string) => {
       <AuthButton
         client:only="react"
         loginUrl={getRelativeLocaleUrl(currentLang, "login")}
+        loginText={t("nav.login")}
+        logoutText={t("nav.logout")}
       />
       <MobileMenu lang={currentLang} />
     </div>

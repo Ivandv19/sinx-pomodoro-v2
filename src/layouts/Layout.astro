@@ -7,6 +7,7 @@ import '../styles/global.css';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 import SessionProvider from '../components/session/SessionProvider.tsx';
+import { Toaster } from '../components/ui/toast.tsx';
 // Fuentes
 import '@fontsource/outfit';
 
@@ -68,18 +69,8 @@ const jsonLdDescription = lang === 'en'
 			// 2. Aplica el tema al DOM y lo persiste en localStorage
 			const applyTheme = (theme) => {
 				document.documentElement.setAttribute('data-theme', theme);
-				if (theme === 'business') {
-					document.documentElement.classList.add('dark');
-				} else {
-					document.documentElement.classList.remove('dark');
-				}
+				document.documentElement.classList.toggle('dark', theme === 'business');
 				localStorage.setItem('theme', theme);
-
-				// 2a. Sincroniza el estado del checkbox si existe
-				const controller = document.querySelector('.theme-controller');
-				if (controller) {
-					controller.checked = theme === 'business';
-				}
 			};
 
 			// 3. Inicializa inmediatamente para evitar FOUC
@@ -91,15 +82,6 @@ const jsonLdDescription = lang === 'en'
 			const onPageLoad = () => {
 				const theme = getTheme();
 				applyTheme(theme);
-
-				const controller = document.querySelector('.theme-controller');
-				if (controller) {
-					controller.checked = theme === 'business';
-					controller.addEventListener('change', (e) => {
-						const newTheme = e.target.checked ? 'business' : 'nord';
-						applyTheme(newTheme);
-					});
-				}
 
 				// 4a. Detecta scroll para cambiar estilo del header
 				const headerScroll = () => {
@@ -168,5 +150,6 @@ const jsonLdDescription = lang === 'en'
 			<slot />
 		</main>
 		<Footer />
+		<Toaster client:load />
 	</body>
 </html>

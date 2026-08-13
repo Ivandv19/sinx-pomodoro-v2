@@ -28,6 +28,10 @@ export const listarCategoriasRoute = createRoute({
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
 		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
+		},
 	},
 });
 
@@ -53,6 +57,10 @@ export const seedCategoriasRoute = createRoute({
 		401: {
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
+		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
 		},
 	},
 });

@@ -44,6 +44,10 @@ export const crearPomodoroRoute = createRoute({
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
 		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
+		},
 	},
 });
 
@@ -70,6 +74,10 @@ export const listarPomodorosRoute = createRoute({
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
 		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
+		},
 	},
 });
 
@@ -93,6 +101,10 @@ export const statsPomodorosRoute = createRoute({
 		401: {
 			content: { "application/json": { schema: errorSchema } },
 			description: "No autenticado",
+		},
+		500: {
+			content: { "application/json": { schema: errorSchema } },
+			description: "Error interno del servidor",
 		},
 	},
 });

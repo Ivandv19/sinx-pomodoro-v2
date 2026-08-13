@@ -1,14 +1,19 @@
 /** @jsxImportSource react */
 // React
 import { useEffect, useState } from "react";
+// i18n
+import { useTranslations } from "../../i18n/utils";
 // Autenticación
 import { authClient } from "../../lib/auth-client";
 // Validaciones
 import { signupSchema } from "../../lib/validations";
-// i18n
-import { useTranslations } from "../../i18n/utils";
 // Store
 import { useStore } from "../../stores/store";
+// Componentes
+import { Button, buttonVariants } from "../ui/button";
+import { cn } from "../../lib/utils";
+// Iconos
+import { Icon } from "@iconify/react";
 
 // Props del componente (interfaz local)
 interface ResetPasswordFormProps {
@@ -47,7 +52,11 @@ export default function ResetPasswordForm({
 		const errorParam = params.get("error");
 
 		if (errorParam) {
-			setError(errorParam === "INVALID_TOKEN" ? t("auth.error.generic") : t("auth.error.generic"));
+			setError(
+				errorParam === "INVALID_TOKEN"
+					? t("auth.error.generic")
+					: t("auth.error.generic"),
+			);
 		}
 
 		if (tokenParam) {
@@ -99,7 +108,10 @@ export default function ResetPasswordForm({
 				<h2 className="text-2xl font-bold">{t("auth.reset.title")}</h2>
 				<p className="text-sm opacity-70">{t("auth.reset.success")}</p>
 				{/* Volver al inicio */}
-				<a href={redirectPath} className="btn btn-primary">
+				<a
+					href={redirectPath}
+					className={cn(buttonVariants({ variant: "default" }))}
+				>
 					{t("auth.backHome")}
 				</a>
 			</div>
@@ -108,7 +120,7 @@ export default function ResetPasswordForm({
 
 	return (
 		<div className="max-w-md w-full mx-4">
-			<div className="bg-base-100/50 backdrop-blur-sm border border-base-200 p-10 rounded-3xl shadow-2xl animate-fade-in-up">
+			<div className="bg-card/50 backdrop-blur-sm border border-border p-10 rounded-3xl shadow-2xl animate-fade-in-up">
 				{/* Encabezado */}
 				<div className="text-center space-y-2 mb-8">
 					<div className="text-4xl">🔐</div>
@@ -295,17 +307,20 @@ export default function ResetPasswordForm({
 					)}
 
 					{/* Botón de enviar */}
-					<button
+					<Button
 						type="submit"
 						disabled={loading || !password || !confirmPassword || !token}
-						className="btn btn-primary w-full h-14 text-sm font-black rounded-2xl border-none shadow-lg hover:scale-[1.02] active:scale-95 transition-transform disabled:opacity-50"
+						className="h-14 w-full text-sm font-black rounded-2xl shadow-lg hover:scale-[1.02] active:scale-95 transition-transform disabled:opacity-50"
 					>
 						{loading ? (
-							<span className="loading loading-spinner loading-sm" />
+							<Icon
+								icon="lucide:loader-circle"
+								className="animate-spin"
+							/>
 						) : (
 							t("auth.reset.btn")
 						)}
-					</button>
+					</Button>
 				</form>
 			</div>
 		</div>

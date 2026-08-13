@@ -5,21 +5,22 @@ import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
 // Store
 import { useShallow } from "zustand/react/shallow";
+// i18n
+import { useTranslations } from "../../i18n/utils";
 // Utilidades
 import { getTodaysStats, getWeeklyStats } from "../../lib/stats";
 import { useStore } from "../../stores/store";
-// i18n
-import { useTranslations } from "../../i18n/utils";
+import DailySummary from "../stats/DailySummary";
+import WeeklySummary from "../stats/WeeklySummary";
+import { Button } from "../ui/button";
 // Componentes
 import CancelConfirmDialog from "./CancelConfirmDialog";
 import CompleteDialog from "./CompleteDialog";
-import DailySummary from "../stats/DailySummary";
 import InterruptDialog from "./InterruptDialog";
-import WeeklySummary from "../stats/WeeklySummary";
 
 // Props del componente (interfaz local)
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-type TimerViewProps = Record<string, never>
+type TimerViewProps = Record<string, never>;
 
 // Constantes del temporizador
 const ALARM_SOUND = "https://pomodoro-assets.mgdc.site/alarm.mp3";
@@ -90,7 +91,7 @@ export default function TimerView(_props: TimerViewProps) {
 	const [showComplete, setShowComplete] = useState(false);
 	const [showInterrupt, setShowInterrupt] = useState(haySesionGuardada);
 	const [showCancelConfirm, setShowCancelConfirm] = useState(false);
-	const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 	const startTimeRef = useRef(initialStartTime);
 
 	const tarea =
@@ -125,7 +126,9 @@ export default function TimerView(_props: TimerViewProps) {
 			}
 			const originalTitle = document.title;
 			document.title = "⏰ Pomodoro completado!";
-			setTimeout(() => { document.title = originalTitle; }, 5000);
+			setTimeout(() => {
+				document.title = originalTitle;
+			}, 5000);
 		};
 
 		timeoutRef.current = setTimeout(tick, 1000);
@@ -225,7 +228,7 @@ export default function TimerView(_props: TimerViewProps) {
 						<Icon icon="lucide:flame" className="w-3.5 h-3.5 animate-pulse" />
 						{t("timer.active_focus")}
 					</span>
-					<h2 className="text-2xl md:text-3xl font-black text-base-content/90 tracking-tight mt-1">
+					<h2 className="text-2xl md:text-3xl font-black text-foreground tracking-tight mt-1">
 						{tarea.nombre}
 					</h2>
 				</div>
@@ -248,7 +251,7 @@ export default function TimerView(_props: TimerViewProps) {
 						stroke="currentColor"
 						strokeWidth="14"
 						fill="none"
-						className="text-base-300 dark:text-base-content/10"
+						className="text-muted dark:text-foreground/10"
 					/>
 					{/* Círculo de progreso */}
 					<circle
@@ -266,10 +269,10 @@ export default function TimerView(_props: TimerViewProps) {
 						}}
 					/>
 					{/* Esquinas decorativas */}
-					<circle cx="140" cy="20" r="3.5" className="fill-base-content/20" />
-					<circle cx="260" cy="140" r="3.5" className="fill-base-content/20" />
-					<circle cx="140" cy="260" r="3.5" className="fill-base-content/20" />
-					<circle cx="20" cy="140" r="3.5" className="fill-base-content/20" />
+					<circle cx="140" cy="20" r="3.5" className="fill-muted-foreground/20" />
+					<circle cx="260" cy="140" r="3.5" className="fill-muted-foreground/20" />
+					<circle cx="140" cy="260" r="3.5" className="fill-muted-foreground/20" />
+					<circle cx="20" cy="140" r="3.5" className="fill-muted-foreground/20" />
 				</svg>
 
 				{/* Tiempo restante */}
@@ -286,13 +289,12 @@ export default function TimerView(_props: TimerViewProps) {
 
 			{/* Botones de control */}
 			<div className="flex gap-4 items-center justify-center w-full max-w-sm">
-				<button
+				<Button
 					type="button"
 					onClick={handlePause}
-					className={`btn flex-1 h-12 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors duration-200 ${
-						isActive
-							? "btn-outline border-base-300 hover:bg-base-200 bg-base-100/50"
-							: "btn-primary shadow-sm hover:scale-[1.01]"
+					variant={isActive ? "outline" : "default"}
+					className={`h-12 flex-1 rounded-xl font-bold gap-2 ${
+						isActive ? "bg-card/50" : "shadow-sm hover:scale-[1.01]"
 					}`}
 					aria-label={isActive ? t("timer.run.pause") : t("timer.run.resume")}
 				>
@@ -301,23 +303,26 @@ export default function TimerView(_props: TimerViewProps) {
 						className="w-5 h-5"
 					/>
 					<span>{isActive ? t("timer.run.pause") : t("timer.run.resume")}</span>
-				</button>
+				</Button>
 
-				<button
+				<Button
 					type="button"
 					onClick={handleCancel}
-					className="btn btn-outline btn-error h-12 px-6 rounded-xl font-bold flex items-center justify-center gap-2 hover:scale-[1.01] transition-transform"
+					variant="destructive"
+					className="h-12 rounded-xl px-6 font-bold gap-2 hover:scale-[1.01] transition-transform"
 					aria-label={t("timer.run.cancel")}
 				>
 					<Icon icon="lucide:x" className="w-5 h-5" />
 					<span className="hidden sm:inline">{t("timer.run.cancel")}</span>
-				</button>
+				</Button>
 			</div>
 
 			{todaysStats.history.length > 0 && (
 				<div className="space-y-8 pt-6 w-full">
-					<div className="divider opacity-30 text-xs font-bold uppercase tracking-widest">
+					<div className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest opacity-30">
+						<span className="h-px flex-1 bg-foreground/20"></span>
 						{t("stats.progress.title")}
+						<span className="h-px flex-1 bg-foreground/20"></span>
 					</div>
 
 					<DailySummary

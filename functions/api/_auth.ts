@@ -1,7 +1,7 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
 import { auth } from "../../src/lib/auth";
-import { checkRateLimit } from "./_helpers";
 import type { Bindings } from "./_helpers";
+import { checkRateLimit } from "./_helpers";
 
 // Catch-all para Better Auth: aplica rate limiting por IP y delega a Better Auth
 export function registerAuth(app: OpenAPIHono<{ Bindings: Bindings }>) {

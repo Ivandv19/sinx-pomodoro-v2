@@ -8,7 +8,7 @@ export function useTranslations(lang: keyof typeof ui) {
 		key: keyof (typeof ui)[typeof defaultLang],
 		vars?: Record<string, string | number>,
 	) {
-		let str = ui[lang][key] || ui[defaultLang][key];
+		let str: string = ui[lang][key] || ui[defaultLang][key];
 		// Reemplaza variables en formato {key} con valores reales
 		if (vars) {
 			for (const [k, v] of Object.entries(vars)) {

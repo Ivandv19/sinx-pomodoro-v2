@@ -1,18 +1,15 @@
 // OpenAPI
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { handle } from "hono/cloudflare-pages";
-
+// Documentación y autenticación
+import { registerAuth } from "./_auth";
+import { registerDocs } from "./_docs";
+import type { Bindings } from "./_helpers";
 // Rutas de la API
 import { registerBreaks } from "./handlers/breaks";
 import { registerCategorias } from "./handlers/categorias";
 import { registerPomodoros } from "./handlers/pomodoros";
 import { registerTareas } from "./handlers/tareas";
-
-// Documentación y autenticación
-import { registerAuth } from "./_auth";
-import { registerDocs } from "./_docs";
-
-import type { Bindings } from "./_helpers";
 
 // Crea la app Hono con OpenAPI para documentación automática de endpoints
 const app = new OpenAPIHono<{ Bindings: Bindings }>().basePath("/api");

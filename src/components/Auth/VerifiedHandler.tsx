@@ -1,10 +1,10 @@
 /** @jsxImportSource react */
 // React
 import { useEffect, useRef } from "react";
-// Store
-import { useStore } from "../../stores/store";
 // i18n
 import { useTranslations } from "../../i18n/utils";
+// Store
+import { useStore } from "../../stores/store";
 
 // Verifica el parámetro "verified" en la URL al cargar y muestra un toast de éxito
 export default function VerifiedHandler() {
