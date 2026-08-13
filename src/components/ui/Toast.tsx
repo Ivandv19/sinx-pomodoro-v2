@@ -1,8 +1,7 @@
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
-
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const toast = ToastPrimitive.createToastManager();
 
@@ -198,17 +197,17 @@ const createToastManager = ToastPrimitive.createToastManager;
 const useToastManager = ToastPrimitive.useToastManager;
 
 export {
-	Toaster,
+	createToastManager,
 	Toast,
 	ToastAction,
 	ToastClose,
 	ToastContent,
 	ToastDescription,
+	Toaster,
 	ToastPortal,
 	ToastProvider,
 	ToastTitle,
 	ToastViewport,
-	createToastManager,
 	toast,
 	useToastManager,
 };

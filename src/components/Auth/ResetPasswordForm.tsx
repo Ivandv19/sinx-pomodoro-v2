@@ -1,19 +1,20 @@
 /** @jsxImportSource react */
 // React
+
+// Iconos
+import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 // i18n
 import { useTranslations } from "../../i18n/utils";
 // Autenticación
 import { authClient } from "../../lib/auth-client";
+import { cn } from "../../lib/utils";
 // Validaciones
 import { signupSchema } from "../../lib/validations";
 // Store
 import { useStore } from "../../stores/store";
 // Componentes
 import { Button, buttonVariants } from "../ui/button";
-import { cn } from "../../lib/utils";
-// Iconos
-import { Icon } from "@iconify/react";
 
 // Props del componente (interfaz local)
 interface ResetPasswordFormProps {

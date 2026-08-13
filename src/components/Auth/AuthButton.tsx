@@ -1,9 +1,9 @@
 /** @jsxImportSource react */
 import { Icon } from "@iconify/react";
 import { authClient } from "../../lib/auth-client";
+import { cn } from "../../lib/utils";
 import { useStore } from "../../stores/store";
 import { Button, buttonVariants } from "../ui/button";
-import { cn } from "../../lib/utils";
 
 interface Props {
 	loginText: string;
