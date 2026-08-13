@@ -1,18 +1,21 @@
 /** @jsxImportSource react */
 // React
+
+// Iconos
+import { Icon } from "@iconify/react";
 import { useState } from "react";
 // i18n
 import { useTranslations } from "../../i18n/utils";
 // Autenticación
 import { authClient } from "../../lib/auth-client";
+// Utilidades
+import { useRedirectIfAuthed } from "../../lib/useRedirectIfAuthed";
+import { cn } from "../../lib/utils";
 // Store
 import { useStore } from "../../stores/store";
 // Componentes
 import { Button, buttonVariants } from "../ui/button";
 import { Input } from "../ui/input";
-import { cn } from "../../lib/utils";
-// Iconos
-import { Icon } from "@iconify/react";
 
 // Props del componente (interfaz local)
 interface ForgotPasswordFormProps {
@@ -24,6 +27,8 @@ export default function ForgotPasswordForm({
 	redirectPath,
 }: ForgotPasswordFormProps) {
 	const t = useTranslations(useStore((s) => s.lang));
+	// Redirige al home si ya hay sesión activa (evita re-solicitar reset)
+	const redirecting = useRedirectIfAuthed(redirectPath);
 	// Estados del formulario
 	const [email, setEmail] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -52,6 +57,10 @@ export default function ForgotPasswordForm({
 	};
 
 	// Vista de confirmación de envío
+	if (redirecting) {
+		return null;
+	}
+
 	if (sent) {
 		return (
 			<div className="max-w-md w-full mx-4 text-center space-y-6 animate-fade-in-up">

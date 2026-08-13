@@ -1,54 +1,37 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
+import type { Context } from "hono";
 import { auth } from "../../src/lib/auth";
 import type { Bindings } from "./_helpers";
 import { checkRateLimit } from "./_helpers";
 
+// Respuesta 429 con mensaje en el idioma del cliente
+const tooManyRequests = (c: Context<{ Bindings: Bindings }>) =>
+	c.json(
+		{ error: "Demasiados intentos. Intente de nuevo en unos minutos." },
+		429,
+	);
+
 // Catch-all para Better Auth: aplica rate limiting por IP y delega a Better Auth
 export function registerAuth(app: OpenAPIHono<{ Bindings: Bindings }>) {
 	app.all("*", async (c) => {
-		// 1. Verifica si la ruta es de login o signup para aplicar rate limiting
+		// 1. Aplica rate limiting a las rutas sensibles
 		const path = c.req.path;
-		if (path.includes("/sign-in/email") || path.includes("/sign-up/email")) {
-			const kv = c.env.LUCIA_KV;
-			if (kv) {
-				// 2. Extrae la IP del cliente desde el header de Cloudflare
-				const ip = c.req.header("cf-connecting-ip") || "unknown";
-				// 3. Verifica si la IP excedió el límite de intentos permitidos
-				const allowed = await checkRateLimit(kv, ip);
-				// 4. Si excedió el límite, responde con 429 en el idioma del cliente
-				if (!allowed) {
-					const lang = c.req.header("Accept-Language")?.startsWith("en")
-						? "en"
-						: "es";
-					return c.json(
-						{
-							error:
-								lang === "es"
-									? "Demasiados intentos. Intente de nuevo en 5 minutos."
-									: "Too many attempts. Please try again in 5 minutes.",
-						},
-						429,
-					);
-				}
-			}
+		const ip = c.req.header("cf-connecting-ip") || "unknown";
+		const kv = c.env.LUCIA_KV;
+		const esRateLimited =
+			kv &&
+			(((path.includes("/sign-in/email") || path.includes("/sign-up/email")) &&
+				!(await checkRateLimit(kv, ip, 20, 5, "login"))) ||
+				(path.includes("/request-password-reset") &&
+					!(await checkRateLimit(kv, ip, 5, 60, "forgot-password"))));
+
+		// 2. Si excedió el límite, responde con 429
+		if (esRateLimited) {
+			return tooManyRequests(c);
 		}
 
-		// 5. Obtiene el token de Turnstile del header de la request
-		const turnstileToken = c.req.header("x-turnstile-token");
-		// 6. Inicializa la instancia de Better Auth con las bindings de Cloudflare
+		// 3. Delega la autenticación a Better Auth
 		const authInstance = auth(c.env.DB, c.env.LUCIA_KV, c.env);
-
-		// 7. Reconstruye la request con el token de Turnstile si existe
-		let requestHandler = c.req.raw;
-		if (turnstileToken) {
-			const headers = new Headers(c.req.raw.headers);
-			if (!headers.has("x-turnstile-token")) {
-				headers.set("x-turnstile-token", turnstileToken);
-			}
-			requestHandler = new Request(c.req.raw, { headers });
-		}
-
-		// 8. Delega la autenticación a Better Auth
-		return authInstance.handler(requestHandler);
+		return authInstance.handler(c.req.raw);
 	});
 }

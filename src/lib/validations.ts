@@ -36,6 +36,9 @@ export type LoginInput = z.infer<typeof loginSchema>;
 
 // ─── Compartidos ──────────────────────────────────────────
 
+// Fecha en formato YYYY-MM-DD (para query params de filtrado por día)
+const FECHA_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+
 export const idParamSchema = z.coerce
 	.number()
 	.int()
@@ -102,6 +105,7 @@ export const crearBreakSchema = z.object({
 		.number()
 		.int()
 		.min(0)
+		.max(20)
 		.openapi({ description: "Minutos reales de descanso" })
 		.optional(),
 });
@@ -115,6 +119,7 @@ export const listarTareasQuery = z.object({
 		.optional(),
 	fecha: z
 		.string()
+		.regex(FECHA_REGEX, "Fecha inválida. Formato: YYYY-MM-DD")
 		.openapi({ description: "Fecha en formato YYYY-MM-DD" })
 		.optional(),
 });
@@ -122,6 +127,7 @@ export const listarTareasQuery = z.object({
 export const listarPomodorosQuery = z.object({
 	fecha: z
 		.string()
+		.regex(FECHA_REGEX, "Fecha inválida. Formato: YYYY-MM-DD")
 		.openapi({ description: "Fecha en formato YYYY-MM-DD" })
 		.optional(),
 });
@@ -129,6 +135,7 @@ export const listarPomodorosQuery = z.object({
 export const statsQuery = z.object({
 	fecha: z
 		.string()
+		.regex(FECHA_REGEX, "Fecha inválida. Formato: YYYY-MM-DD")
 		.openapi({ description: "Fecha en formato YYYY-MM-DD" })
 		.optional(),
 });

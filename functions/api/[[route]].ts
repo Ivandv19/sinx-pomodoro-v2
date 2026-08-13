@@ -4,6 +4,8 @@ import { handle } from "hono/cloudflare-pages";
 // Documentación y autenticación
 import { registerAuth } from "./_auth";
 import { registerDocs } from "./_docs";
+// Manejo global de errores
+import { registerErrors } from "./_errors";
 import type { Bindings } from "./_helpers";
 // Rutas de la API
 import { registerBreaks } from "./handlers/breaks";
@@ -23,5 +25,8 @@ registerBreaks(app);
 // Registra la documentación OpenAPI (Swagger UI en /api/docs) y el handler de Better Auth
 registerDocs(app);
 registerAuth(app);
+
+// Registra el manejo global de errores y 404 (último para no pisar rutas existentes)
+registerErrors(app);
 
 export const onRequest = handle(app);

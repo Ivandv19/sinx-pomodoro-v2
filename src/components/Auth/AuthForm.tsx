@@ -1,5 +1,7 @@
 /** @jsxImportSource react */
 // Turnstile
+
+import { Icon } from "@iconify/react";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 // React
 import type React from "react";
@@ -9,12 +11,12 @@ import { useTranslations } from "../../i18n/utils";
 import { authClient, signIn, signUp } from "../../lib/auth-client";
 // Utilidades
 import { checkStrength } from "../../lib/password";
+import { useRedirectIfAuthed } from "../../lib/useRedirectIfAuthed";
+import { cn } from "../../lib/utils";
 // Validaciones
 import { loginSchema, signupSchema } from "../../lib/validations";
 import { useStore } from "../../stores/store";
 import { Button, buttonVariants } from "../ui/button";
-import { cn } from "../../lib/utils";
-import { Icon } from "@iconify/react";
 
 // Props del componente (interfaz local)
 interface AuthFormProps {
@@ -24,6 +26,8 @@ interface AuthFormProps {
 // Maneja login y registro con validación y Turnstile
 export default function AuthForm({ redirectPath }: AuthFormProps) {
 	const t = useTranslations(useStore((s) => s.lang));
+	// Redirige al home si ya hay sesión activa (evita re-login)
+	const redirecting = useRedirectIfAuthed(redirectPath);
 	// Estados del formulario
 	const [isLogin, setIsLogin] = useState(true);
 	const [loading, setLoading] = useState(false);
@@ -138,6 +142,10 @@ export default function AuthForm({ redirectPath }: AuthFormProps) {
 			turnstileRef.current?.reset();
 		}
 	};
+
+	if (redirecting) {
+		return null;
+	}
 
 	if (signupDone) {
 		return (
