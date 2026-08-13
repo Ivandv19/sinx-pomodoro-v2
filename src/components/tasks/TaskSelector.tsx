@@ -63,7 +63,6 @@ export default function TaskSelector({
 		deleteTarea,
 		history,
 		tareasPendientes,
-		isLoggedIn,
 	} = useStore(
 		useShallow((s) => ({
 			tareas: s.tareas,
@@ -72,7 +71,6 @@ export default function TaskSelector({
 			deleteTarea: s.deleteTarea,
 			history: s.history,
 			tareasPendientes: s.tareasPendientes,
-			isLoggedIn: s.isLoggedIn,
 		})),
 	);
 	const t = useTranslations(useStore((s) => s.lang));
@@ -245,11 +243,7 @@ export default function TaskSelector({
 													<Button
 														type="button"
 														onClick={() =>
-															updateTarea(
-																tarea.id,
-																{ estado: "done" },
-																isLoggedIn,
-															)
+															updateTarea(tarea.id, { estado: "done" })
 														}
 														variant="outline"
 														size="icon-sm"
@@ -270,7 +264,7 @@ export default function TaskSelector({
 												render={
 													<Button
 														type="button"
-														onClick={() => deleteTarea(tarea.id, isLoggedIn)}
+														onClick={() => deleteTarea(tarea.id)}
 														variant="outline"
 														size="icon-sm"
 														className="text-destructive hover:scale-110 hover:text-white hover:bg-destructive transition-transform"

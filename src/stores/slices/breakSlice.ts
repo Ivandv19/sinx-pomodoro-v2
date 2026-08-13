@@ -1,4 +1,6 @@
 // Tipos de descanso y sus estados
+import type { AppState } from "../store";
+
 export type BreakType = "short" | "long";
 export type BreakStatus = "active" | "completed" | "skipped";
 
@@ -18,8 +20,8 @@ export interface BreakSlice {
 	breakActivo: BreakActivo | null;
 
 	iniciarBreak: (tipo?: BreakType) => void;
-	completarBreak: (isLoggedIn: boolean) => Promise<void>;
-	saltarBreak: (isLoggedIn: boolean) => Promise<void>;
+	completarBreak: () => Promise<void>;
+	saltarBreak: () => Promise<void>;
 	resetBreak: () => void;
 }
 
@@ -28,7 +30,7 @@ export const crearSliceBreaks = (
 	set: (
 		partial: Partial<BreakSlice> | ((state: BreakSlice) => Partial<BreakSlice>),
 	) => void,
-	get: () => BreakSlice,
+	get: () => AppState,
 ): BreakSlice => ({
 	breakActivo: null,
 
@@ -48,8 +50,8 @@ export const crearSliceBreaks = (
 		set({ breakActivo: breakData });
 	},
 
-	completarBreak: async (isLoggedIn) => {
-		const { breakActivo } = get();
+	completarBreak: async () => {
+		const { breakActivo, isLoggedIn } = get();
 		if (!breakActivo) return;
 
 		// 1. Si está autenticado, registra en la API
@@ -66,8 +68,7 @@ export const crearSliceBreaks = (
 				});
 			} catch (error) {
 				console.error("[BreakStore] completar error:", error);
-				// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-				(get() as any).addToast?.("Error al registrar descanso", "error");
+				get().addToast("Error al registrar descanso", "error");
 			}
 		}
 		// 2. Limpia localStorage y store
@@ -77,8 +78,8 @@ export const crearSliceBreaks = (
 		set({ breakActivo: null });
 	},
 
-	saltarBreak: async (isLoggedIn) => {
-		const { breakActivo } = get();
+	saltarBreak: async () => {
+		const { breakActivo, isLoggedIn } = get();
 		if (!breakActivo) return;
 
 		// 1. Calcula tiempo transcurrido
@@ -98,8 +99,7 @@ export const crearSliceBreaks = (
 				});
 			} catch (error) {
 				console.error("[BreakStore] saltar error:", error);
-				// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-				(get() as any).addToast?.("Error al saltar descanso", "error");
+				get().addToast("Error al saltar descanso", "error");
 			}
 		}
 		// 3. Limpia localStorage y store

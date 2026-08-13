@@ -25,7 +25,6 @@ export default function BreakTimer(_props: BreakTimerProps) {
 	const breakActivo = useStore((s) => s.breakActivo);
 	const completarBreak = useStore((s) => s.completarBreak);
 	const saltarBreak = useStore((s) => s.saltarBreak);
-	const isLoggedIn = useStore((s) => s.isLoggedIn);
 
 	const totalSeconds = (breakActivo?.minutesPlanned ?? 5) * 60;
 	const [timeLeft, setTimeLeft] = useState(totalSeconds);
@@ -53,12 +52,12 @@ export default function BreakTimer(_props: BreakTimerProps) {
 	// Salta el descanso y registra como saltado
 	const handleSkip = async () => {
 		clearInterval(intervalRef.current);
-		await saltarBreak(isLoggedIn);
+		await saltarBreak();
 	};
 
 	// Continúa después del descanso completado
 	const handleContinue = async () => {
-		await completarBreak(isLoggedIn);
+		await completarBreak();
 	};
 
 	const progress = timeLeft / totalSeconds;

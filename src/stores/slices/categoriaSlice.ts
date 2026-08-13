@@ -1,21 +1,18 @@
 import type { CategoriaResponse } from "../../lib/validations";
+import type { AppState } from "../store";
 
 // Slice de gestión de categorías (CRUD contra API)
 export interface CategoriaSlice {
 	categorias: CategoriaResponse[];
 	cargando: boolean;
 
-	initCategorias: (isLoggedIn: boolean) => Promise<void>;
-	createCategoria: (
-		nombre: string,
-		isLoggedIn: boolean,
-	) => Promise<CategoriaResponse | null>;
+	initCategorias: () => Promise<void>;
+	createCategoria: (nombre: string) => Promise<CategoriaResponse | null>;
 	updateCategoria: (
 		id: number,
 		data: Partial<CategoriaResponse>,
-		isLoggedIn: boolean,
 	) => Promise<void>;
-	deleteCategoria: (id: number, isLoggedIn: boolean) => Promise<void>;
+	deleteCategoria: (id: number) => Promise<void>;
 }
 
 // Crea el slice de categorías
@@ -25,12 +22,13 @@ export const crearSliceCategorias = (
 			| Partial<CategoriaSlice>
 			| ((state: CategoriaSlice) => Partial<CategoriaSlice>),
 	) => void,
-	_get: () => CategoriaSlice,
+	get: () => AppState,
 ): CategoriaSlice => ({
 	categorias: [],
 	cargando: false,
 
-	initCategorias: async (isLoggedIn) => {
+	initCategorias: async () => {
+		const { isLoggedIn } = get();
 		if (!isLoggedIn) return;
 
 		// 1. Carga categorías desde la API
@@ -54,14 +52,14 @@ export const crearSliceCategorias = (
 			}
 		} catch (error) {
 			console.error("[CategoriaStore] init error:", error);
-			// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-			(_get() as any).addToast?.("Error al cargar categorías", "error");
+			get().addToast("Error al cargar categorías", "error");
 		} finally {
 			set({ cargando: false });
 		}
 	},
 
-	createCategoria: async (nombre, isLoggedIn) => {
+	createCategoria: async (nombre) => {
+		const { isLoggedIn } = get();
 		if (!isLoggedIn) return null;
 
 		// 1. Crea la categoría en la API
@@ -79,13 +77,13 @@ export const crearSliceCategorias = (
 			return cat;
 		} catch (error) {
 			console.error("[CategoriaStore] create error:", error);
-			// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-			(_get() as any).addToast?.("Error al crear categoría", "error");
+			get().addToast("Error al crear categoría", "error");
 			return null;
 		}
 	},
 
-	updateCategoria: async (id, data, isLoggedIn) => {
+	updateCategoria: async (id, data) => {
+		const { isLoggedIn } = get();
 		if (!isLoggedIn) return;
 
 		// 1. Actualiza en la API
@@ -97,8 +95,7 @@ export const crearSliceCategorias = (
 			});
 		} catch (error) {
 			console.error("[CategoriaStore] update error:", error);
-			// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-			(_get() as any).addToast?.("Error al actualizar categoría", "error");
+			get().addToast("Error al actualizar categoría", "error");
 		}
 		// 2. Actualiza en el store
 		set((state) => ({
@@ -108,7 +105,8 @@ export const crearSliceCategorias = (
 		}));
 	},
 
-	deleteCategoria: async (id, isLoggedIn) => {
+	deleteCategoria: async (id) => {
+		const { isLoggedIn } = get();
 		if (!isLoggedIn) return;
 
 		// 1. Elimina en la API
@@ -116,8 +114,7 @@ export const crearSliceCategorias = (
 			await fetch(`/api/categorias/${id}`, { method: "DELETE" });
 		} catch (error) {
 			console.error("[CategoriaStore] delete error:", error);
-			// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-			(_get() as any).addToast?.("Error al eliminar categoría", "error");
+			get().addToast("Error al eliminar categoría", "error");
 		}
 		// 2. Elimina del store
 		set((state) => ({

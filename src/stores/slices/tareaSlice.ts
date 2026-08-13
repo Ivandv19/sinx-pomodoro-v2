@@ -1,4 +1,5 @@
 import type { TareaResponse } from "../../lib/validations";
+import type { AppState } from "../store";
 
 // Clave para persistir tareas en localStorage (offline)
 const TAREAS_KEY = "tempo_tareas";
@@ -12,18 +13,13 @@ export interface TareaSlice {
 	tareaActiva: TareaResponse | null;
 	cargando: boolean;
 
-	init: (isLoggedIn: boolean) => Promise<void>;
+	init: () => Promise<void>;
 	createTarea: (
 		nombre: string,
-		isLoggedIn: boolean,
 		categoriaId?: number,
 	) => Promise<TareaResponse | null>;
-	updateTarea: (
-		id: number,
-		data: Partial<TareaResponse>,
-		isLoggedIn: boolean,
-	) => Promise<void>;
-	deleteTarea: (id: number, isLoggedIn: boolean) => Promise<void>;
+	updateTarea: (id: number, data: Partial<TareaResponse>) => Promise<void>;
+	deleteTarea: (id: number) => Promise<void>;
 	selectTarea: (tarea: TareaResponse | null) => void;
 }
 
@@ -32,13 +28,14 @@ export const crearSliceTareas = (
 	set: (
 		partial: Partial<TareaSlice> | ((state: TareaSlice) => Partial<TareaSlice>),
 	) => void,
-	_get: () => TareaSlice,
+	get: () => AppState,
 ): TareaSlice => ({
 	tareas: [],
 	tareaActiva: null,
 	cargando: false,
 
-	init: async (isLoggedIn) => {
+	init: async () => {
+		const { isLoggedIn } = get();
 		// 1. Si está autenticado, carga desde la API
 		if (isLoggedIn) {
 			try {
@@ -49,8 +46,7 @@ export const crearSliceTareas = (
 				}
 			} catch (error) {
 				console.error("[TareaStore] init tareas error:", error);
-				// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-				(_get() as any).addToast?.("Error al cargar tareas", "error");
+				get().addToast("Error al cargar tareas", "error");
 			}
 		} else {
 			// 2. Si no, carga desde localStorage
@@ -65,7 +61,8 @@ export const crearSliceTareas = (
 		}
 	},
 
-	createTarea: async (nombre, isLoggedIn, categoriaId) => {
+	createTarea: async (nombre, categoriaId) => {
+		const { isLoggedIn } = get();
 		// 1. Si está autenticado, crea en la API
 		if (isLoggedIn) {
 			try {
@@ -81,8 +78,7 @@ export const crearSliceTareas = (
 				return tarea;
 			} catch (error) {
 				console.error("[TareaStore] createTarea error:", error);
-				// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-				(_get() as any).addToast?.("Error al crear tarea", "error");
+				get().addToast("Error al crear tarea", "error");
 				return null;
 			}
 		}
@@ -105,7 +101,8 @@ export const crearSliceTareas = (
 		return tarea;
 	},
 
-	updateTarea: async (id, data, isLoggedIn) => {
+	updateTarea: async (id, data) => {
+		const { isLoggedIn } = get();
 		// 1. Si está autenticado, actualiza en la API
 		if (isLoggedIn) {
 			try {
@@ -130,15 +127,15 @@ export const crearSliceTareas = (
 		});
 	},
 
-	deleteTarea: async (id, isLoggedIn) => {
+	deleteTarea: async (id) => {
+		const { isLoggedIn } = get();
 		// 1. Si está autenticado, elimina en la API
 		if (isLoggedIn) {
 			try {
 				await fetch(`/api/tareas/${id}`, { method: "DELETE" });
 			} catch (error) {
 				console.error("[TareaStore] deleteTarea error:", error);
-				// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-				(_get() as any).addToast?.("Error al eliminar tarea", "error");
+				get().addToast("Error al eliminar tarea", "error");
 			}
 		}
 		// 2. Elimina del store y persiste si es offline

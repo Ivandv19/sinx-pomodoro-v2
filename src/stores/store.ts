@@ -23,9 +23,9 @@ export type AppState = TareaSlice &
 	SettingsSlice &
 	CategoriaSlice &
 	BreakSlice & {
-		initTareas: (isLoggedIn: boolean) => Promise<void>;
-		initPomodoros: (isLoggedIn: boolean) => Promise<void>;
-		initCategorias: (isLoggedIn: boolean) => Promise<void>;
+		initTareas: () => Promise<void>;
+		initPomodoros: () => Promise<void>;
+		initCategorias: () => Promise<void>;
 	};
 
 // Crea el store unificado combinando todos los slices

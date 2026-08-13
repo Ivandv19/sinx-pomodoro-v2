@@ -21,7 +21,6 @@ interface PomodoroManagerProps {
 // Orquesta el flujo principal de la app (hero, temporizador, tareas)
 export default function PomodoroManager({ lang = "es" }: PomodoroManagerProps) {
 	const {
-		isLoggedIn,
 		initTareas,
 		initCategorias,
 		createTarea,
@@ -34,7 +33,6 @@ export default function PomodoroManager({ lang = "es" }: PomodoroManagerProps) {
 		toasts,
 	} = useStore(
 		useShallow((s) => ({
-			isLoggedIn: s.isLoggedIn,
 			initTareas: s.initTareas,
 			initCategorias: s.initCategorias,
 			createTarea: s.createTarea,
@@ -64,25 +62,25 @@ export default function PomodoroManager({ lang = "es" }: PomodoroManagerProps) {
 		});
 	}, [toasts]);
 
-	// Inicializa datos al montar el componente o cambiar sesión
+	// Inicializa datos al montar el componente (login/logout recargan la página)
 	useEffect(() => {
-		initTareas(isLoggedIn);
-		initCategorias(isLoggedIn);
-		initPomodoros(isLoggedIn);
-	}, [isLoggedIn, initTareas, initCategorias, initPomodoros]);
+		initTareas();
+		initCategorias();
+		initPomodoros();
+	}, [initTareas, initCategorias, initPomodoros]);
 
 	// Crea una nueva tarea y la inicia inmediatamente
 	const handleStartTask = async (nombre: string, categoriaId?: number) => {
-		const tarea = await createTarea(nombre, isLoggedIn, categoriaId);
+		const tarea = await createTarea(nombre, categoriaId);
 		if (tarea) {
 			selectTarea(tarea);
-			iniciar(tarea.id, isLoggedIn);
+			iniciar(tarea.id);
 		}
 	};
 
 	// Inicia un pomodoro con una tarea existente
 	const handleSelectTask = (tareaId: number) => {
-		iniciar(tareaId, isLoggedIn);
+		iniciar(tareaId);
 	};
 
 	return (

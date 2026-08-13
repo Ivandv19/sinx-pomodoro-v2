@@ -1,4 +1,6 @@
 // Tipos de sesión
+import type { AppState } from "../store";
+
 export type SessionType = "focus" | "short" | "long";
 
 // Entrada del historial de pomodoros
@@ -58,13 +60,13 @@ export interface PomodoroSlice {
 	cargando: boolean;
 	tareasPendientes: Record<number, number>;
 
-	iniciar: (tareaId: number, isLoggedIn: boolean) => void;
-	completar: (isLoggedIn: boolean) => Promise<void>;
-	interrumpir: (minutesActual: number, isLoggedIn: boolean) => Promise<void>;
+	iniciar: (tareaId: number) => void;
+	completar: () => Promise<void>;
+	interrumpir: (minutesActual: number) => Promise<void>;
 	guardarLocal: (type: SessionType, minutes: number) => void;
 	restaurar: () => PomodoroActivo | null;
 	reset: () => void;
-	init: (isLoggedIn: boolean) => Promise<void>;
+	init: () => Promise<void>;
 	clearTareaPendiente: (taskId: number) => void;
 }
 
@@ -75,7 +77,7 @@ export const crearSlicePomodoros = (
 			| Partial<PomodoroSlice>
 			| ((state: PomodoroSlice) => Partial<PomodoroSlice>),
 	) => void,
-	get: () => PomodoroSlice,
+	get: () => AppState,
 ): PomodoroSlice => ({
 	pomodoroActivo: null,
 	history: [],
@@ -83,7 +85,8 @@ export const crearSlicePomodoros = (
 	cargando: false,
 	tareasPendientes: cargarRemaining(),
 
-	init: async (isLoggedIn) => {
+	init: async () => {
+		const { isLoggedIn } = get();
 		// 1. Si está autenticado, carga historial desde la API
 		if (isLoggedIn) {
 			try {
@@ -106,8 +109,7 @@ export const crearSlicePomodoros = (
 				}
 			} catch (error) {
 				console.error("[PomodoroStore] init error:", error);
-				// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-				(get() as any).addToast?.("Error al cargar historial", "error");
+				get().addToast("Error al cargar historial", "error");
 			}
 		}
 		// 2. Combina con historial local de localStorage
@@ -127,7 +129,7 @@ export const crearSlicePomodoros = (
 		get().restaurar();
 	},
 
-	iniciar: (tareaId, _isLoggedIn) => {
+	iniciar: (tareaId) => {
 		const { tareasPendientes } = get();
 		const remainingSecs = tareasPendientes[tareaId];
 		const minutesPlanned = remainingSecs ? Math.ceil(remainingSecs / 60) : 25;
@@ -141,8 +143,8 @@ export const crearSlicePomodoros = (
 		set({ pomodoroActivo: pomodoro });
 	},
 
-	completar: async (isLoggedIn) => {
-		const { pomodoroActivo } = get();
+	completar: async () => {
+		const { pomodoroActivo, isLoggedIn } = get();
 		if (!pomodoroActivo) return;
 
 		const minutes = pomodoroActivo.minutesPlanned;
@@ -164,8 +166,7 @@ export const crearSlicePomodoros = (
 				});
 			} catch (error) {
 				console.error("[PomodoroStore] completar error:", error);
-				// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-				(get() as any).addToast?.("Error al completar pomodoro", "error");
+				get().addToast("Error al completar pomodoro", "error");
 			}
 		}
 		// 3. Guarda en historial local y limpia sesión activa
@@ -174,8 +175,8 @@ export const crearSlicePomodoros = (
 		set({ pomodoroActivo: null });
 	},
 
-	interrumpir: async (minutesActual, isLoggedIn) => {
-		const { pomodoroActivo } = get();
+	interrumpir: async (minutesActual) => {
+		const { pomodoroActivo, isLoggedIn } = get();
 		if (!pomodoroActivo) return;
 
 		const remainingSecs =
@@ -206,8 +207,7 @@ export const crearSlicePomodoros = (
 				});
 			} catch (error) {
 				console.error("[PomodoroStore] interrumpir error:", error);
-				// biome-ignore lint/suspicious/noExplicitAny: acceso cross-slice a addToast
-				(get() as any).addToast?.("Error al interrumpir pomodoro", "error");
+				get().addToast("Error al interrumpir pomodoro", "error");
 			}
 		}
 		// 3. Guarda en historial local y limpia sesión activa

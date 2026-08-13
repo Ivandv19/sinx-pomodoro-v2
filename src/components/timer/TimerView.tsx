@@ -40,7 +40,6 @@ export default function TimerView(_props: TimerViewProps) {
 		interrumpir,
 		reset,
 		history,
-		isLoggedIn,
 		iniciarBreak,
 	} = useStore(
 		useShallow((s) => ({
@@ -53,7 +52,6 @@ export default function TimerView(_props: TimerViewProps) {
 			interrumpir: s.interrumpir,
 			reset: s.reset,
 			history: s.history,
-			isLoggedIn: s.isLoggedIn,
 			iniciarBreak: s.iniciarBreak,
 		})),
 	);
@@ -154,19 +152,16 @@ export default function TimerView(_props: TimerViewProps) {
 	// Abandona la sesión actual y registra el tiempo trabajado
 	const handleAbandon = async () => {
 		const elapsed = Math.round((POMODORO_SECONDS - timeLeft) / 60);
-		await interrumpir(
-			Math.min(elapsed, Math.ceil(POMODORO_SECONDS / 60)),
-			isLoggedIn,
-		);
+		await interrumpir(Math.min(elapsed, Math.ceil(POMODORO_SECONDS / 60)));
 		setShowInterrupt(false);
 		reset();
 	};
 
 	// Marca el pomodoro como completado y la tarea como hecha
 	const handleComplete = async () => {
-		await completar(isLoggedIn);
+		await completar();
 		if (tarea) {
-			await updateTarea(tarea.id, { estado: "done" }, isLoggedIn);
+			await updateTarea(tarea.id, { estado: "done" });
 		}
 		setShowComplete(false);
 		iniciarBreak();
@@ -174,7 +169,7 @@ export default function TimerView(_props: TimerViewProps) {
 
 	// Completa el pomodoro pero la tarea sigue pendiente
 	const handleNotYet = async () => {
-		await completar(isLoggedIn);
+		await completar();
 		setShowComplete(false);
 		iniciarBreak();
 	};
@@ -182,12 +177,9 @@ export default function TimerView(_props: TimerViewProps) {
 	// Cancela la tarea: registra interrupción y elimina la tarea
 	const handleCancelConfirm = async () => {
 		const elapsed = Math.round((POMODORO_SECONDS - timeLeft) / 60);
-		await interrumpir(
-			Math.min(elapsed, Math.ceil(POMODORO_SECONDS / 60)),
-			isLoggedIn,
-		);
+		await interrumpir(Math.min(elapsed, Math.ceil(POMODORO_SECONDS / 60)));
 		if (tarea) {
-			await deleteTarea(tarea.id, isLoggedIn);
+			await deleteTarea(tarea.id);
 		}
 		setShowCancelConfirm(false);
 		reset();
