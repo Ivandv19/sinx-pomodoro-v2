@@ -96,6 +96,12 @@ export const crearPomodoroSchema = z.object({
 		.max(25)
 		.openapi({ description: "Minutos reales trabajados" })
 		.optional(),
+	createdAt: z
+		.number()
+		.int()
+		.positive()
+		.openapi({ description: "Timestamp de inicio (sync del historial local)" })
+		.optional(),
 });
 
 export const crearBreakSchema = z.object({
@@ -107,6 +113,12 @@ export const crearBreakSchema = z.object({
 		.min(0)
 		.max(20)
 		.openapi({ description: "Minutos reales de descanso" })
+		.optional(),
+	createdAt: z
+		.number()
+		.int()
+		.positive()
+		.openapi({ description: "Timestamp de inicio (sync del historial local)" })
 		.optional(),
 });
 

@@ -20,8 +20,9 @@ export function registerBreaks(app: OpenAPIHono<{ Bindings: Bindings }>) {
 		if (!session) return c.json({ error: "Unauthorized" }, 401);
 
 		// 2. Valida y extrae los datos del body (tipo, status, minutos reales)
-		const { tipo, status, minutesActual } = c.req.valid("json");
-		// 3. Calcula los minutos planificados: 15 para largo, 5 para corto
+		const { tipo, status, minutesActual, createdAt } = c.req.valid("json");
+		// 3. Calcula los minutos planificados: 15 para largo, 5 para corto.
+		//    createdAt opcional: preserva el momento del historial local (sync)
 		const minutesPlanned = tipo === "long" ? 15 : 5;
 
 		// 4. Inserta el descanso en la base de datos
@@ -34,7 +35,7 @@ export function registerBreaks(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				status,
 				minutesPlanned,
 				minutesActual: minutesActual ?? null,
-				createdAt: new Date(),
+				createdAt: createdAt ? new Date(createdAt) : new Date(),
 			})
 			.returning({ id: break_.id });
 
@@ -47,7 +48,7 @@ export function registerBreaks(app: OpenAPIHono<{ Bindings: Bindings }>) {
 					status,
 					minutesPlanned,
 					minutesActual: minutesActual ?? null,
-					createdAt: Date.now(),
+					createdAt: createdAt ?? Date.now(),
 					completedAt: null,
 				},
 			},

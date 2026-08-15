@@ -24,9 +24,10 @@ export function registerPomodoros(app: OpenAPIHono<{ Bindings: Bindings }>) {
 		if (!session) return c.json({ error: "Unauthorized" }, 401);
 
 		// 2. Valida y extrae los datos del body (tareaId, status, minutos reales)
-		const { tareaId, status, minutesActual } = c.req.valid("json");
+		const { tareaId, status, minutesActual, createdAt } = c.req.valid("json");
 
-		// 3. Inserta el pomodoro con 25 minutos planificados por defecto
+		// 3. Inserta el pomodoro con 25 minutos planificados por defecto.
+		//    createdAt opcional: preserva el momento del historial local (sync)
 		const db = getDb(c.env);
 		const [row] = await db
 			.insert(pomodoro)
@@ -35,7 +36,7 @@ export function registerPomodoros(app: OpenAPIHono<{ Bindings: Bindings }>) {
 				status,
 				minutesPlanned: 25,
 				minutesActual: minutesActual ?? null,
-				createdAt: new Date(),
+				createdAt: createdAt ? new Date(createdAt) : new Date(),
 			})
 			.returning({ id: pomodoro.id });
 
@@ -48,7 +49,7 @@ export function registerPomodoros(app: OpenAPIHono<{ Bindings: Bindings }>) {
 					status,
 					minutesPlanned: 25,
 					minutesActual: minutesActual ?? null,
-					createdAt: Date.now(),
+					createdAt: createdAt ?? Date.now(),
 				},
 			},
 			201,
@@ -112,8 +113,9 @@ export function registerPomodoros(app: OpenAPIHono<{ Bindings: Bindings }>) {
 		const inicioDelDia = new Date(fecha).getTime();
 		const finDelDia = inicioDelDia + 86400000;
 
-		// 4. Consulta el total de pomodoros completados y el tiempo acumulado
-		//    (solo tareas del usuario autenticado)
+		// 4. Consulta el total de pomodoros y el tiempo acumulado
+		//    (solo tareas del usuario autenticado; regla de negocio 2:
+		//    los interrumpidos también cuentan)
 		const db = getDb(c.env);
 		const tareasDelUsuario = db
 			.select({ id: tarea.id })
@@ -130,7 +132,11 @@ export function registerPomodoros(app: OpenAPIHono<{ Bindings: Bindings }>) {
 					inArray(pomodoro.tareaId, tareasDelUsuario),
 					gte(pomodoro.createdAt, new Date(inicioDelDia)),
 					lt(pomodoro.createdAt, new Date(finDelDia)),
-					inArray(pomodoro.status, ["completed", "completed_early"]),
+					inArray(pomodoro.status, [
+						"completed",
+						"completed_early",
+						"interrupted",
+					]),
 				),
 			);
 

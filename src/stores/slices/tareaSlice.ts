@@ -21,6 +21,8 @@ export interface TareaSlice {
 	updateTarea: (id: number, data: Partial<TareaResponse>) => Promise<void>;
 	deleteTarea: (id: number) => Promise<void>;
 	selectTarea: (tarea: TareaResponse | null) => void;
+	// Helper usado por el sync (src/lib/syncLocalToCloud.ts)
+	setTareas: (tareas: TareaResponse[]) => void;
 }
 
 // Crea el slice de tareas
@@ -150,5 +152,10 @@ export const crearSliceTareas = (
 
 	selectTarea: (tarea) => {
 		set({ tareaActiva: tarea });
+	},
+
+	// Reemplaza la lista de tareas (usado por el sync al subir tareas offline)
+	setTareas: (tareas) => {
+		set({ tareas });
 	},
 });

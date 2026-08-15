@@ -106,7 +106,11 @@ export function registerTareas(app: OpenAPIHono<{ Bindings: Bindings }>) {
 			.where(
 				and(
 					eq(pomodoro.tareaId, id),
-					inArray(pomodoro.status, ["completed", "completed_early"]),
+					inArray(pomodoro.status, [
+						"completed",
+						"completed_early",
+						"interrupted",
+					]),
 				),
 			);
 

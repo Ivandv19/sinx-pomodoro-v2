@@ -1,7 +1,12 @@
 // Tipos de sesión
+
+import { traducirTareaId } from "../../lib/sync";
 import type { AppState } from "../store";
 
 export type SessionType = "focus" | "short" | "long";
+
+// Estado de finalización de un pomodoro registrado localmente
+export type LogStatus = "completed" | "interrupted";
 
 // Entrada del historial de pomodoros
 export interface LogEntry {
@@ -10,6 +15,13 @@ export interface LogEntry {
 	minutes: number;
 	startTime: string;
 	endTime: string;
+	// Datos de la tarea asociada (para el sync local → nube)
+	tareaId?: number;
+	tareaNombre?: string;
+	// Estado real de la sesión (completado o interrumpido)
+	status?: LogStatus;
+	// true = ya registrado en la nube (no se vuelve a subir)
+	synced?: boolean;
 }
 
 // Estadísticas por día
@@ -63,11 +75,24 @@ export interface PomodoroSlice {
 	iniciar: (tareaId: number) => void;
 	completar: () => Promise<void>;
 	interrumpir: (minutesActual: number) => Promise<void>;
-	guardarLocal: (type: SessionType, minutes: number) => void;
+	guardarLocal: (
+		type: SessionType,
+		minutes: number,
+		extra?: {
+			tareaId?: number;
+			tareaNombre?: string;
+			status?: LogStatus;
+			synced?: boolean;
+		},
+	) => void;
 	restaurar: () => PomodoroActivo | null;
 	reset: () => void;
 	init: () => Promise<void>;
 	clearTareaPendiente: (taskId: number) => void;
+	// Helpers usados por el sync (src/lib/syncLocalToCloud.ts)
+	setHistory: (history: LogEntry[]) => void;
+	setTareasPendientes: (map: Record<number, number>) => void;
+	traducirSesionActiva: (tareaIdReal: number) => void;
 }
 
 // Crea el slice de pomodoros
@@ -103,6 +128,12 @@ export const crearSlicePomodoros = (
 									(row.minutesActual as number) * 60000,
 							).toISOString(),
 							endTime: new Date(row.createdAt as number).toISOString(),
+							tareaId: row.tareaId as number,
+							status: (row.status === "interrupted"
+								? "interrupted"
+								: "completed") as LogStatus,
+							// Ya están en la nube: nunca se vuelven a subir
+							synced: true,
 						}),
 					);
 					set({ history });
@@ -144,43 +175,62 @@ export const crearSlicePomodoros = (
 	},
 
 	completar: async () => {
-		const { pomodoroActivo, isLoggedIn } = get();
+		const { pomodoroActivo, isLoggedIn, tareas } = get();
 		if (!pomodoroActivo) return;
 
 		const minutes = pomodoroActivo.minutesPlanned;
+		const tareaNombre = tareas.find(
+			(t) => t.id === pomodoroActivo.tareaId,
+		)?.nombre;
 
 		// 1. Limpia tiempo pendiente de la tarea
 		get().clearTareaPendiente(pomodoroActivo.tareaId);
 
-		// 2. Si está autenticado, registra en la API
+		// 2. Si está autenticado, registra en la API (traduciendo el ID local)
+		let synced = false;
 		if (isLoggedIn) {
 			try {
-				await fetch("/api/pomodoros", {
+				const tareaIdReal = await traducirTareaId({
+					tareaId: pomodoroActivo.tareaId,
+					tareasNube: tareas,
+					getNombre: (id) =>
+						get().tareas.find((t) => t.id === id)?.nombre ?? tareaNombre,
+				});
+				const res = await fetch("/api/pomodoros", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({
-						tareaId: pomodoroActivo.tareaId,
+						tareaId: tareaIdReal,
 						status: "completed",
 						minutesActual: minutes,
 					}),
 				});
+				synced = res.ok;
 			} catch (error) {
 				console.error("[PomodoroStore] completar error:", error);
 				get().addToast("Error al completar pomodoro", "error");
 			}
 		}
 		// 3. Guarda en historial local y limpia sesión activa
-		get().guardarLocal("focus", minutes);
+		get().guardarLocal("focus", minutes, {
+			tareaId: pomodoroActivo.tareaId,
+			tareaNombre,
+			status: "completed",
+			synced,
+		});
 		localStorage.removeItem(STORAGE_KEY);
 		set({ pomodoroActivo: null });
 	},
 
 	interrumpir: async (minutesActual) => {
-		const { pomodoroActivo, isLoggedIn } = get();
+		const { pomodoroActivo, isLoggedIn, tareas } = get();
 		if (!pomodoroActivo) return;
 
 		const remainingSecs =
 			Math.max(pomodoroActivo.minutesPlanned - minutesActual, 0) * 60;
+		const tareaNombre = tareas.find(
+			(t) => t.id === pomodoroActivo.tareaId,
+		)?.nombre;
 
 		// 1. Guarda tiempo restante para reanudar después
 		if (remainingSecs > 0) {
@@ -194,29 +244,42 @@ export const crearSlicePomodoros = (
 			});
 		}
 		// 2. Si está autenticado, registra interrupción en la API
+		let synced = false;
 		if (isLoggedIn) {
 			try {
-				await fetch("/api/pomodoros", {
+				const tareaIdReal = await traducirTareaId({
+					tareaId: pomodoroActivo.tareaId,
+					tareasNube: tareas,
+					getNombre: (id) =>
+						get().tareas.find((t) => t.id === id)?.nombre ?? tareaNombre,
+				});
+				const res = await fetch("/api/pomodoros", {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({
-						tareaId: pomodoroActivo.tareaId,
+						tareaId: tareaIdReal,
 						status: "interrupted",
 						minutesActual,
 					}),
 				});
+				synced = res.ok;
 			} catch (error) {
 				console.error("[PomodoroStore] interrumpir error:", error);
 				get().addToast("Error al interrumpir pomodoro", "error");
 			}
 		}
 		// 3. Guarda en historial local y limpia sesión activa
-		get().guardarLocal("focus", minutesActual);
+		get().guardarLocal("focus", minutesActual, {
+			tareaId: pomodoroActivo.tareaId,
+			tareaNombre,
+			status: "interrupted",
+			synced,
+		});
 		localStorage.removeItem(STORAGE_KEY);
 		set({ pomodoroActivo: null });
 	},
 
-	guardarLocal: (type, minutes) => {
+	guardarLocal: (type, minutes, extra) => {
 		const now = new Date();
 		const startTime = new Date(now.getTime() - minutes * 60000);
 		const entry: LogEntry = {
@@ -225,6 +288,10 @@ export const crearSlicePomodoros = (
 			minutes,
 			startTime: startTime.toISOString(),
 			endTime: now.toISOString(),
+			tareaId: extra?.tareaId,
+			tareaNombre: extra?.tareaNombre,
+			status: extra?.status ?? "completed",
+			synced: extra?.synced ?? false,
 		};
 
 		set((state) => {
@@ -269,5 +336,27 @@ export const crearSlicePomodoros = (
 			guardarRemaining(map);
 			return { tareasPendientes: map };
 		});
+	},
+
+	// Reemplaza el historial completo (usado por el sync)
+	setHistory: (history) => {
+		set({ history });
+	},
+
+	// Reemplaza el mapa de tiempo pendiente (usado por el sync tras traducir IDs)
+	setTareasPendientes: (map) => {
+		guardarRemaining(map);
+		set({ tareasPendientes: map });
+	},
+
+	// Traduce el ID de la sesión activa (pomodoro en curso) al ID real de la nube
+	traducirSesionActiva: (tareaIdReal) => {
+		const { pomodoroActivo } = get();
+		if (!pomodoroActivo) return;
+		const traducido = { ...pomodoroActivo, tareaId: tareaIdReal };
+		try {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(traducido));
+		} catch {}
+		set({ pomodoroActivo: traducido });
 	},
 });
