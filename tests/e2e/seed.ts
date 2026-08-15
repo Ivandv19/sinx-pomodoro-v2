@@ -4,13 +4,15 @@ import { join } from "node:path";
 
 const ROOT = process.cwd();
 const D1_DIR = join(ROOT, ".wrangler", "state", "v3", "d1");
+const KV_DIR = join(ROOT, ".wrangler", "state", "v3", "kv");
 
 function run(cmd: string) {
 	execSync(cmd, { cwd: ROOT, stdio: "inherit" });
 }
 
-console.log("Reseteando D1 local...");
+console.log("Reseteando D1 y KV local...");
 rmSync(D1_DIR, { recursive: true, force: true });
+rmSync(KV_DIR, { recursive: true, force: true });
 
 console.log("Aplicando migraciones...");
 run(

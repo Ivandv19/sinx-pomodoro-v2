@@ -30,6 +30,7 @@ export default function PomodoroManager({ lang = "es" }: PomodoroManagerProps) {
 		iniciar,
 		initPomodoros,
 		setLang,
+		isLoggedIn,
 		toasts,
 	} = useStore(
 		useShallow((s) => ({
@@ -42,6 +43,7 @@ export default function PomodoroManager({ lang = "es" }: PomodoroManagerProps) {
 			iniciar: s.iniciar,
 			initPomodoros: s.initPomodoros,
 			setLang: s.setLang,
+			isLoggedIn: s.isLoggedIn,
 			toasts: s.toasts,
 		})),
 	);
@@ -62,12 +64,13 @@ export default function PomodoroManager({ lang = "es" }: PomodoroManagerProps) {
 		});
 	}, [toasts]);
 
-	// Inicializa datos al montar el componente (login/logout recargan la página)
+	// Inicializa datos al montar y de nuevo cuando la sesión resuelve,
+	// para que el fetch a la nube no dependa de un race con la sesión
 	useEffect(() => {
 		initTareas();
 		initCategorias();
 		initPomodoros();
-	}, [initTareas, initCategorias, initPomodoros]);
+	}, [isLoggedIn, initTareas, initCategorias, initPomodoros]);
 
 	// Crea una nueva tarea y la inicia inmediatamente
 	const handleStartTask = async (nombre: string, categoriaId?: number) => {
