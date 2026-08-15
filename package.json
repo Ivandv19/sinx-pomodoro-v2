@@ -19,6 +19,8 @@
 		"format": "biome format --write .",
 		"lint": "biome lint --write .",
 		"check": "biome check --write .",
+		"seed:e2e": "bun tests/e2e/seed.ts",
+		"test:e2e": "bun run seed:e2e && playwright test",
 		"gen:secret": "bun -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
 	},
 	"overrides": {
@@ -60,6 +62,7 @@
 		"@better-auth/cli": "^1.4.21",
 		"@biomejs/biome": "^2.5.8",
 		"@cloudflare/workers-types": "^5.20260813.1",
+		"@playwright/test": "^1.62.1",
 		"drizzle-kit": "^0.31.10",
 		"typescript": "~5.9",
 		"wrangler": "^4.123.0"
