@@ -1,10 +1,5 @@
 import { defineConfig } from "@playwright/test";
 
-const TURNSTILE_TEST = {
-	PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA",
-	TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA",
-};
-
 const BINDING_SECRET_TEST =
 	"--binding TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA";
 const BASE =
@@ -37,6 +32,15 @@ export default defineConfig({
 			dependencies: ["setup"],
 			use: { baseURL: "http://localhost:4322" },
 		},
+		{
+			name: "mobile",
+			testMatch: /online\.spec\.ts/,
+			dependencies: ["setup"],
+			use: {
+				storageState: "tests/e2e/.state/storageState.json",
+				viewport: { width: 390, height: 844 },
+			},
+		},
 	],
 	webServer: [
 		{
@@ -46,14 +50,17 @@ export default defineConfig({
 			reuseExistingServer: false,
 		},
 		{
+			// El health check apunta a una ruta API: fuerza la compilación
+			// on-demand del bundle de funciones antes de los tests (wrangler
+			// pages dev aborta la primera conexión mientras compila)
 			command: `${BASE} --port 4321 ${BINDING_SECRET_TEST}`,
-			url: "http://localhost:4321",
+			url: "http://localhost:4321/api/auth/get-session",
 			timeout: 60_000,
 			reuseExistingServer: false,
 		},
 		{
 			command: `${BASE} --port 4322 ${BINDING_SECRET_TEST} --binding HASH_SERVICE_URL=http://localhost:3999 --binding BETTER_AUTH_URL=http://localhost:4322`,
-			url: "http://localhost:4322",
+			url: "http://localhost:4322/api/auth/get-session",
 			timeout: 60_000,
 			reuseExistingServer: false,
 		},

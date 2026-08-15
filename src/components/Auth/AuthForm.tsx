@@ -172,12 +172,12 @@ export default function AuthForm({ redirectPath }: AuthFormProps) {
 		<div className="max-w-md w-full space-y-8 bg-card/50 backdrop-blur-sm border border-border p-10 rounded-3xl shadow-2xl animate-fade-in transition-all duration-300">
 			{/* Cabecera del Formulario */}
 			<div className="text-center space-y-2">
-				<h2
+				<h1
 					key={isLogin ? "login-title" : "signup-title"}
 					className="text-4xl font-black bg-linear-to-r from-(--auth-title-from) to-(--auth-title-to) bg-clip-text text-transparent font-[Outfit] tracking-tight py-1 animate-fade-in-up"
 				>
 					{isLogin ? t("auth.login.title") : t("auth.signup.title")}
-				</h2>
+				</h1>
 				<p
 					key={isLogin ? "login-sub" : "signup-sub"}
 					className="text-sm text-(--auth-text-secondary) font-medium"

@@ -6,7 +6,11 @@ import { createServer } from "node:http";
 
 const PORT = Number(process.env.HASHY_STUB_PORT || 3010);
 
-const send = (res: import("node:http").ServerResponse, status: number, body: unknown) => {
+const send = (
+	res: import("node:http").ServerResponse,
+	status: number,
+	body: unknown,
+) => {
 	res.writeHead(status, { "Content-Type": "application/json" });
 	res.end(JSON.stringify(body));
 };

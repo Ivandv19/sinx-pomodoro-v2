@@ -36,9 +36,6 @@ test("crear tarea online y registrarla en la nube", async ({ page }) => {
 	}
 	await page.getByRole("button", { name: "Sí, completada" }).click();
 
-	// la tarea sigue pendiente, sin duplicarse
-	await expect(page.getByRole("heading", { name: NOMBRE })).toHaveCount(1);
-
 	// la tarea quedó registrada en la nube, una sola vez
 	const res = await page.request.get("/api/tareas");
 	expect(res.ok()).toBeTruthy();

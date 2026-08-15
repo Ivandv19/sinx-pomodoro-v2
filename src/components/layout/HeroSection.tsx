@@ -31,7 +31,10 @@ export default function HeroSection({ mode }: HeroSectionProps) {
 
 	// Modo default: muestra título completo con spans coloreados
 	return (
-		<div className="text-center space-y-4 mb-10 animate-fade-in-up">
+		<div
+			data-testid="hero"
+			className="text-center space-y-4 mb-10 animate-fade-in-up"
+		>
 			{/* Título principal de la landing */}
 			<h1 className="text-5xl md:text-6xl font-black bg-linear-to-r from-(--hero-title-from) to-(--hero-title-to) bg-clip-text text-transparent pb-3 tracking-tighter">
 				{t("hero.title")}

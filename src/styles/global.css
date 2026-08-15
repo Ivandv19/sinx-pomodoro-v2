@@ -205,9 +205,9 @@
   --card-border: rgba(0, 0, 0, 0.05);
   --hero-title-from: #3b82f6;
   --hero-title-to: #ec4899;
-  --hero-coding: #2563eb;
-  --hero-studying: #db2777;
-  --hero-creating: #0d9488;
+  --hero-coding: #60a5fa;
+  --hero-studying: #f472b6;
+  --hero-creating: #2dd4bf;
 }
 
 [data-theme="business"] {
