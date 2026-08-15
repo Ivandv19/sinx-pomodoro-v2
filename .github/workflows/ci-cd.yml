@@ -44,6 +44,67 @@ jobs:
       - name: Format check
         run: bun run check
 
+  e2e:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.14.1"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.13"
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock') }}
+
+      - name: Install Playwright chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: Crear .dev.vars para E2E
+        env:
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+        run: |
+          cat > .dev.vars <<EOF
+          BETTER_AUTH_URL=http://localhost:4321
+          BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+          HASH_SERVICE_URL=http://localhost:3010
+          HASH_SERVICE_API_KEY=stub
+          EOF
+
+      - name: Suite E2E (Playwright)
+        run: bun run test:e2e
+
+      - name: Subir resultados E2E si falla
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     needs: [lint]

@@ -40,6 +40,12 @@ export default defineConfig({
 	],
 	webServer: [
 		{
+			command: "bun tests/e2e/hashy-stub.ts",
+			url: "http://localhost:3010/health",
+			timeout: 30_000,
+			reuseExistingServer: false,
+		},
+		{
 			command: `${BASE} --port 4321 ${BINDING_SECRET_TEST}`,
 			url: "http://localhost:4321",
 			timeout: 60_000,
