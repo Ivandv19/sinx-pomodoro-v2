@@ -22,8 +22,15 @@ import type { TareaResponse } from "./validations";
 
 const TAREAS_KEY = "tempo_tareas";
 
+// Tarea local: además de lo que devuelve la API, lleva el flag de sync.
+// Los IDs locales se generan con Date.now() + random (≈1.7e12); los IDs
+// reales de D1 son secuenciales (AUTOINCREMENT), siempre < 1e12.
+type TareaLocal = TareaResponse & { synced?: boolean };
+
+const UMBRAL_ID_REAL = 1_000_000_000_000;
+
 // Lee las tareas offline desde localStorage (con sus IDs inventados)
-const cargarTareasLocales = (): TareaResponse[] => {
+const cargarTareasLocales = (): TareaLocal[] => {
 	if (typeof localStorage === "undefined") return [];
 	try {
 		const saved = localStorage.getItem(TAREAS_KEY);
@@ -34,10 +41,20 @@ const cargarTareasLocales = (): TareaResponse[] => {
 };
 
 // Reescribe las tareas offline en localStorage con sus IDs reales
-const persistirTareasLocales = (tareas: TareaResponse[]) => {
+const persistirTareasLocales = (tareas: TareaLocal[]) => {
 	try {
 		localStorage.setItem(TAREAS_KEY, JSON.stringify(tareas));
 	} catch {}
+};
+
+// Marca como sincronizadas las tareas locales que ya tienen un ID real
+// (subidas por un sync anterior): evita re-subirlas en cada login.
+const sanearTareasLocales = (locales: TareaLocal[]): TareaLocal[] => {
+	const saneadas = locales.map((t) =>
+		t.id >= UMBRAL_ID_REAL ? t : { ...t, synced: true },
+	);
+	persistirTareasLocales(saneadas);
+	return saneadas;
 };
 
 // 1. Sube las tareas offline, construye el mapa y traduce todo lo que
@@ -45,15 +62,26 @@ const persistirTareasLocales = (tareas: TareaResponse[]) => {
 const syncTareasLocales = async (): Promise<void> => {
 	const { tareas, setTareas } = useStore.getState();
 	const mapa = cargarMapaIds();
-	const locales = cargarTareasLocales();
+	// Poda del mapa: las claves con ID real son residuo del bug de re-subida
+	for (const k of Object.keys(mapa).map(Number)) {
+		if (k < UMBRAL_ID_REAL) delete mapa[k];
+	}
+	guardarMapaIds(mapa);
+
+	let locales = cargarTareasLocales();
 	if (locales.length === 0) return;
+	// Las tareas con ID real ya están en la nube: marcar sincronizadas
+	locales = sanearTareasLocales(locales);
 
 	const porSubir = locales.filter(
-		(t) => mapa[t.id] === undefined && !tareas.some((x) => x.id === t.id),
+		(t) =>
+			!t.synced &&
+			mapa[t.id] === undefined &&
+			!tareas.some((x) => x.id === t.id),
 	);
 	if (porSubir.length === 0) return;
 
-	const traducidas: TareaResponse[] = [];
+	const traducidas: TareaLocal[] = [];
 	for (const t of porSubir) {
 		const idReal = await traducirTareaId({
 			tareaId: t.id,
@@ -65,13 +93,15 @@ const syncTareasLocales = async (): Promise<void> => {
 			continue;
 		}
 		mapa[t.id] = idReal;
-		traducidas.push({ ...t, id: idReal });
+		traducidas.push({ ...t, id: idReal, synced: true });
 	}
 	guardarMapaIds(mapa);
 	persistirTareasLocales(traducidas);
 
-	// Las tareas recién creadas en la nube entran al store
-	const nuevas = traducidas.filter((t) => !tareas.some((x) => x.id === t.id));
+	// Las tareas recién creadas en la nube entran al store (sin el flag)
+	const nuevas = traducidas
+		.filter((t) => t.synced && !tareas.some((x) => x.id === t.id))
+		.map(({ synced: _synced, ...t }) => t);
 	if (nuevas.length > 0) {
 		setTareas([...nuevas, ...tareas]);
 	}
