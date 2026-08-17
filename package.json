@@ -21,6 +21,7 @@
 		"check": "biome check --write .",
 		"seed:e2e": "bun tests/e2e/seed.ts",
 		"test:e2e": "bun run seed:e2e && playwright test",
+		"test:smoke": "bun run build && playwright test --config=playwright.smoke.config.ts",
 		"gen:secret": "bun -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
 	},
 	"overrides": {

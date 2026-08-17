@@ -108,6 +108,13 @@ export const auth = (
 			storeSessionInDatabase: true,
 		},
 
+		// 3b1. Tokens de verificación/reset en D1 (consumo atómico single-use):
+		//      el KV no tiene operación atómica get+delete y su consumo no
+		//      coordina entre procesos. Las sesiones siguen en el KV.
+		verification: {
+			storeInDatabase: true,
+		},
+
 		// 3c. Almacenamiento secundario en KV para sesiones
 		secondaryStorage: kv
 			? {
