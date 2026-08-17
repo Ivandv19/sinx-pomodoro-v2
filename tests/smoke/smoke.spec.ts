@@ -1,7 +1,7 @@
-import { expect, test } from "@playwright/test";
 import { execSync } from "node:child_process";
 import { createHmac } from "node:crypto";
 import { readFileSync } from "node:fs";
+import { expect, test } from "@playwright/test";
 import { DUMMY_TOKEN, login, mockTurnstile } from "../e2e/helpers";
 
 // En Better Auth v1.6 el token de verificación de email es un JWT stateless
@@ -34,10 +34,14 @@ function leerTokenResetDeD1(): string {
 	const cmd = `bunx wrangler d1 execute pomodoro-db --local --json --command "SELECT identifier FROM verification WHERE identifier LIKE 'reset-password:%' ORDER BY expiresAt DESC LIMIT 1"`;
 	const out = execSync(cmd, { encoding: "utf8", timeout: 30_000 });
 	const match = out.match(/\[[\s\S]*\]/);
-	if (!match) throw new Error(`No se pudo parsear la salida de wrangler d1: ${out}`);
+	if (!match)
+		throw new Error(`No se pudo parsear la salida de wrangler d1: ${out}`);
 	const statements = JSON.parse(match[0]);
 	const row = statements?.[0]?.results?.[0];
-	expect(row?.identifier, "el token de reset debe existir en la tabla verification").toBeTruthy();
+	expect(
+		row?.identifier,
+		"el token de reset debe existir en la tabla verification",
+	).toBeTruthy();
 	return row.identifier.replace("reset-password:", "");
 }
 
@@ -71,7 +75,9 @@ test.describe("render de páginas", () => {
 		page,
 	}) => {
 		const res = await page.goto("/ruta-que-no-existe");
-		expect(res?.status(), "la página 404 debe responder con status 404").toBe(404);
+		expect(res?.status(), "la página 404 debe responder con status 404").toBe(
+			404,
+		);
 		await expect(page).toHaveTitle(/404|no encontrado|not found/i);
 	});
 });
@@ -145,7 +151,9 @@ test.describe("flujo real de registro y verificación", () => {
 		await page.goto(
 			`/api/auth/verify-email?token=${encodeURIComponent(firmarTokenVerificacion(email))}&callbackURL=${encodeURIComponent("/")}`,
 		);
-		const sesion = await (await page.request.get("/api/auth/get-session")).json();
+		const sesion = await (
+			await page.request.get("/api/auth/get-session")
+		).json();
 		expect(sesion.user.email, "el setup debe quedar con sesión").toBe(email);
 
 		// 1. Solicitar restablecimiento (equivale al formulario de forgot-password;
@@ -171,9 +179,11 @@ test.describe("flujo real de registro y verificación", () => {
 		const ctx = await browser.newContext();
 		const pageLogin = await ctx.newPage();
 		await login(pageLogin, email, nuevaPassword);
-		await expect(pageLogin.getByRole("button", { name: /salir/i })).toBeVisible({
-			timeout: 15_000,
-		});
+		await expect(pageLogin.getByRole("button", { name: /salir/i })).toBeVisible(
+			{
+				timeout: 15_000,
+			},
+		);
 		await expect(pageLogin.getByPlaceholder("Nueva tarea...")).toBeVisible();
 		await ctx.close();
 	});

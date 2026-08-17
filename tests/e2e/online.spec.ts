@@ -16,7 +16,9 @@ test("crear tarea online y registrarla en la nube", async ({ page }) => {
 
 	// completar el pomodoro retrocediendo el inicio 26 minutos
 	await page.evaluate(() => {
-		const s = JSON.parse(localStorage.getItem("pomodoro_active_session")!);
+		const raw = localStorage.getItem("pomodoro_active_session");
+		if (!raw) throw new Error("se esperaba una sesión activa");
+		const s = JSON.parse(raw);
 		s.startedAt = Date.now() - 26 * 60 * 1000;
 		localStorage.setItem("pomodoro_active_session", JSON.stringify(s));
 	});

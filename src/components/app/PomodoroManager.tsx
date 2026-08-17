@@ -66,6 +66,7 @@ export default function PomodoroManager({ lang = "es" }: PomodoroManagerProps) {
 
 	// Inicializa datos al montar y de nuevo cuando la sesión resuelve,
 	// para que el fetch a la nube no dependa de un race con la sesión
+	// biome-ignore lint/correctness/useExhaustiveDependencies: isLoggedIn re-inicializa los datos al resolver la sesión (intencional)
 	useEffect(() => {
 		initTareas();
 		initCategorias();
