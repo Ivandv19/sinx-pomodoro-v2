@@ -22,6 +22,7 @@
 		"seed:e2e": "bun tests/e2e/seed.ts",
 		"test:e2e": "bun run seed:e2e && playwright test",
 		"test:smoke": "bun run build && playwright test --config=playwright.smoke.config.ts",
+		"test:unit": "vitest run",
 		"gen:secret": "bun -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
 	},
 	"overrides": {
@@ -66,7 +67,9 @@
 		"@cloudflare/workers-types": "^5.20260813.1",
 		"@playwright/test": "^1.62.1",
 		"drizzle-kit": "^0.31.10",
+		"jsdom": "^30.0.1",
 		"typescript": "~5.9",
+		"vitest": "^4.1.11",
 		"wrangler": "^4.123.0"
 	}
 }
