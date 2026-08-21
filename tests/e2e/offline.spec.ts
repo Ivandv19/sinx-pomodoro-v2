@@ -21,8 +21,14 @@ test("tarea creada sin red se sincroniza al reconectar sin duplicarse", async ({
 	await page.reload();
 	await expect(page.getByRole("heading", { name: NOMBRE })).toHaveCount(1);
 
-	const res = await page.request.get("/api/tareas");
-	expect(res.ok()).toBeTruthy();
-	const body = JSON.stringify(await res.json());
-	expect(body.match(new RegExp(NOMBRE, "g"))).toHaveLength(1);
+	const listarTareas = async (): Promise<string[]> => {
+		const res = await page.request.get("/api/tareas");
+		if (!res.ok()) return [];
+		const body = JSON.stringify(await res.json());
+		return body.match(new RegExp(NOMBRE, "g")) ?? [];
+	};
+
+	// El sync local → nube es asíncrono (SessionProvider): esperar a que
+	// la tarea aparezca en la API y que no se haya duplicado
+	await expect.poll(listarTareas, { timeout: 10_000 }).toHaveLength(1);
 });
