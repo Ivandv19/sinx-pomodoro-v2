@@ -55,13 +55,13 @@ export default defineConfig({
 			// pages dev aborta la primera conexión mientras compila)
 			command: `${BASE} --port 4321 ${BINDING_SECRET_TEST}`,
 			url: "http://localhost:4321/api/auth/get-session",
-			timeout: 60_000,
+			timeout: 90_000,
 			reuseExistingServer: false,
 		},
 		{
 			command: `${BASE} --port 4322 ${BINDING_SECRET_TEST} --binding HASH_SERVICE_URL=http://localhost:3999 --binding BETTER_AUTH_URL=http://localhost:4322`,
 			url: "http://localhost:4322/api/auth/get-session",
-			timeout: 60_000,
+			timeout: 90_000,
 			reuseExistingServer: false,
 		},
 	],

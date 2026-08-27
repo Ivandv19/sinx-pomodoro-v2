@@ -1,0 +1,35 @@
+name: Setup E2E
+description: Reusa setup + Playwright browsers + .dev.vars para E2E
+
+inputs:
+  better-auth-secret:
+    description: BETTER_AUTH_SECRET para .dev.vars
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Bun env
+      uses: ./.github/actions/setup
+
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock') }}
+
+    - name: Install Playwright chromium
+      shell: bash
+      run: bunx playwright install --with-deps chromium
+
+    - name: Crear .dev.vars para E2E
+      shell: bash
+      env:
+        BETTER_AUTH_SECRET: ${{ inputs.better-auth-secret }}
+      run: |
+        cat > .dev.vars <<EOF
+        BETTER_AUTH_URL=http://localhost:4321
+        BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+        HASH_SERVICE_URL=http://localhost:3010
+        HASH_SERVICE_API_KEY=stub
+        EOF

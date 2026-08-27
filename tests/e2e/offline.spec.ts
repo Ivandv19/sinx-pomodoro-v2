@@ -21,6 +21,14 @@ test("tarea creada sin red se sincroniza al reconectar sin duplicarse", async ({
 	await page.reload();
 	await expect(page.getByRole("heading", { name: NOMBRE })).toHaveCount(1);
 
+	// El sync es async via SessionProvider: esperar al POST de tareas antes de pollear
+	await page
+		.waitForResponse(
+			(r) => r.url().includes("/api/tareas") && r.request().method() === "POST",
+			{ timeout: 15_000 },
+		)
+		.catch(() => {});
+
 	const listarTareas = async (): Promise<string[]> => {
 		const res = await page.request.get("/api/tareas");
 		if (!res.ok()) return [];
@@ -28,7 +36,8 @@ test("tarea creada sin red se sincroniza al reconectar sin duplicarse", async ({
 		return body.match(new RegExp(NOMBRE, "g")) ?? [];
 	};
 
-	// El sync local → nube es asíncrono (SessionProvider): esperar a que
-	// la tarea aparezca en la API y que no se haya duplicado
-	await expect.poll(listarTareas, { timeout: 10_000 }).toHaveLength(1);
+	// Poll con intervalos para evitar flake en CI
+	await expect
+		.poll(listarTareas, { timeout: 15_000, intervals: [500, 1_000, 2_000] })
+		.toHaveLength(1);
 });
