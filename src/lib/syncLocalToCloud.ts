@@ -253,11 +253,22 @@ const syncBreaks = async (): Promise<void> => {
 	}
 };
 
+// Helper para exponer estado del sync a E2E (Playwright waitForFunction)
+// Patrón estándar para tests de sync offline: exponer flag global + evento
+const setSyncFlag = (done: boolean) => {
+	if (typeof window === "undefined") return;
+	(window as unknown as Record<string, unknown>).__tempoSyncDone = done;
+	window.dispatchEvent(
+		new CustomEvent(done ? "tempo-sync-done" : "tempo-sync-start"),
+	);
+};
+
 // Orquesta el sync completo. Seguro de llamar en cada login/page load.
 export const syncLocalToCloud = async (): Promise<void> => {
 	const { isLoggedIn } = useStore.getState();
 	if (!isLoggedIn) return;
 
+	setSyncFlag(false);
 	try {
 		await syncTareasLocales();
 	} catch (error) {
@@ -273,4 +284,5 @@ export const syncLocalToCloud = async (): Promise<void> => {
 	} catch (error) {
 		console.error("[Sync] syncBreaks error:", error);
 	}
+	setSyncFlag(true);
 };

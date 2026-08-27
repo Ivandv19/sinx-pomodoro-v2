@@ -23,10 +23,17 @@ export default function SessionProvider() {
 			// próxima carga de página.
 			if (!syncedRef.current) {
 				syncedRef.current = true;
-				syncLocalToCloud().catch((error) => {
-					console.error("[Sync] syncLocalToCloud error:", error);
-					syncedRef.current = false;
-				});
+				syncLocalToCloud()
+					.catch((error) => {
+						console.error("[Sync] syncLocalToCloud error:", error);
+						syncedRef.current = false;
+					})
+					.finally(() => {
+						// Asegura flag global para E2E (playwright waitForFunction)
+						if (typeof window !== "undefined") {
+							window.dispatchEvent(new CustomEvent("tempo-sync-done"));
+						}
+					});
 			}
 		} else {
 			setUser(null);
