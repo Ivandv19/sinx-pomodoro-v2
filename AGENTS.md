@@ -1,26 +1,32 @@
 # Tempo
 
-App de Pomodoro + gestión de tareas. Astro + React + Cloudflare (Workers + D1).
+App de Pomodoro + gestión de tareas. Astro 7 + React 19 + Cloudflare (Pages + D1 + KV).
 
 ## Antes de tocar código
 
-Lee primero:
+Lee `docs/DOCUMENTACION.md` — arquitectura, offline-first, sync y reglas.
+Verifica índice: `codegraph status /home/ivan/software-dev/tempo` (y `codegraph sync` si tocaste `src/`).
 
-- `docs/ARCHITECTURE.md` — stack, schema de la BD, capas, flujo offline-first
-- `docs/BUSINESS-RULES.md` — reglas de negocio vigentes (no romperlas sin discutir)
-- `docs/DECISIONS.md` — decisiones de diseño y pendientes registrados
+## Comandos útiles (bun)
 
-## Comandos
+- `bun run dev` — Astro dev (solo frontend, puerto 4321)
+- `bun run dev:full` — `astro build && wrangler pages dev dist/ --port 4321` (con API + D1 local)
+- `bun run build` / `bun run preview`
+- `bun run check` (= `biome check --write` lint+format) | `bun run lint` solo lint
+- `bun run test:unit` (Vitest) | `bun run test:e2e` (seed + Playwright)
+- `bunx wrangler pages dev dist/ --port 4321` — wrangler local directo (si no usas `dev:full`)
+- `bunx wrangler d1 execute pomodoro-db --local --file=<sql>` — aplicar SQL local
 
-- `bun run dev` — dev local (Astro)
-- `bun run build` — build de producción (prebuild = `bun install`)
-- `bun run check` — biome check --write (formato + lint)
-- `bun run db:gen` — genera migraciones de Drizzle
-- `bunx wrangler d1 execute pomodoro-db --local|--remote --file=<sql>` — aplicar migraciones
+## Convenciones
 
-## Convenciones del repo
+- Español en código/comentarios.
 
-- Comentarios y código en español
-- Store: Zustand con slices (`src/stores/slices/*.ts`)
-- API: Hono + zod-openapi en `functions/api/` (handlers + schemas separados)
-- Offline-first: toda mutación local persiste en localStorage y la API se usa si `isLoggedIn`
+## Entornos
+
+- Local: `.dev.vars` con `BETTER_AUTH_URL=http://localhost:4321`, `BETTER_AUTH_SECRET`, `HASH_SERVICE_URL=http://localhost:3010`, keys Turnstile. Corre con `bun run dev:full`.
+- Prod: secrets en GitHub Actions / Cloudflare (`BETTER_AUTH_SECRET`, `CLOUDFLARE_API_TOKEN`, etc.). URL `https://tempo.mgdc.site`.
+
+## Que NO hacer
+
+- No mandar IDs locales `Date.now()+random` a `/api/*` sin `traducirTareaId` (`src/lib/sync.ts:58`).
+- No iniciar pomodoro sin `tareaId`.
