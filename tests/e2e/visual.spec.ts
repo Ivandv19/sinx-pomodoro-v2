@@ -15,6 +15,9 @@ test.describe("visual regression", () => {
 			await mockTurnstile(page);
 			await page.goto("/login");
 			await page.getByPlaceholder("ejemplo@correo.com").waitFor();
+			// Esperar a que fuentes Outfit + Turnstile stub terminen (race de networkidle)
+			await page.waitForLoadState("networkidle").catch(() => {});
+			await page.waitForTimeout(500);
 			await expect(page).toHaveScreenshot("login.png", {
 				animations: "disabled",
 			});
@@ -26,6 +29,8 @@ test.describe("visual regression", () => {
 	test("el hero del dashboard coincide con el baseline", async ({ page }) => {
 		await page.goto("/");
 		await page.getByRole("button", { name: /salir/i }).waitFor();
+		await page.waitForLoadState("networkidle").catch(() => {});
+		await page.waitForTimeout(500);
 		await expect(page.getByTestId("hero")).toHaveScreenshot("hero.png", {
 			animations: "disabled",
 		});
