@@ -3,7 +3,7 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 // Zod
 import { ZodError } from "zod";
 // Helpers
-import type { Bindings } from "./_helpers";
+import type { Bindings } from "../_shared/types";
 
 // Registra el manejo global de errores y 404 de la API
 export function registerErrors(app: OpenAPIHono<{ Bindings: Bindings }>) {

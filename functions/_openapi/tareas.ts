@@ -10,9 +10,9 @@ import {
 	listarTareasQuery,
 	tareaDetalleResponse as tareaDetalleResponseSchema,
 	tareaResponse as tareaResponseSchema,
-} from "../../../src/lib/validations";
+} from "../../src/lib/validations";
 // Helpers
-import { dataResponse, errorSchema, successSchema } from "../_helpers";
+import { dataResponse, errorSchema, successSchema } from "../_shared/helpers";
 
 // Define la ruta para listar tareas
 export const listarTareasRoute = createRoute({

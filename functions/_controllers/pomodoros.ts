@@ -3,17 +3,17 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 // Drizzle
 import { and, count, desc, eq, gte, inArray, lt, sql } from "drizzle-orm";
 // Schema
-import { pomodoro, tarea } from "../../../src/db/schema";
-// Helpers
-import { getDb, toMsReq } from "../_db";
-import type { Bindings } from "../_helpers";
-import { getSession } from "../_helpers";
+import { pomodoro, tarea } from "../../src/db/schema";
+// Helpers & DB
+import { dateToTimestampRequired, getDb } from "../_db/db";
 // OpenAPI
 import {
 	crearPomodoroRoute,
 	listarPomodorosRoute,
 	statsPomodorosRoute,
-} from "../openapi/pomodoros";
+} from "../_openapi/pomodoros";
+import { getSession } from "../_shared/helpers";
+import type { Bindings } from "../_shared/types";
 
 // Registra las rutas de pomodoros en la aplicación
 export function registerPomodoros(app: OpenAPIHono<{ Bindings: Bindings }>) {
@@ -95,7 +95,7 @@ export function registerPomodoros(app: OpenAPIHono<{ Bindings: Bindings }>) {
 		// 5. Convierte las fechas a timestamps numéricos y responde
 		const results = rows.map((p) => ({
 			...p,
-			createdAt: toMsReq(p.createdAt),
+			createdAt: dateToTimestampRequired(p.createdAt),
 		}));
 		return c.json({ data: results }, 200);
 	});

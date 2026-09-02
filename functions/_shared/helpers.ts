@@ -1,19 +1,7 @@
-import type { D1Database, KVNamespace } from "@cloudflare/workers-types";
+import type { KVNamespace } from "@cloudflare/workers-types";
 import { z } from "@hono/zod-openapi";
 import { auth } from "../../src/lib/auth";
-
-// Bindings de Cloudflare: variables de entorno, D1, KV
-export type Bindings = {
-	DB: D1Database;
-	LUCIA_KV: KVNamespace;
-	BETTER_AUTH_SECRET: string;
-	BETTER_AUTH_URL: string;
-	TURNSTILE_SECRET_KEY: string;
-	HASH_SERVICE_URL: string;
-	HASH_SERVICE_API_KEY: string;
-	RESEND_API_KEY: string;
-	RESEND_FROM?: string;
-};
+import type { Bindings } from "./types";
 
 // Schema base para respuestas de error (string o detalle)
 export const errorSchema = z.object({

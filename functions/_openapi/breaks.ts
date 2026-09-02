@@ -7,9 +7,9 @@ import {
 	breakResponse as breakResponseSchema,
 	crearBreakSchema,
 	listarPomodorosQuery,
-} from "../../../src/lib/validations";
+} from "../../src/lib/validations";
 // Helpers
-import { dataResponse, errorSchema } from "../_helpers";
+import { dataResponse, errorSchema } from "../_shared/helpers";
 
 // Define la ruta para registrar un descanso
 export const crearBreakRoute = createRoute({

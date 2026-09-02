@@ -1,6 +1,6 @@
 import { swaggerUI } from "@hono/swagger-ui";
 import type { OpenAPIHono } from "@hono/zod-openapi";
-import type { Bindings } from "./_helpers";
+import type { Bindings } from "../_shared/types";
 
 // Registra los endpoints de documentación: schema OpenAPI en /api/openapi y Swagger UI en /api/docs
 export function registerDocs(app: OpenAPIHono<{ Bindings: Bindings }>) {

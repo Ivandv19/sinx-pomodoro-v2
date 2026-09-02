@@ -1,8 +1,8 @@
 import type { OpenAPIHono } from "@hono/zod-openapi";
 import type { Context } from "hono";
 import { auth } from "../../src/lib/auth";
-import type { Bindings } from "./_helpers";
-import { checkRateLimit } from "./_helpers";
+import { checkRateLimit } from "../_shared/helpers";
+import type { Bindings } from "../_shared/types";
 
 // Respuesta 429 con mensaje en el idioma del cliente
 const tooManyRequests = (c: Context<{ Bindings: Bindings }>) =>

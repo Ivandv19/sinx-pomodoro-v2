@@ -3,16 +3,16 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 // Drizzle
 import { asc, desc, eq } from "drizzle-orm";
 // Schema
-import { categoria } from "../../../src/db/schema";
-// Helpers
-import { getDb } from "../_db";
-import type { Bindings } from "../_helpers";
-import { getSession } from "../_helpers";
+import { categoria } from "../../src/db/schema";
+// Helpers & DB
+import { getDb } from "../_db/db";
 // OpenAPI
 import {
 	listarCategoriasRoute,
 	seedCategoriasRoute,
-} from "../openapi/categorias";
+} from "../_openapi/categorias";
+import { getSession } from "../_shared/helpers";
+import type { Bindings } from "../_shared/types";
 
 // Registra las rutas de categorías en la aplicación
 export function registerCategorias(app: OpenAPIHono<{ Bindings: Bindings }>) {

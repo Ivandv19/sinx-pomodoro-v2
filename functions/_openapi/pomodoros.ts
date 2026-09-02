@@ -9,9 +9,9 @@ import {
 	pomodoroResponse as pomodoroResponseSchema,
 	statsQuery,
 	statsResponse as statsResponseSchema,
-} from "../../../src/lib/validations";
+} from "../../src/lib/validations";
 // Helpers
-import { dataResponse, errorSchema } from "../_helpers";
+import { dataResponse, errorSchema } from "../_shared/helpers";
 
 // Define la ruta para registrar un pomodoro
 export const crearPomodoroRoute = createRoute({

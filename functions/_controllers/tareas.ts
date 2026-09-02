@@ -3,11 +3,9 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 // Drizzle
 import { and, count, desc, eq, inArray, sql } from "drizzle-orm";
 // Schema
-import { pomodoro, tarea } from "../../../src/db/schema";
-// Helpers
-import { getDb, toMs, toMsReq } from "../_db";
-import type { Bindings } from "../_helpers";
-import { getSession } from "../_helpers";
+import { pomodoro, tarea } from "../../src/db/schema";
+// Helpers & DB
+import { dateToTimestamp, dateToTimestampRequired, getDb } from "../_db/db";
 // OpenAPI
 import {
 	actualizarTareaRoute,
@@ -15,7 +13,9 @@ import {
 	eliminarTareaRoute,
 	listarTareasRoute,
 	obtenerTareaRoute,
-} from "../openapi/tareas";
+} from "../_openapi/tareas";
+import { getSession } from "../_shared/helpers";
+import type { Bindings } from "../_shared/types";
 
 // Registra las rutas de tareas en la aplicación
 export function registerTareas(app: OpenAPIHono<{ Bindings: Bindings }>) {
@@ -50,8 +50,8 @@ export function registerTareas(app: OpenAPIHono<{ Bindings: Bindings }>) {
 		// 4. Convierte las fechas a timestamps numéricos y responde
 		const results = rows.map((t) => ({
 			...t,
-			createdAt: toMsReq(t.createdAt),
-			completedAt: toMs(t.completedAt),
+			createdAt: dateToTimestampRequired(t.createdAt),
+			completedAt: dateToTimestamp(t.completedAt),
 		}));
 		return c.json({ data: results }, 200);
 	});
@@ -119,11 +119,11 @@ export function registerTareas(app: OpenAPIHono<{ Bindings: Bindings }>) {
 			{
 				data: {
 					...tareaRow,
-					createdAt: toMsReq(tareaRow.createdAt),
-					completedAt: toMs(tareaRow.completedAt),
+					createdAt: dateToTimestampRequired(tareaRow.createdAt),
+					completedAt: dateToTimestamp(tareaRow.completedAt),
 					pomodoros: pomodorosRows.map((p) => ({
 						...p,
-						createdAt: toMsReq(p.createdAt),
+						createdAt: dateToTimestampRequired(p.createdAt),
 					})),
 					stats: statsRow ?? { total: 0, totalTime: 0 },
 				},

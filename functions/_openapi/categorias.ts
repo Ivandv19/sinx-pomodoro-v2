@@ -2,9 +2,9 @@
 import { createRoute } from "@hono/zod-openapi";
 // Zod
 import { z } from "zod";
-import { categoriaResponse as categoriaResponseSchema } from "../../../src/lib/validations";
+import { categoriaResponse as categoriaResponseSchema } from "../../src/lib/validations";
 // Helpers
-import { dataResponse, errorSchema } from "../_helpers";
+import { dataResponse, errorSchema } from "../_shared/helpers";
 
 // Define la ruta para listar categorías del usuario
 export const listarCategoriasRoute = createRoute({

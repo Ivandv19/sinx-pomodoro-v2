@@ -3,13 +3,13 @@ import type { OpenAPIHono } from "@hono/zod-openapi";
 // Drizzle
 import { and, asc, eq, gte, lt } from "drizzle-orm";
 // Schema
-import { break_ } from "../../../src/db/schema";
-// Helpers
-import { getDb, toMs, toMsReq } from "../_db";
-import type { Bindings } from "../_helpers";
-import { getSession } from "../_helpers";
+import { break_ } from "../../src/db/schema";
+// Helpers & DB
+import { dateToTimestamp, dateToTimestampRequired, getDb } from "../_db/db";
 // OpenAPI
-import { crearBreakRoute, listarBreaksRoute } from "../openapi/breaks";
+import { crearBreakRoute, listarBreaksRoute } from "../_openapi/breaks";
+import { getSession } from "../_shared/helpers";
+import type { Bindings } from "../_shared/types";
 
 // Registra las rutas de descansos en la aplicación
 export function registerBreaks(app: OpenAPIHono<{ Bindings: Bindings }>) {
@@ -94,8 +94,8 @@ export function registerBreaks(app: OpenAPIHono<{ Bindings: Bindings }>) {
 		// 5. Convierte las fechas a timestamps numéricos y responde
 		const results = rows.map((b) => ({
 			...b,
-			createdAt: toMsReq(b.createdAt),
-			completedAt: toMs(b.completedAt),
+			createdAt: dateToTimestampRequired(b.createdAt),
+			completedAt: dateToTimestamp(b.completedAt),
 		}));
 		return c.json({ data: results }, 200);
 	});
