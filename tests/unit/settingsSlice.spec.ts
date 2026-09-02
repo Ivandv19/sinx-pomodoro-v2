@@ -1,3 +1,4 @@
+// Tests unitarios de configuración (tema visual e idioma)
 import { afterEach, describe, expect, it } from "vitest";
 import { crearStore } from "./helpers";
 

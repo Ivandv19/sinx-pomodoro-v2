@@ -1,14 +1,11 @@
-// Suite de API sin navegador: el fixture request hereda la sesión del
-// storageState del setup (login de e2e@tempo.dev) y dispara HTTP directo
-// contra el Workers local, sin renderizar la UI.
+// Pruebas de contrato HTTP directo contra la API (sin navegador)
 import { type APIRequestContext, expect, test } from "@playwright/test";
 
 const SIN_SESION: Parameters<typeof test.use>[0] = {
 	storageState: { cookies: [], origins: [] },
 };
 
-// POST /api/tareas crea una tarea y devuelve su id (para los tests que
-// necesitan una tarea propia; se limpia al final del test).
+// Helper: crea tarea de prueba vía API y devuelve su ID
 const crearTareaApi = async (request: APIRequestContext) => {
 	const res = await request.post("/api/tareas", {
 		data: { nombre: `API ${Date.now()}` },

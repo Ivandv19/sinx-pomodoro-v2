@@ -1,3 +1,4 @@
+// Tests unitarios de categorías (CRUD y seeding inicial)
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { crearStore, jsonOk, loguear, mockFetch } from "./helpers";
 

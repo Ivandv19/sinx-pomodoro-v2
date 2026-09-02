@@ -1,20 +1,21 @@
+// Valida flujo completo online: crear tarea, registrar pomodoro y persistir en la nube
 import { expect, test } from "@playwright/test";
 
 const NOMBRE = `E2E online ${Date.now()}`;
 
 test("crear tarea online y registrarla en la nube", async ({ page }) => {
+	// 1. Crea la tarea e inicia el pomodoro
 	await page.goto("/");
 	await page.getByPlaceholder("Nueva tarea...").fill(NOMBRE);
 	await page.getByRole("button", { name: "Crear y empezar" }).click();
 
-	// se crea y arranca el pomodoro
 	await expect(page.getByRole("heading", { name: NOMBRE })).toBeVisible();
 	const activa = await page.evaluate(() =>
 		localStorage.getItem("pomodoro_active_session"),
 	);
 	expect(activa).not.toBeNull();
 
-	// completar el pomodoro retrocediendo el inicio 26 minutos
+	// 2. Simula paso del tiempo (26 min) para completar el pomodoro
 	await page.evaluate(() => {
 		const raw = localStorage.getItem("pomodoro_active_session");
 		if (!raw) throw new Error("se esperaba una sesión activa");
@@ -24,8 +25,7 @@ test("crear tarea online y registrarla en la nube", async ({ page }) => {
 	});
 	await page.reload();
 
-	// al recargar aparece el modal de sesión guardada: continuar para
-	// que el timer llegue a 0 y pregunte si se completó
+	// 3. Resuelve modales de reanudación y confirmación
 	await page
 		.getByText(/Sesión interrumpida|¿Terminaste la tarea\?/)
 		.first()
@@ -38,7 +38,7 @@ test("crear tarea online y registrarla en la nube", async ({ page }) => {
 	}
 	await page.getByRole("button", { name: "Sí, completada" }).click();
 
-	// la tarea quedó registrada en la nube, una sola vez
+	// 4. Confirma registro único de la tarea en la API
 	const res = await page.request.get("/api/tareas");
 	expect(res.ok()).toBeTruthy();
 	const body = JSON.stringify(await res.json());

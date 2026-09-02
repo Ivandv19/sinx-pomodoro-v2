@@ -4,11 +4,7 @@ import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
 import { DUMMY_TOKEN, login, mockTurnstile } from "../e2e/helpers";
 
-// En Better Auth v1.6 el token de verificación de email es un JWT stateless
-// (HS256 firmado con BETTER_AUTH_SECRET) que el email llevaría en su link.
-// El email real no se envía (RESEND_API_KEY es fake en dev): firmamos el JWT
-// nosotros con el mismo secret del .dev.vars local — el endpoint verify-email
-// lo acepta idéntico al que firmaría el servidor.
+// Genera JWT de verificación firmado con BETTER_AUTH_SECRET local
 function firmarTokenVerificacion(email: string): string {
 	const raw = readFileSync(".dev.vars", "utf8");
 	const match = raw.match(/^BETTER_AUTH_SECRET=(.+)$/m);
@@ -25,11 +21,7 @@ function firmarTokenVerificacion(email: string): string {
 	return `${header}.${payload}.${signature}`;
 }
 
-// El token de reset-password se persiste en D1: Better Auth v1.6 con
-// `verification.storeInDatabase: true` (config en src/lib/auth.ts) guarda las
-// verification values en la tabla `verification` — identifier
-// `reset-password:<token>` (columna `value` guarda el user id). Es exactamente
-// el link que el email de recuperación llevaría.
+// Obtiene el token de reset-password generado en D1
 function leerTokenResetDeD1(): string {
 	const cmd = `bunx wrangler d1 execute pomodoro-db --local --json --command "SELECT identifier FROM verification WHERE identifier LIKE 'reset-password:%' ORDER BY expiresAt DESC LIMIT 1"`;
 	const out = execSync(cmd, { encoding: "utf8", timeout: 30_000 });

@@ -1,3 +1,4 @@
+// Tests unitarios de notificaciones toast (ciclo de vida y auto-remoción)
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { crearStore } from "./helpers";
 

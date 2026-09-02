@@ -1,7 +1,4 @@
-// Stub del servicio de hash para los tests E2E
-// Reemplaza a hashy (Go/Docker) por un servidor determinista que siempre
-// responde match: true, suficiente para probar el flujo de la app sin
-// depender del contenedor local ni de un build en CI.
+// Stub determinista de hashing para tests E2E (sin depender de Docker)
 import { createServer } from "node:http";
 
 const PORT = Number(process.env.HASHY_STUB_PORT || 3010);

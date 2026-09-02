@@ -1,3 +1,4 @@
+// Tests unitarios de descansos (duración, historial y sincronización)
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { crearStore, jsonOk, loguear, mockFetch } from "./helpers";
 

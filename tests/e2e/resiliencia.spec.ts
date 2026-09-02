@@ -1,3 +1,4 @@
+// Valida respuesta amigable cuando el microservicio de hashing está caído
 import { expect, test } from "@playwright/test";
 import { login } from "./helpers";
 
@@ -6,6 +7,7 @@ test("el login falla limpio cuando el servicio de hash no responde", async ({
 }) => {
 	await login(page, "e2e@tempo.dev", "TestE2E!pass2026");
 
+	// Valida mensaje de error sin romper la interfaz
 	await expect(
 		page.getByText(/Ocurrió un error|Servicio de autenticación no disponible/),
 	).toBeVisible();

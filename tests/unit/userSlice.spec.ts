@@ -1,3 +1,4 @@
+// Tests unitarios de usuario (estado de sesión y autenticación)
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { crearStore } from "./helpers";
 

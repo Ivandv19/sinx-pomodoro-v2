@@ -1,3 +1,4 @@
+// Tests unitarios de tareas (operaciones offline-first y sincronización con API)
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { crearStore, jsonOk, loguear, mockFetch } from "./helpers";
 

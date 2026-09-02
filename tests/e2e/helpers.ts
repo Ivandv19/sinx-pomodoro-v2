@@ -1,9 +1,9 @@
 import { expect, type Page } from "@playwright/test";
 
+// Token simulado de Turnstile para tests automatizados
 export const DUMMY_TOKEN = "XXXX.DUMMY.TOKEN.XXXX";
 
-// Turnstile no carga en headless: se mockea el script con un stub que
-// resuelve el token dummy (las test keys lo aceptan en siteverify).
+// Mock de Turnstile para navegadores headless
 export async function mockTurnstile(page: Page) {
 	await page.route("**/challenges.cloudflare.com/**", (route) =>
 		route.fulfill({
@@ -21,6 +21,7 @@ export async function mockTurnstile(page: Page) {
 	);
 }
 
+// Flujo de login en la interfaz web
 export async function login(page: Page, email: string, password: string) {
 	await mockTurnstile(page);
 	await page.goto("/login");
@@ -29,6 +30,7 @@ export async function login(page: Page, email: string, password: string) {
 	await page.getByRole("button", { name: "Entrar" }).click();
 }
 
+// Valida redirección exitosa al dashboard
 export async function expectLoginExitoso(page: Page) {
 	await expect(page).toHaveURL(/localhost:4321\/(es\/)?$/, { timeout: 15_000 });
 }

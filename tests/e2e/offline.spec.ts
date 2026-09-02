@@ -25,9 +25,14 @@ test("tarea creada sin red se sincroniza al reconectar sin duplicarse", async ({
 	// syncLocalToCloud expone window.__tempoSyncDone + evento tempo-sync-done
 	// Esto es más robusto que solo waitForResponse (puede perderse si el POST ya pasó)
 	await page
-		.waitForFunction(() => (window as unknown as Record<string, unknown>).__tempoSyncDone === true, null, {
-			timeout: 15_000,
-		})
+		.waitForFunction(
+			() =>
+				(window as unknown as Record<string, unknown>).__tempoSyncDone === true,
+			null,
+			{
+				timeout: 15_000,
+			},
+		)
 		.catch(() => {});
 	// Fallback por si el flag no se seteó (navegador sin window): espera al POST
 	await page
