@@ -25,7 +25,10 @@
 		"test:visual:update": "bun run seed:e2e && playwright test tests/e2e/visual.spec.ts --update-snapshots",
 		"test:smoke": "bun run build && playwright test --config=playwright.smoke.config.ts",
 		"test:unit": "vitest run",
-		"gen:secret": "bun -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
+		"gen:secret": "bun -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"",
+		"snyk:auth": "snyk auth",
+		"snyk:test": "snyk test",
+		"snyk:monitor": "snyk monitor"
 	},
 	"overrides": {
 		"@types/react": "^19.0.0",
@@ -70,6 +73,7 @@
 		"@playwright/test": "^1.62.1",
 		"drizzle-kit": "^0.31.10",
 		"jsdom": "^30.0.1",
+		"snyk": "^1.1307.0",
 		"typescript": "^7.0.2",
 		"vitest": "^5.0.0",
 		"wrangler": "^4.129.0"
