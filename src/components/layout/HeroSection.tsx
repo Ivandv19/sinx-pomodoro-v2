@@ -57,7 +57,7 @@ export default function HeroSection({ mode }: HeroSectionProps) {
 					</span>
 				</p>
 				{/* Segunda parte del subtítulo */}
-				<p className="opacity-80">{t("hero.subtitle.part2")}</p>
+				<p>{t("hero.subtitle.part2")}</p>
 			</div>
 		</div>
 	);

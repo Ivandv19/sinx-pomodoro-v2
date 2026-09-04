@@ -81,9 +81,9 @@
 /* ─── Tema claro ─────────────────────────────────────── */
 :root {
   /* Acción (azul) */
-  --primary: #2563eb;
+  --primary: #1d4ed8;
   --primary-foreground: #ffffff;
-  --ring: #2563eb;
+  --ring: #1d4ed8;
 
   /* Superficies */
   --background: #ffffff;
@@ -95,7 +95,7 @@
   --secondary: #f1f5f9;
   --secondary-foreground: #1e293b;
   --muted: #f1f5f9;
-  --muted-foreground: #64748b;
+  --muted-foreground: #475569;
   --accent: #f1f5f9;
   --accent-foreground: #1e293b;
 
@@ -139,9 +139,9 @@
 
 /* ─── Tema oscuro ────────────────────────────────────── */
 .dark {
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --ring: #3b82f6;
+  --primary: #60a5fa;
+  --primary-foreground: #0f172a;
+  --ring: #60a5fa;
 
   --background: #1d232a;
   --foreground: #f1f5f9;
@@ -192,11 +192,11 @@
   --auth-bg-card: rgba(255, 255, 255, 0.85);
   --auth-text: #0f172a;
   --auth-text-secondary: #475569;
-  --auth-label: #64748b;
+  --auth-label: #475569;
   --auth-placeholder: #94a3b8;
   --auth-border: rgba(226, 232, 240, 0.8);
   --auth-input-bg: rgba(241, 245, 249, 0.5);
-  --auth-accent: #64748b;
+  --auth-accent: #475569;
   --auth-accent-hover: #1e293b;
   --auth-btn-text: #ffffff;
   --auth-title-from: #3b82f6;
@@ -205,9 +205,9 @@
   --card-border: rgba(0, 0, 0, 0.05);
   --hero-title-from: #3b82f6;
   --hero-title-to: #ec4899;
-  --hero-coding: #60a5fa;
-  --hero-studying: #f472b6;
-  --hero-creating: #2dd4bf;
+  --hero-coding: #1d4ed8;
+  --hero-studying: #be185d;
+  --hero-creating: #0f766e;
 }
 
 [data-theme="business"] {
