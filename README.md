@@ -1,4 +1,4 @@
-# Tempo (Temporizador de Productividad)
+# Tempo 
 
 ## Descripción
 
@@ -10,7 +10,7 @@ Aplicación web moderna diseñada para ayudarte a gestionar tu tiempo de estudio
 - **Datos de sesión guardados**: Si interrumpes un pomodoro, el tiempo restante se guarda. Puedes retomarlo después desde donde lo dejaste.
 - **Estadísticas semanales y diarias**: Visualiza tu progreso con gráficos de barras y líneas de promedio.
 - **Soporte para usuarios invitados y registrados**: Los invitados guardan datos en localStorage; los usuarios registrados persisten en D1 via API.
-- **Modo oscuro/claro**: Tema nord (claro) y business (oscuro) con DaisyUI.
+- **Modo oscuro/claro**: Soporte para temas claro y oscuro con transiciones fluidas.
 - **Internacionalización**: Español e inglés completos.
 
 ## Secciones
@@ -27,21 +27,22 @@ Aplicación web moderna diseñada para ayudarte a gestionar tu tiempo de estudio
 
 ## Tecnologías Utilizadas
 
-- **Frontend**: Astro 6, React 19, Tailwind CSS 4, DaisyUI 5
-- **Backend**: Cloudflare Pages Functions (Hono), D1 (SQLite via Drizzle ORM), KV (Better Auth sessions)
-- **Auth**: Better Auth (external Argon2id hash service), Cloudflare Turnstile CAPTCHA
+- **Frontend**: Astro 7, React 19, Tailwind CSS 4, shadcn/ui
+- **Backend**: Cloudflare Pages Functions (Hono 4), D1 (SQLite via Drizzle ORM), KV (Better Auth sessions)
+- **Auth**: Better Auth, Cloudflare Turnstile CAPTCHA, microservicio externo Argon2id
 - **State**: Zustand 5 (stores duales: API para usuarios logueados, localStorage para invitados)
-- **Validación**: Zod 3
-- **Iconos**: Lucide (via @iconify/react + astro-icon)
-- **Herramientas**: Bun 1.3.9, Biome 2.4.16, Vitest 4
-- **Infra**: Cloudflare Pages, D1, KV, R2
+- **Validación**: Zod 4
+- **Iconos**: Lucide (via @iconify/react)
+- **Testing**: Vitest 5, Playwright
+- **Herramientas**: Bun, Biome 2, TypeScript 7
+- **Infra & CI/CD**: Cloudflare Pages, D1, KV, R2, GitHub Actions
 
 ## Instalación
 
 1. **Clonar el Repositorio**: Descarga el código de este proyecto en tu máquina usando Git.
 
 ```bash
-git clone https://github.com/Ivandv19/tempo.git
+git clone https://github.com/ivndv/tempo.git
 ```
 
 2. **Instalar Dependencias**: Abre una terminal en la carpeta del proyecto y ejecuta:
