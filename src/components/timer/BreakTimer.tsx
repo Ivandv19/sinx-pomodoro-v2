@@ -15,7 +15,7 @@ import { Button } from "../ui/button";
 type BreakTimerProps = Record<string, never>;
 
 // Constantes del temporizador
-const ALARM_SOUND = "https://pomodoro-assets.mgdc.site/alarm.mp3";
+const ALARM_SOUND = "https://tempo-assets.mgdc.site/alarm.mp3";
 const RADIUS = 120;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
