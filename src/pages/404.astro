@@ -13,19 +13,23 @@ const t = useTranslations(lang);
     class="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6 animate-fade-in"
   >
     <div
-      class="text-9xl font-black bg-gradient-to-b from-foreground/20 to-transparent bg-clip-text text-transparent select-none"
+      class="text-8xl md:text-9xl font-black bg-gradient-to-b from-primary/30 to-primary/5 bg-clip-text text-transparent select-none tracking-tighter"
     >
       404
     </div>
-    <h1 class="text-3xl font-bold">{t("404.heading")}</h1>
-    <p class="text-xl text-muted-foreground max-w-md">
+    <h1 class="text-3xl md:text-4xl font-black text-foreground dark:text-white tracking-tight">
+      {t("404.heading")}
+    </h1>
+    <p class="text-base md:text-lg text-muted-foreground max-w-md">
       {t("404.description")}
     </p>
-    <a
-      href="/"
-      class="inline-flex h-9 items-center justify-center rounded-full bg-primary px-8 text-sm font-medium text-primary-foreground shadow-lg hover:scale-105 hover:bg-primary/80 transition-all"
-    >
-      {t("404.back")}
-    </a>
+    <div class="pt-2">
+      <a
+        href="/"
+        class="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-md hover:bg-primary/90 hover:scale-[1.02] transition-all"
+      >
+        {t("404.back")}
+      </a>
+    </div>
   </div>
 </Layout>
