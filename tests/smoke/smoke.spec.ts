@@ -165,6 +165,7 @@ test.describe("flujo real de registro y verificación", () => {
 		await page.locator('input[type="password"]').nth(0).fill(nuevaPassword);
 		await page.locator('input[type="password"]').nth(1).fill(nuevaPassword);
 		await page.getByRole("button", { name: "Cambiar contraseña" }).click();
+		await expect(page.getByText("✅")).toBeVisible();
 
 		// 4. Contexto de navegador fresco (sin la sesión del setup) para probar
 		//    el login real con la contraseña nueva (verificación argon2 contra hashy)

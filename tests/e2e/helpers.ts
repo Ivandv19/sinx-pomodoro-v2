@@ -10,7 +10,7 @@ export async function mockTurnstile(page: Page) {
 			contentType: "application/javascript",
 			body: `window.turnstile = {
 				render: (_el, opts) => {
-					setTimeout(() => opts.callback && opts.callback("${DUMMY_TOKEN}"), 100);
+					setTimeout(() => opts.callback && opts.callback("${DUMMY_TOKEN}"), 0);
 					return "dummy-widget";
 				},
 				remove: () => {},
@@ -27,6 +27,7 @@ export async function login(page: Page, email: string, password: string) {
 	await page.goto("/login");
 	await page.getByPlaceholder("ejemplo@correo.com").fill(email);
 	await page.getByPlaceholder("••••••••").fill(password);
+	await page.waitForTimeout(100);
 	await page.getByRole("button", { name: "Entrar" }).click();
 }
 
