@@ -74,10 +74,7 @@ const syncTareasLocales = async (): Promise<void> => {
 	locales = sanearTareasLocales(locales);
 
 	const porSubir = locales.filter(
-		(t) =>
-			!t.synced &&
-			mapa[t.id] === undefined &&
-			!tareas.some((x) => x.id === t.id),
+		(t) => !t.synced && mapa[t.id] === undefined && t.id >= UMBRAL_ID_REAL,
 	);
 	if (porSubir.length === 0) return;
 
@@ -85,7 +82,7 @@ const syncTareasLocales = async (): Promise<void> => {
 	for (const t of porSubir) {
 		const idReal = await traducirTareaId({
 			tareaId: t.id,
-			tareasNube: tareas,
+			tareasNube: tareas.filter((x) => x.id < UMBRAL_ID_REAL),
 			getNombre: () => t.nombre,
 		});
 		if (idReal === null) {
@@ -98,12 +95,16 @@ const syncTareasLocales = async (): Promise<void> => {
 	guardarMapaIds(mapa);
 	persistirTareasLocales(traducidas);
 
-	// Las tareas recién creadas en la nube entran al store (sin el flag)
+	// Las tareas recién creadas en la nube entran al store sustituyendo los IDs locales
 	const nuevas = traducidas
-		.filter((t) => t.synced && !tareas.some((x) => x.id === t.id))
+		.filter((t) => t.synced)
 		.map(({ synced: _synced, ...t }) => t);
 	if (nuevas.length > 0) {
-		setTareas([...nuevas, ...tareas]);
+		const tareasReales = tareas.filter((x) => x.id < UMBRAL_ID_REAL);
+		setTareas([
+			...nuevas,
+			...tareasReales.filter((x) => !nuevas.some((n) => n.id === x.id)),
+		]);
 	}
 
 	// Traduce las claves de tareasPendientes (tiempo restante por tarea)
