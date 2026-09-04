@@ -35,3 +35,25 @@ export async function login(page: Page, email: string, password: string) {
 export async function expectLoginExitoso(page: Page) {
 	await expect(page).toHaveURL(/localhost:4321\/(es\/)?$/, { timeout: 15_000 });
 }
+
+// Configura el tema antes de la navegación para evitar FOUC y asincronías
+export async function prepararTema(page: Page, tema: "business" | "nord") {
+	await page.addInitScript((t) => {
+		try {
+			localStorage.setItem("theme", t);
+		} catch {}
+	}, tema);
+}
+
+// Establece el tema en el DOM y localStorage para pruebas visuales
+export async function setTema(page: Page, tema: "business" | "nord") {
+	await page.evaluate((theme) => {
+		document.documentElement.setAttribute("data-theme", theme);
+		document.documentElement.classList.toggle("dark", theme === "business");
+		try {
+			localStorage.setItem("theme", theme);
+		} catch {}
+	}, tema);
+	// Espera breve para estabilizar transiciones CSS de color
+	await page.waitForTimeout(200);
+}
