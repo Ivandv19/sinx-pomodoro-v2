@@ -114,6 +114,9 @@ export const ui = {
 		"footer.whatis": "¿Qué es Pomodoro?",
 		"footer.slogan":
 			"Herramienta de productividad. Sin distracciones, solo enfoque.",
+		"footer.slogan.1": "Herramienta de productividad.",
+		"footer.slogan.2": "Sin distracciones.",
+		"footer.slogan.3": "Solo enfoque.",
 		"footer.developed": "Desarrollado por",
 		"footer.rights": "Todos los derechos reservados",
 
@@ -297,6 +300,9 @@ export const ui = {
 		// Footer
 		"footer.whatis": "What is Pomodoro?",
 		"footer.slogan": "Productivity tool. No distractions, just focus.",
+		"footer.slogan.1": "Productivity tool.",
+		"footer.slogan.2": "No distractions.",
+		"footer.slogan.3": "Just focus.",
 		"footer.developed": "Developed by",
 		"footer.rights": "All rights reserved",
 

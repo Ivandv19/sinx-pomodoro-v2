@@ -36,38 +36,44 @@ const year = new Date().getFullYear();
                 <span class="font-bold text-xl tracking-tight">Tempo</span>
             </div>
 
-            <p class="font-medium">
-                {t("footer.slogan")}
-            </p>
-
-            <p class="text-xs mt-4">
-                {t("footer.developed")}
-                <span class="font-bold">sinx</span>
-            </p>
-
-            <!-- Tecnologías usadas -->
-            <div class="flex flex-wrap justify-center gap-2 mt-1 mb-2">
-                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
-                    >Astro</span
-                >
-                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
-                    >React</span
-                >
-                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
-                    >Tailwind</span
-                >
-                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
-                    >Bun</span
-                >
-                <span class="inline-flex h-4 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
-                    >Cloudflare</span
-                >
+            <!-- Slogan en 3 frases separadas -->
+            <div class="text-sm font-medium text-muted-foreground space-y-0.5">
+                <p>{t("footer.slogan.1")}</p>
+                <p>{t("footer.slogan.2")}</p>
+                <p>{t("footer.slogan.3")}</p>
             </div>
 
-            <!-- Copyright -->
-            <p class="text-xs opacity-75">
-                Copyright © {year} - {t("footer.rights")}
-            </p>
+            <!-- Bloque inferior: Desarrollador, Tecnologías y Copyright con espaciado equilibrado -->
+            <div class="pt-4 flex flex-col items-center gap-3">
+                <p class="text-xs text-muted-foreground">
+                    {t("footer.developed")}
+                    <span class="font-bold text-foreground">sinx</span>
+                </p>
+
+                <!-- Tecnologías usadas -->
+                <div class="flex flex-wrap justify-center gap-1.5">
+                    <span class="inline-flex h-5 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
+                        >Astro</span
+                    >
+                    <span class="inline-flex h-5 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
+                        >React</span
+                    >
+                    <span class="inline-flex h-5 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
+                        >Tailwind</span
+                    >
+                    <span class="inline-flex h-5 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
+                        >Bun</span
+                    >
+                    <span class="inline-flex h-5 items-center rounded-full border border-border px-2 text-[10px] font-medium text-muted-foreground"
+                        >Cloudflare</span
+                    >
+                </div>
+
+                <!-- Copyright -->
+                <p class="text-xs text-muted-foreground/80">
+                    Copyright © {year} - {t("footer.rights")}
+                </p>
+            </div>
         </aside>
     </div>
 </footer>
