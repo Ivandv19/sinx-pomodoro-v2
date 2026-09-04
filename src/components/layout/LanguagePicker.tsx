@@ -19,9 +19,9 @@ interface LanguagePickerProps {
 
 // Genera la URL del idioma destino conservando la ruta actual
 const getLangPath = (target: string, current: string) => {
-	const path = current.replace(/^\/(es|en)\/?/, "") || "/";
-	if (target === "es") return path === "/" ? "/" : `/${path}`;
-	return path === "/" ? "/en" : `/en/${path}`;
+	const clean = current.replace(/^\/(es|en)(\/|$)/, "/").replace(/^\/+/, "");
+	if (target === "es") return clean ? `/${clean}` : "/";
+	return clean ? `/en/${clean}` : "/en";
 };
 
 // Selector de idioma (desplegable)
